@@ -11,7 +11,7 @@ const cached = import.meta.glob('./generated/img/*.{jpg,jpeg,png,webp}', { eager
 const cachedImage = (id) => cached[`./generated/img/${id}.jpg`] || null;
 // The offline preview cannot load remote photos, so it lists only items with a cached one.
 const PREVIEW = import.meta.env.MODE === 'preview' || import.meta.env.MODE === 'single';
-const genItems = (generated['./generated/items.json'] || []).filter((i) => known.has(i.brandId) && i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title))
+const genItems = (generated['./generated/items.json'] || []).filter((i) => known.has(i.brandId) && i.image && i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title))
   .filter((i) => !PREVIEW || cachedImage(i.id));
 
 // Brand = hand-written entry + facts the store publishes about itself (those win).

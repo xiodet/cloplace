@@ -33,17 +33,17 @@ function hasWord(s, w) {
 }
 const extraWords = {
   hoodie: ['crewneck', 'crew neck', 'pullover', 'hooded', 'tracksuit', 'sudadera', 'zipper', 'twinset'],
-  tee: ['polo', 'jersey', 'tank', 'top', 'bodysuit', 'singlet', 'long sleeve', 'short sleeve', 'camiseta', 'chemise', 'tanktop', 'rugby', 'flannel', 'body', 'bralette', 'maglia', 'corset', 'tank top'],
+  tee: ['poloshirt', 'polo', 'jersey', 'tank', 'top', 'bodysuit', 'singlet', 'long sleeve', 'short sleeve', 'camiseta', 'chemise', 'tanktop', 'rugby', 'flannel', 'body', 'bralette', 'maglia', 'corset', 'tank top'],
   shirt: ['camisa', 'chemise', 'button up', 'button-up', 'button down', 'oxford', 'flannel', 'overhemd', 'hemd'],
   shorts: ['sweatshort', 'swimshort', 'swim short', 'swimshorts', 'short'],
   jeans: ['jean', 'selvedge', 'vaquero'],
   skirt: ['mini skirt', 'gown', 'robe', 'falda', 'jupe', 'gonna', 'kleid'],
-  pants: ['jogger', 'legging', 'pant', 'chino', 'bottom', 'sweatpant', 'trackpant', 'pantalon', 'pantalón', 'panttalón', 'hose', 'suit', 'workpant'],
+  pants: ['carpenter', 'jogger', 'legging', 'pant', 'chino', 'bottom', 'sweatpant', 'trackpant', 'pantalon', 'pantalón', 'panttalón', 'hose', 'suit', 'workpant'],
   jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell', 'chaqueta', 'cortavientos', 'veste', 'jacke', 'manteau', 'doudoune', 'poncho', 'trucker', 'overshirt'],
-  cap: ['gorra', 'casquette', 'bonnet', 'balaclava', 'bucket', 'gorro', 'panama'],
-  knit: ['turtleneck', 'pull'],
-  shoes: ['boot', 'nike', 'new balance', 'salomon', 'converse', 'vans', 'reebok', 'puma', 'onitsuka', 'jordan', 'asics', 'adistar', 'beaters', 'beisser', 'derbys', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
-  accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace', 'underwear', 'boxer', 'panty', 'bandana', 'tie', 'pendant', 'spray', 'mug', 'deck', 'brush', 'bufanda', 'calcetin', 'chaussette', 'echarpe', 'décapsuleur', 'voiture', 'duffle', 'musette', 'ceinture', 'sacoche', 'handbag', 'holdall', 'carabiner', 'charm', 'pin', 'chain'],
+  cap: ['snapback', 'gorra', 'casquette', 'bonnet', 'balaclava', 'bucket', 'gorro', 'panama'],
+  knit: ['turtleneck', 'pull', 'v-neck'],
+  shoes: ['boot', 'calzado', 'zapato', 'schuhe', 'scarpe', 'nike', 'new balance', 'salomon', 'converse', 'vans', 'reebok', 'puma', 'onitsuka', 'jordan', 'asics', 'adistar', 'beaters', 'beisser', 'derbys', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
+  accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace', 'underwear', 'boxer', 'panty', 'bandana', 'tie', 'pendant', 'spray', 'mug', 'deck', 'brush', 'bufanda', 'calcetin', 'chaussette', 'echarpe', 'décapsuleur', 'voiture', 'duffle', 'musette', 'ceinture', 'sacoche', 'handbag', 'holdall', 'carabiner', 'charm', 'pin', 'chain', 'accesorio', 'accessoire', 'accessori', 'zubehör', 'bolso', 'bolsito', 'bandolera', 'riñonera', 'mochila', 'cartera', 'pendientes', 'phone case', 'iphone case', 'chess', 'palo santo', 'tasche', 'borsa', 'zaino', 'lunettes', 'gafas', 'sac à'],
 };
 // The title names the garment most precisely ("Denim Shorts" in a store type "Bottoms"), but when the
 // store files something under shoes or accessories, that wins over a title like "Shirt Keychain".

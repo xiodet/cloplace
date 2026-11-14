@@ -19,6 +19,8 @@ export default function Garment({ item, tone = 0 }) {
   const [broken, setBroken] = useState(false);
   // If a photo cannot load (offline preview, blocked host), fall back to the silhouette.
   if (item.image && !broken) return <img className="tile-img" src={item.image} alt={item.title} loading="lazy" onError={() => setBroken(true)} />;
+  // a real item whose photo failed to load: a quiet empty tile, not a drawing
+  if (!item.demo) return <span className="tile-img" role="img" aria-label={item.title} style={{ display: 'block', background: '#f1f1f0' }} />;
   return (
     <svg className="tile-img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label={item.title} style={{ background: bg }}>
       <g transform="translate(50 50) scale(0.62) translate(-50 -50)">

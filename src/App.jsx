@@ -485,7 +485,6 @@ function IndexPage() {
 
 function NewsCard({ n }) {
   const { lang, t } = useLang();
-  const b = brandById[n.brandId];
   return (
     <article className="news-card">
       <div className="news-top">
@@ -496,8 +495,7 @@ function NewsCard({ n }) {
       <h3>{pick(n.title, lang)}</h3>
       <p>{pick(n.summary, lang)}</p>
       <div className="news-links">
-        {b && <a href={'#/brand/' + b.id}>{b.name} →</a>}
-        {n.source?.url && <a href={n.source.url} target="_blank" rel="noreferrer">↗</a>}
+        {n.source?.url && <a href={n.source.url} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
       </div>
     </article>
   );
