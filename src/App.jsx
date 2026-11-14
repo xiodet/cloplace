@@ -51,8 +51,10 @@ const W = {
 };
 
 // Six showcases: brands with real collected photos first, then the hand-picked rest.
-const PICKS = ['nofaith-studios', 'antisocial-laboratory', 'scuffers', 'racer-worldwide', 'society-de-nobodies', 'jaded-london', 'lomalab', 'lkc2000', 'fwwproject'];
-const FEATURED = [...PICKS.filter((id) => liveBrandIds.includes(id)), ...PICKS.filter((id) => !liveBrandIds.includes(id))].slice(0, 6);
+// Home order is reshuffled on every visit (page load) so no brand owns the top row,
+// and stays put while moving around the site. Brands with real items come before demo ones.
+const shuffle = (list) => { const a = [...list]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const HOME_ORDER = [...shuffle(brands.filter((b) => liveBrandIds.includes(b.id))), ...shuffle(brands.filter((b) => !liveBrandIds.includes(b.id)))];
 const PAGE = 12;
 const BATCH = 6;
 let homeCount = BATCH; // remembered so coming back from a brand keeps your place
@@ -179,7 +181,7 @@ function SearchBar({ initial = '' }) {
 function Home() {
   const { t, w, lang } = useLang();
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
-  const order = useMemo(() => [...FEATURED.map((id) => brandById[id]).filter(Boolean), ...brands.filter((b) => !FEATURED.includes(b.id))], []);
+  const order = HOME_ORDER;
   const [count, setCount] = useState(homeCount);
   const more = useRef(null);
   useEffect(() => { homeCount = count; }, [count]);
