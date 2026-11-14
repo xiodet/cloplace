@@ -1,16 +1,214 @@
 [
  {
+  "id": "nofaith-studios-sale-2026-11",
+  "brandId": "nofaith-studios",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%"
+  },
+  "summary": {
+   "en": "6 items discounted.",
+   "ru": "6 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://nofaithstudios.com/products/japanese-workers-cut"
+  }
+ },
+ {
+  "id": "ksenia-schnaider-sale-2026-11",
+  "brandId": "ksenia-schnaider",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −85%",
+   "ru": "Скидки до −85%"
+  },
+  "summary": {
+   "en": "102 items discounted.",
+   "ru": "102 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kseniaschnaider.com/products/corruption-pants-black"
+  }
+ },
+ {
+  "id": "represent-sale-2026-11",
+  "brandId": "represent",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −50%",
+   "ru": "Скидки до −50%"
+  },
+  "summary": {
+   "en": "71 items discounted.",
+   "ru": "71 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://representclo.com/products/initial-oversized-hoodie-black"
+  }
+ },
+ {
+  "id": "places-faces-sale-2026-11",
+  "brandId": "places-faces",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −75%",
+   "ru": "Скидки до −75%"
+  },
+  "summary": {
+   "en": "116 items discounted.",
+   "ru": "116 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://www.placesplusfaces.com/products/logo-tab-bucket-hat-hot-pink-sample"
+  }
+ },
+ {
+  "id": "olaf-hussein-sale-2026-11",
+  "brandId": "olaf-hussein",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −50%",
+   "ru": "Скидки до −50%"
+  },
+  "summary": {
+   "en": "21 items discounted.",
+   "ru": "21 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://olafhussein.com/products/10year-socks-optical-white-mocha-mousse"
+  }
+ },
+ {
+  "id": "arte-antwerp-sale-2026-11",
+  "brandId": "arte-antwerp",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −40%",
+   "ru": "Скидки до −40%"
+  },
+  "summary": {
+   "en": "241 items discounted.",
+   "ru": "241 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://arte-antwerp.com/products/colson-heart-sweater-creme"
+  }
+ },
+ {
+  "id": "helas-sale-2026-11",
+  "brandId": "helas",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −51%",
+   "ru": "Скидки до −51%"
+  },
+  "summary": {
+   "en": "96 items discounted.",
+   "ru": "96 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://helascaps.com/products/classic-full-zip-heather-grey"
+  }
+ },
+ {
+  "id": "represent-drop-2026-11-13",
+  "brandId": "represent",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "71 new items",
+   "ru": "71 новых вещей"
+  },
+  "summary": {
+   "en": "New in: Represent X Sunset Oil Mini Mart Leather Inlay Denim - Jet Black, Represent X Sunset Oil Mini Mart Leather Moto Jacket - Jet Black, Represent X Sunset Oil Mini Mart Patch Cap - Off White…",
+   "ru": "Новинки: Represent X Sunset Oil Mini Mart Leather Inlay Denim - Jet Black, Represent X Sunset Oil Mini Mart Leather Moto Jacket - Jet Black, Represent X Sunset Oil Mini Mart Patch Cap - Off White…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://representclo.com/products/represent-x-sunset-oil-mini-mart-leather-inlay-denim-jet-black"
+  }
+ },
+ {
+  "id": "ksenia-schnaider-drop-2026-11-12",
+  "brandId": "ksenia-schnaider",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "18 new items",
+   "ru": "18 новых вещей"
+  },
+  "summary": {
+   "en": "New in: Jungle Jeans, Illusion Sweater with Denim Back Detail, Jungle Denim Jacket with Hood…",
+   "ru": "Новинки: Jungle Jeans, Illusion Sweater with Denim Back Detail, Jungle Denim Jacket with Hood…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kseniaschnaider.com/products/reworked-square-jeans-copy-1"
+  }
+ },
+ {
+  "id": "olaf-hussein-drop-2026-11-10",
+  "brandId": "olaf-hussein",
+  "type": "drop",
+  "date": "2026-11-10",
+  "title": {
+   "en": "10 new items",
+   "ru": "10 новых вещей"
+  },
+  "summary": {
+   "en": "New in: SIGNATURE LS TEE | BLACK, HARVEST LS TEE | PLAZA TAUPE, HARVEST LS TEE | CHARCOAL…",
+   "ru": "Новинки: SIGNATURE LS TEE | BLACK, HARVEST LS TEE | PLAZA TAUPE, HARVEST LS TEE | CHARCOAL…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://olafhussein.com/products/signature-lss-tee-black"
+  }
+ },
+ {
+  "id": "arte-antwerp-drop-2026-11-09",
+  "brandId": "arte-antwerp",
+  "type": "drop",
+  "date": "2026-11-09",
+  "title": {
+   "en": "250 new items",
+   "ru": "250 новых вещей"
+  },
+  "summary": {
+   "en": "New in: Stencil Sunfade Longsleeve - Bordeaux, Plaid Wool Scarf - Plaid, Sunfade Scarf - Navy…",
+   "ru": "Новинки: Stencil Sunfade Longsleeve - Bordeaux, Plaid Wool Scarf - Plaid, Sunfade Scarf - Navy…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://arte-antwerp.com/products/stencil-sunfade-longsleeve-bordeaux"
+  }
+ },
+ {
   "id": "nofaith-studios-drop-2026-11-03",
   "brandId": "nofaith-studios",
   "type": "drop",
   "date": "2026-11-03",
   "title": {
-   "en": "New: Pull Over Concrete Leather Bomber",
-   "ru": "Новинка: Pull Over Concrete Leather Bomber"
+   "en": "1 new items",
+   "ru": "1 новых вещей"
   },
   "summary": {
-   "en": "Added to the store on 3 November, €1200.",
-   "ru": "Появился в магазине 3 ноября, €1200."
+   "en": "New in: PULL OVER CONCRETE LEATHER  BOMBER",
+   "ru": "Новинки: PULL OVER CONCRETE LEATHER  BOMBER"
   },
   "source": {
    "kind": "shopify",
