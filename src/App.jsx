@@ -7,7 +7,8 @@ import { places, guessCountry, estimate } from './data/places.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
 import Logo from './components/Logo.jsx';
-import BrandMap, { clusterBrands } from './components/BrandMap.jsx';
+import BrandMap, { clusterBrands, ZOOM } from './components/BrandMap.jsx';
+import { MAP, project, km } from './data/mapProjection.js';
 
 // ── tiny hash router: #/  #/brands  #/brand/:id  #/news  #/search?q=...
 function useRoute() {
@@ -49,6 +50,7 @@ const go = (h) => { window.location.hash = h; };
 // Extra copy for this layout (kept next to the layout that uses it).
 const W = {
   en: {
+    m_all: 'All', m_ua: 'Ukraine', m_eu: 'EU', m_europe: 'All of Europe', m_cities: 'All cities', m_in: 'Zoom in', m_out: 'Zoom out', m_title: (b, c) => `${b} ${b === 1 ? 'brand' : 'brands'} in ${c} ${c === 1 ? 'city' : 'cities'}`, m_sub: 'Nearest to you first. Select a city on the map or below.', m_away: (d) => `${d} km from you`, m_here: 'your city', m_ship: (d) => `Delivery about ${d}`, m_noship: 'does not ship to you', m_latest: (c) => `Latest from ${c}`, m_nearby: 'Nearby',
     headline: 'Independent streetwear brands. Prices, shipping and returns in one place.',
     lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
     quote_by: 'ShoWindow',
@@ -63,6 +65,7 @@ const W = {
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
+    m_all: 'Все', m_ua: 'Украина', m_eu: 'ЕС', m_europe: 'Вся Европа', m_cities: 'Все города', m_in: 'Приблизить', m_out: 'Отдалить', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренда', 'брендов')} в ${c} ${ruPlural(c, 'городе', 'городах', 'городах')}`, m_sub: 'Сначала ближайшие к вам. Выберите город на карте или в списке.', m_away: (d) => `${d} км от вас`, m_here: 'ваш город', m_ship: (d) => `Доставка примерно ${d}`, m_noship: 'не доставляет к вам', m_latest: (c) => `Новое из города ${c}`, m_nearby: 'Рядом',
     headline: 'Независимые стритвир-бренды. Цены, доставка и возвраты в одном месте.',
     lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
     quote_by: 'ShoWindow',
@@ -77,6 +80,7 @@ const W = {
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
   },
   uk: {
+    m_all: 'Усі', m_ua: 'Україна', m_eu: 'ЄС', m_europe: 'Уся Європа', m_cities: 'Усі міста', m_in: 'Наблизити', m_out: 'Віддалити', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренди', 'брендів')} у ${c} ${ruPlural(c, 'місті', 'містах', 'містах')}`, m_sub: 'Спочатку найближчі до вас. Оберіть місто на карті або у списку.', m_away: (d) => `${d} км від вас`, m_here: 'ваше місто', m_ship: (d) => `Доставка приблизно ${d}`, m_noship: 'не доставляє до вас', m_latest: (c) => `Нове з міста ${c}`, m_nearby: 'Поруч',
     headline: 'Незалежні стрітвір-бренди. Ціни, доставка й повернення в одному місці.',
     lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
     quote_by: 'ShoWindow',
@@ -422,50 +426,141 @@ function Showcase({ brand, group = 'clothes', n }) {
 
 // ── Index: every brand as a typographic row ─────────────────
 // Map page: a large map with one pin per city, and rough delivery times to the visitor's country.
+const EU_CODES = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
+const inRegion = { all: () => true, ua: (b) => b.country === 'UA', eu: (b) => EU_CODES.includes(b.country) };
+const ALL_CLUSTERS = clusterBrands(brands);
+const HOME_VIEW = { zoom: 1, cx: MAP.w / 2, cy: MAP.h / 2 };
+const stamp = (i) => i.publishedAt || '';
+
+// ── Map: Europe drawn with dots, a pin per city, and a panel that lists the cities by
+// distance from the visitor or shows the brands of the chosen city.
 function IndexPage() {
   const { lang, t, w } = useLang();
-  const [origin, setOrigin] = useState('ALL');
+  const [region, setRegion] = useState('all');
   const [place, setPlace] = useState(null);
-  const [hotPlace, setHotPlace] = useState(null);
+  const [view, setView] = useState(HOME_VIEW);
   const [me, setMeState] = useState(guessCountry);
   const setMe = (c) => { setMeState(c); try { localStorage.setItem('country', c); } catch {} };
-  const inOrigin = brands
-    .filter((b) => origin === 'ALL' || (origin === 'UA' ? b.country === 'UA' : b.country !== 'UA'))
-    .sort((a, b) => a.name.localeCompare(b.name));
-  const clusters = useMemo(() => clusterBrands(inOrigin), [origin]);
-  const picked = clusters.find((c) => c.key === place);
+  const num = useMemo(() => { try { const f = new Intl.NumberFormat(dateLocale[lang]); return (n) => f.format(n); } catch { return String; } }, [lang]);
   const regionName = useMemo(() => { try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (c) => d.of(c); } catch { return (c) => c; } }, [lang]);
-  const rows = clusters
-    .map((c) => ({ c, e: estimate(c.brands[0].country, cities[c.brands[0].city], me) }))
-    .sort((a, b) => a.e.days[0] - b.e.days[0] || a.e.days[1] - b.e.days[1] || a.c.key.localeCompare(b.c.key));
+
+  const home = places[me].geo;
+  const [hx, hy] = project(home);
+  const mine = ALL_CLUSTERS.find((c) => Math.hypot(c.x - hx, c.y - hy) < 16);
+  const rows = ALL_CLUSTERS
+    .map((c) => { const list = c.brands.filter(inRegion[region]); return { ...c, list, n: list.length || c.brands.length, ok: list.length > 0, you: c === mine, d: Math.round(km(home, c.geo)) }; })
+    .sort((a, b) => a.d - b.d);
+  const shown = rows.filter((c) => c.ok);
+  const far = Math.max(1, ...shown.map((c) => c.d));
+  const count = (r) => brands.filter(inRegion[r]).length;
+  const picked = rows.find((c) => c.key === place);
+
+  const select = (key) => {
+    const c = rows.find((x) => x.key === key);
+    setPlace(key); setView({ zoom: ZOOM, cx: c.x, cy: c.y });
+    // on a phone the city opens in a bottom sheet: bring the map right under the header so the pin stays in view
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      const map = document.querySelector('.dmap'), head = document.querySelector('.top');
+      if (map && head) window.scrollTo({ top: map.getBoundingClientRect().top + window.scrollY - head.getBoundingClientRect().bottom - 8, behavior: 'smooth' });
+    }
+  };
+  const reset = () => { setPlace(null); setView((v) => ({ ...v, zoom: 1 })); };
+  const zoomIn = () => setView((v) => ({ zoom: ZOOM, cx: picked ? picked.x : 330, cy: picked ? picked.y : 410 }));
+  const setFilter = (r) => { setRegion(r); if (picked && !picked.brands.some(inRegion[r])) reset(); };
   const ships = (b) => !b.shipsTo || b.country === me || b.shipsTo.includes(me);
-  const brandLinks = (c) => c.brands.map((b) => (
-    <a key={b.id} className={'dl-brand' + (ships(b) ? '' : ' no')} href={'#/brand/' + b.id} title={ships(b) ? undefined : w.d_noship}>{b.name}</a>
-  ));
+
+  const latest = picked ? picked.list.flatMap((b) => itemsByBrand[b.id] || []).filter((i) => i.image && !i.demo).sort((a, b) => stamp(b).localeCompare(stamp(a))).slice(0, 3) : [];
+  const nearby = picked ? rows.filter((c) => c.key !== picked.key && c.ok && Math.hypot(c.x - picked.x, c.y - picked.y) < 75).sort((a, b) => Math.hypot(a.x - picked.x, a.y - picked.y) - Math.hypot(b.x - picked.x, b.y - picked.y)).slice(0, 6) : [];
+  const days = picked ? estimate(picked.country, picked.geo, me) : null;
+
   return (
     <>
       <TopBar active="index" />
       <main className="index-page">
-        <div className="np-head rise">
-          <p className="np-lead">{w.index_quote}</p>
-          <div className="chips">
-            {[['ALL', t.any], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
-              <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => { setOrigin(k); setPlace(null); }}>{label}</button>
-            ))}
-          </div>
-        </div>
-        <div className="map-wrap rise" style={{ '--i': 1 }}>
-          <BrandMap clusters={clusters} selected={place} hot={null} onSelect={setPlace} onHover={setHotPlace} focus={origin} you={places[me].geo} youLabel={w.d_you} />
-          {picked
-            ? (
-              <div className="map-card">
-                <button className="map-x" onClick={() => setPlace(null)} aria-label={w.map_reset}>×</button>
-                <span className="muted">{picked.names.join(', ')} · {pick(countries[picked.brands[0].country], lang)}</span>
-                <span className="map-brands">{brandLinks(picked)}</span>
-                <span className="muted">{w.d_days(...estimate(picked.brands[0].country, cities[picked.brands[0].city], me).days)} · {regionName(me)}</span>
+        <div className="mapx">
+          <div className="mapx-stage">
+            <div className="mapx-bar">
+              <div className="mapx-chips" role="group" aria-label={w.index_quote}>
+                {[['all', w.m_all], ['ua', w.m_ua], ['eu', w.m_eu]].map(([k, label]) => (
+                  <button key={k} type="button" className={'mchip' + (region === k ? ' on' : '')} aria-pressed={region === k} onClick={() => setFilter(k)}>{label} · {count(k)}</button>
+                ))}
               </div>
-            )
-            : <p className="map-hint muted">{w.map_hint}</p>}
+              {view.zoom > 1 && (
+                <button type="button" className="mchip mback" onClick={reset}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>{w.m_europe}
+                </button>
+              )}
+            </div>
+            <BrandMap
+              pins={rows} selected={place} view={view} onSelect={select} onZoomIn={zoomIn} onReset={reset}
+              you={{ x: hx, y: hy }}
+              copy={{ you: w.d_you, brands: t.brands_count, leg1: t.brands_count(1), zoomIn: w.m_in, zoomOut: w.m_out }}
+            />
+          </div>
+          <aside className={'mapx-panel' + (picked ? ' open' : '')} aria-live="polite">
+            {picked ? (
+              <div className="mp-city" key={picked.key}>
+                <button type="button" className="mp-back" onClick={reset}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>{w.m_cities}
+                </button>
+                <p className="mp-kicker">{pick(countries[picked.country], lang) || regionName(picked.country)}</p>
+                <h2 className="mp-name">{picked.name}</h2>
+                <p className="mp-sub">{t.brands_count(picked.list.length)} · {picked.d < 5 ? w.m_here : w.m_away(num(picked.d))}</p>
+                <p className="mp-sub">{w.m_ship(w.d_days(...days.days))}{days.customs ? ' · ' + w.d_customs : ''}</p>
+                <div className="mp-brands">
+                  {picked.list.map((b) => {
+                    const n = (itemsByBrand[b.id] || []).filter((i) => !i.demo).length;
+                    const bits = [b.style?.[0], b.closed ? w.cl_tile : n ? t.items_found(n) : null, picked.names.length > 1 ? b.city : null, ships(b) ? null : w.m_noship].filter(Boolean);
+                    return (
+                      <a key={b.id} className="mp-brand" href={'#/brand/' + b.id}>
+                        <span className="mp-logo"><b>{b.name[0]}</b><Logo src={brandMedia(b.id).logo} /></span>
+                        <span className="mp-bname">{b.name}<small>{bits.join(' · ')}</small></span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+                      </a>
+                    );
+                  })}
+                </div>
+                {latest.length > 0 && (
+                  <>
+                    <p className="mp-kicker gap">{w.m_latest(picked.name)}</p>
+                    <div className="mp-latest">
+                      {latest.map((i) => (
+                        <a key={i.id} href={i.url || '#/brand/' + i.brandId} {...(i.url ? { target: '_blank', rel: 'noreferrer' } : {})} title={`${brandById[i.brandId].name} · ${i.title}`}>
+                          <span className="mp-tile"><Garment item={i} /></span>
+                          <small>{brandById[i.brandId].name}</small>
+                        </a>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {nearby.length > 0 && (
+                  <>
+                    <p className="mp-kicker gap">{w.m_nearby}</p>
+                    <div className="mp-near">
+                      {nearby.map((c) => <button key={c.key} type="button" className="mchip" onClick={() => select(c.key)}>{c.name} · {c.list.length}</button>)}
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="mp-over">
+                <p className="mp-kicker">{w.index_quote}</p>
+                <h2 className="mp-title">{w.m_title(shown.reduce((s, c) => s + c.list.length, 0), shown.length)}</h2>
+                <p className="mp-sub">{w.m_sub}</p>
+                <div className="mp-rows">
+                  {shown.map((c, i) => (
+                    <button key={c.key} type="button" className="mp-row" onClick={() => select(c.key)} aria-label={`${c.name}, ${t.brands_count(c.list.length)}, ${num(c.d)} km`}>
+                      <span className="mp-i">{i + 1}</span>
+                      <span className="mp-rname">{c.name}{c.you && <small> · {w.d_you}</small>}</span>
+                      <span className="mp-n">{c.list.length}</span>
+                      <span className="mp-bar"><i style={{ width: Math.max(2, (c.d / far) * 100) + '%' }} /></span>
+                      <span className="mp-km">{num(c.d)} km</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </aside>
         </div>
         <section className="delivery">
           <div className="row-head">
@@ -477,11 +572,11 @@ function IndexPage() {
             </label>
           </div>
           <div className="dl-list">
-            {rows.map(({ c, e }) => (
-              <div key={c.key} className={'dl-row' + (hotPlace === c.key || place === c.key ? ' hot' : '')} onMouseEnter={() => setHotPlace(c.key)} onMouseLeave={() => setHotPlace(null)}>
+            {shown.map((c) => ({ c, e: estimate(c.country, c.geo, me) })).sort((a, b) => a.e.days[0] - b.e.days[0] || a.e.days[1] - b.e.days[1] || a.c.d - b.c.d).map(({ c, e }) => (
+              <div key={c.key} className={'dl-row' + (place === c.key ? ' hot' : '')}>
                 <span className="dl-days">{w.d_days(...e.days)}</span>
-                <span className="dl-from">{c.names.join(', ')}<small>{pick(countries[c.brands[0].country], lang)}{e.customs ? ' · ' + w.d_customs : ''}</small></span>
-                <span className="dl-brands">{brandLinks(c)}</span>
+                <span className="dl-from">{c.names.join(', ')}<small>{pick(countries[c.country], lang)}{e.customs ? ' · ' + w.d_customs : ''}</small></span>
+                <span className="dl-brands">{c.list.map((b) => <a key={b.id} className={'dl-brand' + (ships(b) ? '' : ' no')} href={'#/brand/' + b.id} title={ships(b) ? undefined : w.d_noship}>{b.name}</a>)}</span>
               </div>
             ))}
           </div>

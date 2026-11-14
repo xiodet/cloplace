@@ -1,5 +1,7 @@
 // Where a visitor might be: country code → a reference point [lon, lat] (the capital) and
 // the browser time zones that suggest it. Used only for rough delivery estimates on the map.
+import { km } from './mapProjection.js';
+
 export const places = {
   UA: { geo: [30.52, 50.45], tz: ['Europe/Kyiv', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye'] },
   PL: { geo: [21.01, 52.23], tz: ['Europe/Warsaw'] },
@@ -48,10 +50,6 @@ export function guessCountry() {
   return 'UA';
 }
 
-const km = ([lon1, lat1], [lon2, lat2]) => {
-  const r = Math.PI / 180, a = Math.sin(((lat2 - lat1) * r) / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(((lon2 - lon1) * r) / 2) ** 2;
-  return 12742 * Math.asin(Math.sqrt(a));
-};
 
 // A rough guess, not carrier data: same country is quick, inside the EU it grows with
 // distance, and a customs border (Ukraine, UK, Switzerland, Norway…) adds the most.
