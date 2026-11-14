@@ -549,6 +549,8 @@ function SearchPage({ q }) {
   const parsed = useMemo(() => parseQuery(q), [q]);
   const [f, setF] = useState(parsed);
   useEffect(() => setF(parsed), [parsed]);
+  const [shown, setShown] = useState(48);
+  useEffect(() => setShown(48), [f]);
   const set = (k, v) => setF((o) => ({ ...o, [k]: v === '' || v === false ? undefined : v }));
 
   const found = items.filter((i) => matchItem(i, brandById[i.brandId], f));
@@ -564,11 +566,14 @@ function SearchPage({ q }) {
   if (f.text?.length) chips.push('“' + f.text.join(' ') + '”');
 
   return (
-    <Shell word={w.search} quote={w.search_quote} by={t.items_found(found.length)} wide active="search">
-      <div className="rise"><SearchBar initial={q} /></div>
-      {chips.length > 0 && (
-        <div className="understood rise">{t.understood}: {chips.map((c) => <span key={c} className="tag">{c}</span>)}</div>
-      )}
+    <>
+      <TopBar active="search" />
+      <main className="search-page">
+      <div className="sp-bar rise"><SearchBar initial={q} /></div>
+      <div className="sp-meta rise">
+        <span className="understood">{chips.length > 0 && <>{t.understood}: {chips.map((c) => <span key={c} className="tag">{c}</span>)}</>}</span>
+        <span className="muted">{t.items_found(found.length)}</span>
+      </div>
       <div className="filters rise">
         <label>{t.category}
           <select id="f-cat" value={f.category || ''} onChange={(e) => set('category', e.target.value)}>
@@ -599,9 +604,12 @@ function SearchPage({ q }) {
         <button className="reset" onClick={() => go('/search')}>{t.reset}</button>
       </div>
       {found.length
-        ? <div className="item-grid wide-grid rise">{found.slice(0, 48).map((i) => <ItemCard key={i.id} item={i} showBrand />)}</div>
-        : <p className="muted rise">{t.nothing}</p>}
+        ? <div className="item-grid wide-grid rise">{found.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} showBrand />)}</div>
+        : <p className="muted rise sp-none">{t.nothing}</p>}
+      {found.length > shown && <button className="more home-more" onClick={() => setShown((n) => n + 48)}>{w.more(found.length - shown)}</button>}
       {items.some((i) => i.demo) && <p className="demo-note">{t.demo_note}</p>}
-    </Shell>
+      <footer className="foot"><span>{t.footer}</span></footer>
+      </main>
+    </>
   );
 }
