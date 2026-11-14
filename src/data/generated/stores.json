@@ -8321,5 +8321,10 @@
    "ZW"
   ],
   "priced": "USD"
+ },
+ "vicinity": {
+  "closed": true,
+  "opensAt": null,
+  "closedNote": null
  }
 }
