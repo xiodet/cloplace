@@ -121,7 +121,7 @@ function readCur() {
   try { const c = localStorage.getItem('cur'); return CURS.some((x) => x[0] === c) ? c : 'EUR'; } catch { return 'EUR'; }
 }
 function readLang() {
-  try { const l = localStorage.getItem('lang'); return dict[l] ? l : 'ru'; } catch { return 'ru'; }
+  try { const l = localStorage.getItem('lang'); return dict[l] ? l : 'en'; } catch { return 'en'; }
 }
 
 export default function App() {
@@ -145,6 +145,29 @@ export default function App() {
   return <LangContext.Provider value={{ lang, t: dict[lang], w: W[lang], setLang, cur, setCur }}>{body}</LangContext.Provider>;
 }
 
+// A quiet setting in the top bar: shows the current value, opens a short list on click.
+function Pref({ label, value, options, show, onPick }) {
+  const [open, setOpen] = useState(false);
+  const box = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => { if (e.key === 'Escape' || (e.type === 'pointerdown' && !box.current?.contains(e.target))) setOpen(false); };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', close);
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', close); };
+  }, [open]);
+  return (
+    <span className="pref" ref={box}>
+      <button className="pref-btn" aria-label={label} aria-expanded={open} onClick={() => setOpen(!open)}>{show || options.find((o) => o[0] === value)[1]}</button>
+      {open && (
+        <span className="pref-menu" role="menu">
+          {options.map(([k, l]) => <button key={k} role="menuitem" className={k === value ? 'on' : ''} onClick={() => { onPick(k); setOpen(false); }}>{l}</button>)}
+        </span>
+      )}
+    </span>
+  );
+}
+
 // ── Top bar on every page: wordmark left, quiet nav right.
 function TopBar({ active }) {
   const { lang, t, setLang, cur, setCur } = useLang();
@@ -156,17 +179,11 @@ function TopBar({ active }) {
         <a href="#/search" className={active === 'search' ? 'on' : ''}>{t.nav_search}</a>
         <a href="#/brands" className={active === 'index' ? 'on' : ''}>{t.nav_map}</a>
         <a href="#/news" className={active === 'news' ? 'on' : ''}>{t.nav_news}</a>
-        <span className="lang" role="group" aria-label="Language">
-          {LANGS.map(([l, label]) => (
-            <button key={l} className={l === lang ? 'on' : ''} onClick={() => setLang(l)}>{label}</button>
-          ))}
-        </span>
-        <span className="lang cur" role="group" aria-label="Currency">
-          {CURS.map(([c, sign]) => (
-            <button key={c} className={c === cur ? 'on' : ''} title={c} onClick={() => setCur(c)}>{sign}</button>
-          ))}
-        </span>
       </nav>
+      <div className="prefs">
+        <Pref label="Language" value={lang} options={LANGS} onPick={setLang} />
+        <Pref label="Currency" value={cur} options={CURS.map(([c, sign]) => [c, sign + ' ' + c])} show={CURS.find((c) => c[0] === cur)[1]} onPick={setCur} />
+      </div>
     </header>
   );
 }
