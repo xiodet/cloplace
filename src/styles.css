@@ -63,8 +63,8 @@ p { margin: 0; }
 /* real photos are never cropped; multiply melts their white studio background into the tile */
 img.tile-img { object-fit: contain; mix-blend-mode: multiply; }
 .showcase:hover .tile-img { transform: scale(1.04); }
-.home-note { margin-top: 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 12px 0; }
-.home-note p { max-width: 580px; font-size: 21px; line-height: 1.2; letter-spacing: -0.03em; }
+.home-note { margin-top: 96px; padding-bottom: 56px; }
+.home-note p { font-size: clamp(22px, 2.9vw, 44px); line-height: 1.1; letter-spacing: -0.045em; text-wrap: pretty; }
 .home-search { margin-top: 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
 
 /* the click transition */
@@ -250,7 +250,7 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
   .below-row { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 72px; }
 
   .home-search, .home-note { margin-top: 64px; }
-  .home-note p { font-size: 19px; }
+  .home-note { padding-bottom: 40px; }
   .shell { grid-template-columns: minmax(0, 1fr); }
   .side { position: static; height: auto; gap: 40px; padding-bottom: 28px; padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
   .main { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); min-height: 0; }

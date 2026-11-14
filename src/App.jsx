@@ -213,12 +213,10 @@ function Home() {
           </button>
         )}
         <div className="home-note rise">
-          <span className="muted">{lang === 'ru' ? 'О сайте' : 'About'}</span>
           <p>{lang === 'ru'
             ? 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.'
             : 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.'}</p>
         </div>
-        <footer className="foot"><span>{t.footer}</span></footer>
       </main>
     </>
   );
