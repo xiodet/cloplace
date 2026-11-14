@@ -133,7 +133,7 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .brand.open .sh-closed { display: none; }
 .store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
 .brand.open .store-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 44px 16px; }
-.store-grid .item-card { will-change: transform; }
+.store-grid .item-card { }
 .next-brand { display: flex; flex-direction: column; gap: 4px; margin-top: 120px; padding-top: 20px; border-top: 1px solid var(--ink); }
 .nb-name { font-size: clamp(36px, 6vw, 96px); letter-spacing: -0.055em; line-height: 1; transition: padding .35s var(--ease-out); }
 .next-brand:hover .nb-name { padding-left: 16px; }
@@ -210,10 +210,13 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .index-page .ir-name { font-size: clamp(26px, 3.6vw, 54px); }
 .index-page .ir-city { text-align: right; }
 .index-row.hot { padding-left: 14px; }
-.map { position: relative; width: 100%; }
+@property --z { syntax: '<number>'; inherits: true; initial-value: 1; }
+.map { position: relative; width: 100%; overflow: hidden; border-radius: 10px; }
+.map-stage { position: absolute; inset: 0; transform-origin: 0 0; transition: transform 1.3s var(--ease), --z 1.3s var(--ease); }
+@media (prefers-reduced-motion: reduce) { .map-stage { transition: none; } }
 .map svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .map path { fill: var(--soft); stroke: var(--bg); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.pin { position: absolute; width: 24px; height: 24px; transform: translate(-50%, -50%); border-radius: 50%; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; color: var(--ink); z-index: 1; }
+.pin { position: absolute; width: 24px; height: 24px; transform: translate(-50%, -50%) scale(calc(1 / var(--z))); border-radius: 50%; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; color: var(--ink); z-index: 1; }
 .pin-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 10px; height: 10px; border-radius: 10px; background: var(--ink); color: var(--bg); font-size: 11px; line-height: 18px; text-align: center; box-shadow: 0 0 0 3px var(--bg); transition: transform .3s var(--ease-out), box-shadow .3s; }
 .pin-dot:not(:empty) { min-width: 18px; height: 18px; }
 .pin-label { position: absolute; left: calc(50% + 14px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; text-align: left; white-space: nowrap; font-size: 12px; line-height: 1.2; color: var(--muted); pointer-events: none; transition: color .2s; }

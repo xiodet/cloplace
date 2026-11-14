@@ -278,7 +278,7 @@ function IndexPage() {
             </div>
           </div>
           <div className="rise" style={{ '--i': 2 }}>
-            <BrandMap clusters={clusters} selected={place} hot={hotBrand} onSelect={setPlace} onHover={setHotPlace} />
+            <BrandMap clusters={clusters} selected={place} hot={hotBrand} onSelect={setPlace} onHover={setHotPlace} focus={origin} />
           </div>
         </div>
         <div className="row-head ix-head">
