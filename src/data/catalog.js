@@ -3,7 +3,7 @@ import demoNews from './news.demo.js';
 
 // Data written by scripts/ingest.mjs. Missing files are fine: we fall back to demo data.
 const generated = import.meta.glob('./generated/*.json', { eager: true, import: 'default' });
-const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0);
+const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title));
 const genNews = generated['./generated/news.json'] || [];
 const stores = generated['./generated/stores.json'] || {};
 // Photos cached by the ingest script (optional). A cached copy wins over the remote URL.

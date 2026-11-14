@@ -42,12 +42,6 @@ export const brands = [
     website: 'https://societydenobodies.com', instagram: 'society.de.nobodies',
   },
   {
-    ...base, id: 'vicinity', name: 'Vicinity', country: 'DE', city: 'Sindelfingen',
-    style: ['streetwear', 'ready-to-wear'],
-    description: { en: 'German streetwear brand making high-quality ready-to-wear.', ru: 'Немецкий стритвир-бренд, который делает качественную повседневную одежду.' },
-    website: 'https://vicinity.de', instagram: 'vicinity_de',
-  },
-  {
     ...base, id: 'club-de-presage', name: 'club de présage', country: 'DE', city: 'Dreieich',
     style: ['streetwear'],
     description: { en: 'German streetwear brand focused on high quality and statement pieces.', ru: 'Немецкий стритвир-бренд с упором на качество и вещи-высказывания.' },

@@ -21,7 +21,7 @@ const outDir = FIXTURE ? join(root, 'scripts/fixtures/out') : join(root, 'src/da
 const NEW_DAYS = 14;
 // --images: keep a small local copy of the first photo of the newest items (used by offline previews)
 const IMAGES = process.argv.includes('--images');
-const IMAGES_PER_BRAND = 8;
+const IMAGES_PER_BRAND = 6;
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
 function guessCategory(text) {
@@ -64,7 +64,7 @@ async function storeInfo(base) {
 
 async function shopify(brand, base, currency) {
   const data = JSON.parse(await fetchText(base.replace(/\/$/, '') + '/products.json?limit=250'));
-  return (data.products || []).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0)).map((p) => {
+  return (data.products || []).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0) && !/gift ?card|gutschein|e-?gift/i.test(p.title)).map((p) => {
     const prices = p.variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
     const compare = p.variants.map((v) => parseFloat(v.compare_at_price)).filter((n) => !isNaN(n));
     const price = Math.min(...prices);
@@ -148,7 +148,7 @@ async function cacheImages(items) {
     const file = join(dir, it.id + '.jpg');
     try { await readFile(file); continue; } catch {}
     try {
-      const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=480&format=jpg';
+      const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=420&format=jpg';
       const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await writeFile(file, Buffer.from(await res.arrayBuffer()));

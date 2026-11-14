@@ -49,7 +49,7 @@ const W = {
 };
 
 // Six showcases: brands with real collected photos first, then the hand-picked rest.
-const PICKS = ['nofaith-studios', 'antisocial-laboratory', 'scuffers', 'racer-worldwide', 'society-de-nobodies', 'jaded-london', 'vicinity', 'lomalab', 'lkc2000', 'fwwproject'];
+const PICKS = ['nofaith-studios', 'antisocial-laboratory', 'scuffers', 'racer-worldwide', 'society-de-nobodies', 'jaded-london', 'lomalab', 'lkc2000', 'fwwproject'];
 const FEATURED = [...PICKS.filter((id) => liveBrandIds.includes(id)), ...PICKS.filter((id) => !liveBrandIds.includes(id))].slice(0, 6);
 const PAGE = 12;
 const itemsByBrand = items.reduce((m, i) => ((m[i.brandId] ||= []).push(i), m), {});

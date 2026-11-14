@@ -7,7 +7,6 @@ export default {
   'fwwproject': { shopify: 'https://fwwpjct.com' },
   'nofaith-studios': { shopify: 'https://nofaithstudios.com' },
   'society-de-nobodies': { shopify: 'https://societydenobodies.com' },
-  'vicinity': { shopify: 'https://vicinity.de' },
   'club-de-presage': { shopify: 'https://clubpresage.com' },
   'divention': { shopify: 'https://divention.de' },
   'obvune': { shopify: 'https://obvune.com' },
