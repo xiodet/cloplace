@@ -230,7 +230,6 @@ function Showcase({ brand, n }) {
   return (
     <a className="showcase rise" style={{ '--i': n }} href={'#/brand/' + brand.id} onClick={(e) => openBrand(e, brand)}>
       <span className="sc-head">
-        {logo && <img className="sc-logo" src={logo} alt="" />}
         <span className="sc-name">{brand.name}</span>
         <span className="sc-city">{brand.city || countries[brand.country][lang]}</span>
       </span>
@@ -322,25 +321,51 @@ function NewsRow({ n, i }) {
 }
 
 function NewsPage() {
-  const { t, w } = useLang();
+  const { t, w, lang } = useLang();
   const [type, setType] = useState('all');
+  const [brand, setBrand] = useState('all');
+  const [sort, setSort] = useState('new');
+  const L = lang === 'ru'
+    ? { all: 'Все бренды', brand: 'Бренд', sort: 'Сортировка', new: 'Сначала новые', old: 'Сначала старые', az: 'По бренду, А–Я', empty: 'Новостей по этому фильтру пока нет', reset: 'Сбросить' }
+    : { all: 'All brands', brand: 'Brand', sort: 'Sort', new: 'Newest first', old: 'Oldest first', az: 'By brand, A–Z', empty: 'No news for this filter yet', reset: 'Reset' };
   const kinds = ['all', 'drop', 'sale', 'collab', 'news'].filter((k) => k === 'all' || news.some((n) => n.type === k));
-  const list = news.filter((n) => type === 'all' || n.type === type);
+  const withNews = brands.filter((b) => news.some((n) => n.brandId === b.id)).sort((a, b) => a.name.localeCompare(b.name));
+  const list = news
+    .filter((n) => brandById[n.brandId] && (type === 'all' || n.type === type) && (brand === 'all' || n.brandId === brand))
+    .sort((a, b) => sort === 'az'
+      ? brandById[a.brandId].name.localeCompare(brandById[b.brandId].name) || b.date.localeCompare(a.date)
+      : sort === 'old' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
   return (
     <>
       <TopBar active="news" />
       <main className="news-page">
         <div className="np-head rise">
           <p className="np-lead">{w.news_quote}</p>
-          <div className="chips">
-            {kinds.map((k) => (
-              <button key={k} className={type === k ? 'chip on' : 'chip'} onClick={() => setType(k)}>
-                {k === 'all' ? t.any : t.news_types[k]}
-              </button>
-            ))}
+          <div className="np-tools">
+            <div className="chips">
+              {kinds.map((k) => (
+                <button key={k} className={type === k ? 'chip on' : 'chip'} onClick={() => setType(k)}>
+                  {k === 'all' ? t.any : t.news_types[k]}
+                </button>
+              ))}
+            </div>
+            <label className="np-select"><span>{L.brand}</span>
+              <select value={brand} onChange={(e) => setBrand(e.target.value)}>
+                <option value="all">{L.all}</option>
+                {withNews.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+              </select>
+            </label>
+            <label className="np-select"><span>{L.sort}</span>
+              <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                <option value="new">{L.new}</option>
+                <option value="old">{L.old}</option>
+                <option value="az">{L.az}</option>
+              </select>
+            </label>
           </div>
         </div>
-        <div className="np-list">{list.map((n, i) => <NewsRow key={n.id} n={n} i={i} />)}</div>
+        <div className="np-list" key={type + brand + sort}>{list.map((n, i) => <NewsRow key={n.id} n={n} i={i} />)}</div>
+        {!list.length && <p className="np-empty">{L.empty}. <button className="chip on" onClick={() => { setType('all'); setBrand('all'); }}>{L.reset}</button></p>}
         <footer className="foot"><span>{t.footer}</span></footer>
       </main>
     </>

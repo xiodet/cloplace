@@ -159,6 +159,12 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .np-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px 32px; flex-wrap: wrap; padding-bottom: 28px; }
 .np-lead { color: var(--muted); font-size: 22px; letter-spacing: -0.03em; max-width: 26ch; line-height: 1.15; }
 .np-head .chips { margin: 0; }
+.np-tools { display: flex; align-items: flex-end; gap: 16px 32px; flex-wrap: wrap; }
+.np-select { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--muted); }
+.np-select select { font: inherit; font-size: 15px; color: var(--ink); padding: 4px 18px 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: var(--bg); outline: none; cursor: pointer; max-width: 200px; }
+.np-select select:focus-visible { border-bottom-color: var(--ink); }
+.np-tools .chips { padding-bottom: 7px; }
+.np-empty { padding: 40px 0; color: var(--muted); border-top: 1px solid var(--line); }
 .news-row { position: relative; border-top: 1px solid var(--line); }
 .news-row:last-child { border-bottom: 1px solid var(--line); }
 .nr-main { display: grid; grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1.25fr) 236px 28px; gap: 24px; align-items: center; padding: 22px 0; transition: padding .45s var(--ease), background .3s; }
