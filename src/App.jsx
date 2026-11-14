@@ -214,19 +214,15 @@ function SearchBar({ initial = '' }) {
 // ── Home: white canvas, one line, six showcases of different heights ──
 let homeGroup = 'clothes';
 let homeSort = 'def';
-// Items of one group for a brand; a brand without clothes still shows what it has.
-function groupItems(id, group) {
-  const all = itemsByBrand[id] || [];
-  const g = all.filter((i) => GROUPS[group].includes(i.category));
-  return g.length || group !== 'clothes' ? g : all;
-}
+// Items of one group for a brand: clothing shows clothing only, and so on.
+const groupItems = (id, group) => (itemsByBrand[id] || []).filter((i) => GROUPS[group].includes(i.category));
 function Home() {
   const { t, w, lang } = useLang();
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
   const [group, setGroupState] = useState(homeGroup);
   const [sort, setSortState] = useState(homeSort);
   const order = useMemo(() => {
-    const list = HOME_ORDER.filter((b) => group === 'clothes' || groupItems(b.id, group).length > 0);
+    const list = HOME_ORDER.filter((b) => groupItems(b.id, group).length > 0);
     const mid = (b) => { const p = groupItems(b.id, group).filter((i) => !i.demo && i.price > 0).map(priceUAH).sort((x, y) => x - y); return p.length ? p[p.length >> 1] : Infinity; };
     if (sort === 'az') return [...list].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'lo') return [...list].sort((a, b) => mid(a) - mid(b));

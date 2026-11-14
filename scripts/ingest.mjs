@@ -25,9 +25,27 @@ const IMAGE_QUOTA = { clothes: 6, acc: 2, shoes: 3 }; // photos cached per brand
 const ITEMS_PER_BRAND = 120; // newest items kept per brand, so the site stays light
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
-function guessCategory(text) {
-  const s = ' ' + text.toLowerCase() + ' ';
-  for (const [cat, words] of Object.entries(categoryWords)) if (words.some((w) => s.includes(w))) return cat;
+// Latin words must start a word ("steel" is not a "tee"); short ones must also end it ("baggy" is not a "bag").
+function hasWord(s, w) {
+  w = w.trim();
+  if (!/^[a-z-]+$/.test(w)) return s.includes(w);
+  return new RegExp(`(^|[^a-z])${w}${w.length <= 4 ? '(s|es)?([^a-z]|$)' : ''}`).test(s);
+}
+const extraWords = {
+  hoodie: ['crewneck', 'pullover', 'hooded', 'tracksuit'],
+  tee: ['shirt', 'polo', 'jersey', 'tank', 'top', 'dress', 'bodysuit', 'singlet'],
+  pants: ['jogger', 'short', 'skirt', 'legging', 'jorts', 'pant', 'chino', 'bottom', 'sweatpant', 'sweatshort', 'trackpant'],
+  jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell'],
+  shoes: ['boot', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
+  accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace'],
+};
+// The store's own product type is the best hint, then the title, then the tags.
+function guessCategory(type, title, tags) {
+  for (const text of [type, title, tags]) {
+    const s = String(text || '').toLowerCase();
+    if (!s) continue;
+    for (const [cat, words] of Object.entries(categoryWords)) if ([...words, ...(extraWords[cat] || [])].some((w) => hasWord(s, w))) return cat;
+  }
   return 'accessories';
 }
 
@@ -60,6 +78,11 @@ async function storeInfo(base) {
     const hit = policy.match(/(\d{1,2})\s*[- ]?\s*(?:calendar |business |working )?(?:days|day|tage|tagen|jours|días|dias|giorni|dni|днів|дней|дня)/i);
     if (hit && +hit[1] >= 7 && +hit[1] <= 60) info.returnDays = +hit[1];
   } catch {}
+  // The product feed is priced in the currency the store shows this visitor, which can differ from the shop's own.
+  try {
+    const hit = (await fetchText(root + '/')).match(/Shopify\.currency\s*=\s*\{\s*"active"\s*:\s*"([A-Z]{3})"/);
+    if (hit) info.priced = hit[1];
+  } catch {}
   return info;
 }
 
@@ -74,7 +97,7 @@ async function shopify(brand, base, currency) {
       id: `${brand.id}-${p.handle}`,
       brandId: brand.id,
       title: p.title,
-      category: guessCategory(`${p.product_type} ${p.title} ${(p.tags || []).join(' ')}`),
+      category: guessCategory(p.product_type, p.title, (Array.isArray(p.tags) ? p.tags : [p.tags]).join(' ')),
       price,
       compareAt: compareAt && compareAt > price ? compareAt : null,
       currency: currency || brand.currency,
@@ -223,7 +246,8 @@ async function main() {
       try {
         const info = FIXTURE ? null : await storeInfo(s.shopify).catch((e) => (report.push(`✗ ${brand.id} store info: ${e.message}`), null));
         if (info) stores[brand.id] = info;
-        const its = await shopify(brand, s.shopify, info?.currency);
+        const its = await shopify(brand, s.shopify, info?.priced || info?.currency);
+        if (info?.priced && info.priced !== info.currency) report.push(`• ${brand.id}: feed priced in ${info.priced}, shop currency ${info.currency}`);
         items.push(...its);
         news.push(...newsFromItems(brand, its));
         report.push(`✓ ${brand.id} shopify: ${its.length} items`);
