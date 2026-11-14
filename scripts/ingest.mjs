@@ -7,7 +7,7 @@
 // Writes src/data/generated/items.json and news.json. The site falls back to demo
 // data for any brand without collected items. News is merged with the previous run,
 // so the feed keeps its history.
-import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm, readdir, unlink } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,7 +21,8 @@ const outDir = FIXTURE ? join(root, 'scripts/fixtures/out') : join(root, 'src/da
 const NEW_DAYS = 14;
 // --images: keep a small local copy of the first photo of the newest items (used by offline previews)
 const IMAGES = process.argv.includes('--images');
-const IMAGES_PER_BRAND = 24;
+const IMAGES_PER_BRAND = +(process.env.IMAGES_PER_BRAND || 8); // photos cached per brand for the offline preview
+const ITEMS_PER_BRAND = 120; // newest items kept per brand, so the site stays light
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
 function guessCategory(text) {
@@ -64,7 +65,7 @@ async function storeInfo(base) {
 
 async function shopify(brand, base, currency) {
   const data = JSON.parse(await fetchText(base.replace(/\/$/, '') + '/products.json?limit=250'));
-  return (data.products || []).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0) && !/gift ?card|gutschein|e-?gift/i.test(p.title)).map((p) => {
+  return (data.products || []).slice(0, ITEMS_PER_BRAND * 2).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0) && !/gift ?card|gutschein|e-?gift/i.test(p.title)).map((p) => {
     const prices = p.variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
     const compare = p.variants.map((v) => parseFloat(v.compare_at_price)).filter((n) => !isNaN(n));
     const price = Math.min(...prices);
@@ -82,7 +83,7 @@ async function shopify(brand, base, currency) {
       inStock: p.variants.some((v) => v.available !== false),
       publishedAt: p.published_at || p.created_at,
     };
-  });
+  }).slice(0, ITEMS_PER_BRAND);
 }
 
 const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many);
@@ -141,12 +142,14 @@ async function cacheImages(items) {
   const dir = join(outDir, 'img');
   await mkdir(dir, { recursive: true });
   const perBrand = {};
+  const keep = new Set();
   let saved = 0;
   for (const it of items) {
     if (!it.image) continue;
     perBrand[it.brandId] = (perBrand[it.brandId] || 0) + 1;
     if (perBrand[it.brandId] > IMAGES_PER_BRAND) continue;
     const file = join(dir, it.id + '.jpg');
+    keep.add(it.id + '.jpg');
     try { await readFile(file); continue; } catch {}
     try {
       const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=480&format=jpg';
@@ -156,7 +159,13 @@ async function cacheImages(items) {
       saved++;
     } catch (e) { console.log(`✗ image ${it.id}: ${e.message}`); }
   }
-  console.log(`→ ${saved} new images cached`);
+  // drop photos of items that are no longer in the cached set, and unused cover images
+  let dropped = 0;
+  for (const f of await readdir(dir)) {
+    if (f.startsWith('_logo-') || keep.has(f)) continue;
+    await unlink(join(dir, f)); dropped++;
+  }
+  console.log(`→ ${saved} new images cached, ${dropped} stale removed`);
 }
 
 // Brand visuals from the store's homepage: logo mark (site icon) and a campaign photo (og:image).
@@ -185,7 +194,7 @@ async function brandMedia(brand, base) {
     const url = abs(attr(icon, 'href')).replace(/([?&])width=\d+/, '$1width=256').replace(/([?&])height=\d+/, '$1height=256');
     await save('logo', url).catch((e) => console.log(`✗ ${brand.id} ${e.message}`));
   }
-  if (og && attr(og, 'content')) {
+  if (false && og && attr(og, 'content')) { // cover images are not used by the site any more
     let url = abs(attr(og, 'content'));
     if (/cdn\.shopify\.com|\/cdn\/shop\//.test(url)) url = url.replace(/([?&])width=\d+/, '$1width=1400');
     await save('hero', url).catch((e) => console.log(`✗ ${brand.id} ${e.message}`));

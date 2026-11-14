@@ -604,7 +604,7 @@ function BrandPage({ brand }) {
               <div><dt>{w.country}</dt><dd>{pick(countries[brand.country], lang)}{brand.city ? ', ' + brand.city : ''}</dd></div>
               {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
               <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
-              <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
+              {brand.instagram && <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>}
               <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => pick(regions[r], lang)).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{pick(brand.shippingNote, lang)}</small>}</dd></div>
               <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : <span className="muted">{w.see_store}</span>}{brand.returns?.days ? unv('returns') : null}{brand.returnsNote && <small>{pick(brand.returnsNote, lang)}</small>}</dd></div>
             </dl>
