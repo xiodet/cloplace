@@ -301,6 +301,9 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
   .top { display: grid; grid-template-columns: 1fr auto; align-content: center; }
   .nav { gap: 18px; padding: 9px 14px; justify-content: space-between; overflow-x: auto; grid-column: 1 / -1; order: 3; }
   .prefs { order: 2; }
+  .top[data-nav] { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+  .top[data-nav] .nav { grid-column: 1 / -1; order: 3; justify-content: space-between; padding: 0; margin: 0; }
+  .top[data-nav] .prefs { margin: 0; border: 0; padding: 0; }
   .store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .store-head { flex-wrap: wrap; row-gap: 8px; }
   .store-groups { order: 5; width: 100%; flex-wrap: nowrap; }
@@ -355,13 +358,29 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 /* top bar: menu in the middle-right pill, language and currency as two quiet buttons after it */
 .top-right { display: flex; align-items: center; gap: 18px; }
 .prefs { display: flex; align-items: center; gap: 4px; }
-.pref { position: relative; }
-.pref-btn { background: none; border: 0; padding: 8px 8px; font: inherit; font-size: 14px; color: var(--muted); cursor: pointer; border-radius: 6px; min-width: 34px; }
-.pref-btn:hover, .pref-btn[aria-expanded="true"] { color: var(--ink); background: var(--soft); }
-.pref-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; display: flex; flex-direction: column; background: var(--bg); border-radius: 8px; padding: 6px; box-shadow: 0 8px 30px rgba(0,0,0,.10), 0 0 0 1px var(--line); min-width: 84px; }
-.pref-menu button { background: none; border: 0; padding: 7px 10px; font: inherit; font-size: 14px; text-align: left; color: var(--muted); cursor: pointer; border-radius: 5px; white-space: nowrap; }
-.pref-menu button:hover { background: var(--soft); color: var(--ink); }
-.pref-menu button.on { color: var(--ink); }
+.prefs { position: relative; }
+.pref-btn { background: none; border: 0; padding: 8px 0 8px 10px; font: inherit; font-size: 15px; color: var(--ink); cursor: pointer; white-space: nowrap; letter-spacing: -0.01em; }
+.pref-btn:hover { opacity: .6; }
+.pref-sep { color: var(--muted); margin: 0 .45em; }
+.pref-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; display: flex; gap: 28px; background: var(--bg); border-radius: 8px; padding: 14px 18px; box-shadow: 0 8px 30px rgba(0,0,0,.10), 0 0 0 1px var(--line); }
+.pm-col { display: flex; flex-direction: column; gap: 2px; min-width: 70px; }
+.pm-h { font-size: 12px; color: var(--muted); padding-bottom: 6px; }
+.pref-menu button { background: none; border: 0; padding: 4px 0; font: inherit; font-size: 15px; text-align: left; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.pref-menu button:hover, .pref-menu button.on { color: var(--ink); }
+
+/* header layouts without the grey pill */
+.top[data-nav] .nav { background: none; padding: 0; border-radius: 0; gap: 26px; }
+.top[data-nav] .nav a.on { color: var(--ink); }
+@media (min-width: 861px) {
+.top[data-nav="left"] { display: flex; justify-content: flex-start; gap: 56px; }
+.top[data-nav="left"] .prefs { margin-left: auto; }
+.top[data-nav="right"] { display: flex; justify-content: flex-start; }
+.top[data-nav="right"] .nav { margin-left: auto; }
+.top[data-nav="right"] .prefs { margin-left: 26px; padding-left: 16px; border-left: 1px solid var(--line); }
+.top[data-nav="spread"] { display: grid; grid-template-columns: 1fr 2fr 1fr; }
+.top[data-nav="spread"] .nav { justify-content: space-between; padding: 0 4vw; }
+}
+
 .sp-gender { margin: 0 0 0 auto; gap: 18px; font-size: 16px; align-self: center; }
 @media (max-width: 860px) { .sp-gender { margin: 0; order: 3; width: 100%; } }
 

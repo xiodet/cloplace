@@ -165,8 +165,10 @@ export default function App() {
   return <LangContext.Provider value={{ lang, t: dict[lang], w: W[lang], setLang, cur, setCur }}>{body}</LangContext.Provider>;
 }
 
-// A quiet setting in the top bar: shows the current value, opens a short list on click.
-function Pref({ label, value, options, show, onPick }) {
+// Language and currency as one quiet "UA / EUR" button; a small panel with both lists opens on click.
+const PREF_COPY = { en: ['Language', 'Currency'], ru: ['Язык', 'Валюта'], uk: ['Мова', 'Валюта'] };
+function Settings() {
+  const { lang, setLang, cur, setCur } = useLang();
   const [open, setOpen] = useState(false);
   const box = useRef(null);
   useEffect(() => {
@@ -176,12 +178,20 @@ function Pref({ label, value, options, show, onPick }) {
     document.addEventListener('keydown', close);
     return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', close); };
   }, [open]);
+  const [lt, ct] = PREF_COPY[lang];
   return (
-    <span className="pref" ref={box}>
-      <button className="pref-btn" aria-label={label} aria-expanded={open} onClick={() => setOpen(!open)}>{show || options.find((o) => o[0] === value)[1]}</button>
+    <span className="prefs" ref={box}>
+      <button className="pref-btn" aria-expanded={open} aria-label={lt + ' / ' + ct} onClick={() => setOpen(!open)}>
+        {LANGS.find((l) => l[0] === lang)[1]}<span className="pref-sep">/</span>{cur}
+      </button>
       {open && (
-        <span className="pref-menu" role="menu">
-          {options.map(([k, l]) => <button key={k} role="menuitem" className={k === value ? 'on' : ''} onClick={() => { onPick(k); setOpen(false); }}>{l}</button>)}
+        <span className="pref-menu">
+          <span className="pm-col"><span className="pm-h">{lt}</span>
+            {LANGS.map(([k, l]) => <button key={k} className={k === lang ? 'on' : ''} onClick={() => setLang(k)}>{l}</button>)}
+          </span>
+          <span className="pm-col"><span className="pm-h">{ct}</span>
+            {CURS.map(([k, sign]) => <button key={k} className={k === cur ? 'on' : ''} onClick={() => setCur(k)}>{k} <span className="muted">{sign}</span></button>)}
+          </span>
         </span>
       )}
     </span>
@@ -211,11 +221,14 @@ function Wordmark() {
   );
 }
 
+// Header layout: 'left' (menu next to the name), 'right' (menu next to the settings), 'spread' (menu across the middle).
+const NAV_STYLE = 'left';
+
 // ── Top bar on every page: wordmark left, quiet nav right.
 function TopBar({ active }) {
-  const { lang, t, setLang, cur, setCur } = useLang();
+  const { t } = useLang();
   return (
-    <header className="top">
+    <header className="top" data-nav={NAV_STYLE}>
       <Wordmark />
       <nav className="nav">
         <a href="#/" className={active === 'home' ? 'on' : ''}>{t.nav_brands}</a>
@@ -223,10 +236,7 @@ function TopBar({ active }) {
         <a href="#/brands" className={active === 'index' ? 'on' : ''}>{t.nav_map}</a>
         <a href="#/news" className={active === 'news' ? 'on' : ''}>{t.nav_news}</a>
       </nav>
-      <div className="prefs">
-        <Pref label="Language" value={lang} options={LANGS} onPick={setLang} />
-        <Pref label="Currency" value={cur} options={CURS.map(([c, sign]) => [c, sign + ' ' + c])} show={CURS.find((c) => c[0] === cur)[1]} onPick={setCur} />
-      </div>
+      <Settings />
     </header>
   );
 }
