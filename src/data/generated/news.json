@@ -1,1 +1,272 @@
-[]
+[
+ {
+  "id": "nofaith-studios-sale-2026-11",
+  "brandId": "nofaith-studios",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%"
+  },
+  "summary": {
+   "en": "6 items discounted.",
+   "ru": "6 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://nofaithstudios.com/products/japanese-workers-cut"
+  }
+ },
+ {
+  "id": "society-de-nobodies-sale-2026-11",
+  "brandId": "society-de-nobodies",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −43%",
+   "ru": "Скидки до −43%"
+  },
+  "summary": {
+   "en": "7 items discounted.",
+   "ru": "7 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://societydenobodies.com/products/braun-longsleeve"
+  }
+ },
+ {
+  "id": "club-de-presage-sale-2026-11",
+  "brandId": "club-de-presage",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −38%",
+   "ru": "Скидки до −38%"
+  },
+  "summary": {
+   "en": "3 items discounted.",
+   "ru": "3 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://clubpresage.com/products/scared-of-girls-club-1"
+  }
+ },
+ {
+  "id": "divention-sale-2026-11",
+  "brandId": "divention",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −62%",
+   "ru": "Скидки до −62%"
+  },
+  "summary": {
+   "en": "46 items discounted.",
+   "ru": "46 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://divention.de/products/cicada-beanie-4"
+  }
+ },
+ {
+  "id": "racer-worldwide-sale-2026-11",
+  "brandId": "racer-worldwide",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −79%",
+   "ru": "Скидки до −79%"
+  },
+  "summary": {
+   "en": "102 items discounted.",
+   "ru": "102 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://racerworldwide.net/products/black-pony-hair-boots"
+  }
+ },
+ {
+  "id": "lomalab-sale-2026-11",
+  "brandId": "lomalab",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −30%",
+   "ru": "Скидки до −30%"
+  },
+  "summary": {
+   "en": "8 items discounted.",
+   "ru": "8 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://lomalab.store/products/everyday-longsleeve-double-sleeve-tee-set"
+  }
+ },
+ {
+  "id": "jaded-london-sale-2026-11",
+  "brandId": "jaded-london",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%"
+  },
+  "summary": {
+   "en": "62 items discounted.",
+   "ru": "62 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://jadedman.com/products/cara-faux-fur-scarf-men"
+  }
+ },
+ {
+  "id": "undersoul-sale-2026-11",
+  "brandId": "undersoul",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −52%",
+   "ru": "Скидки до −52%"
+  },
+  "summary": {
+   "en": "21 items discounted.",
+   "ru": "21 вещей со скидкой."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://undersoulwear.com/products/raw-denim-bomber-jacket"
+  }
+ },
+ {
+  "id": "jaded-london-drop-2026-11-13",
+  "brandId": "jaded-london",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 145",
+   "ru": "Новинки в магазине: 145"
+  },
+  "summary": {
+   "en": "New in: Black Diamante Hardcore Joggers, Black Diamante Hardcore Joggers, Printed Graffiti Indigo Colossus Jeans…",
+   "ru": "Новинки: Black Diamante Hardcore Joggers, Black Diamante Hardcore Joggers, Printed Graffiti Indigo Colossus Jeans…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://jadedman.com/products/black-diamante-hardcore-joggers-ww"
+  }
+ },
+ {
+  "id": "society-de-nobodies-drop-2026-11-11",
+  "brandId": "society-de-nobodies",
+  "type": "drop",
+  "date": "2026-11-11",
+  "title": {
+   "en": "New in store: 5",
+   "ru": "Новинки в магазине: 5"
+  },
+  "summary": {
+   "en": "New in: KONSUM CAMO BOMBER (SS26), MARIA SHIRT (FW25), SPIRITUAL DENIM (SS21)…",
+   "ru": "Новинки: KONSUM CAMO BOMBER (SS26), MARIA SHIRT (FW25), SPIRITUAL DENIM (SS21)…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://societydenobodies.com/products/konsum-camo-bomber-ss26"
+  }
+ },
+ {
+  "id": "obvune-drop-2026-11-08",
+  "brandId": "obvune",
+  "type": "drop",
+  "date": "2026-11-08",
+  "title": {
+   "en": "New in store: 13",
+   "ru": "Новинки в магазине: 13"
+  },
+  "summary": {
+   "en": "New in: 4 Pocket Zip Hoodie, Lounge Pants, Brocade Pants…",
+   "ru": "Новинки: 4 Pocket Zip Hoodie, Lounge Pants, Brocade Pants…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://obvune.com/products/4-pocket-zip-hoodie"
+  }
+ },
+ {
+  "id": "scuffers-drop-2026-11-08",
+  "brandId": "scuffers",
+  "type": "drop",
+  "date": "2026-11-08",
+  "title": {
+   "en": "New in store: 33",
+   "ru": "Новинки в магазине: 33"
+  },
+  "summary": {
+   "en": "New in: New Raw Black Puffer, New Raw Green Puffer, Icecream Brown Longsleeve…",
+   "ru": "Новинки: New Raw Black Puffer, New Raw Green Puffer, Icecream Brown Longsleeve…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://scuffers.com/products/new-raw-black-puffer"
+  }
+ },
+ {
+  "id": "divention-drop-2026-11-04",
+  "brandId": "divention",
+  "type": "drop",
+  "date": "2026-11-04",
+  "title": {
+   "en": "New in store: 2",
+   "ru": "Новинки в магазине: 2"
+  },
+  "summary": {
+   "en": "New in: Cicada Beanie, Rhombus Belt Leo",
+   "ru": "Новинки: Cicada Beanie, Rhombus Belt Leo"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://divention.de/products/cicada-beanie-4"
+  }
+ },
+ {
+  "id": "2819-jewelry-drop-2026-11-04",
+  "brandId": "2819-jewelry",
+  "type": "drop",
+  "date": "2026-11-04",
+  "title": {
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1"
+  },
+  "summary": {
+   "en": "New in: GIFT CARD [DIGITAL]",
+   "ru": "Новинки: GIFT CARD [DIGITAL]"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://2819jewelry.de/products/gift-card"
+  }
+ },
+ {
+  "id": "nofaith-studios-drop-2026-11-03",
+  "brandId": "nofaith-studios",
+  "type": "drop",
+  "date": "2026-11-03",
+  "title": {
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1"
+  },
+  "summary": {
+   "en": "New in: PULL OVER CONCRETE LEATHER  BOMBER",
+   "ru": "Новинки: PULL OVER CONCRETE LEATHER  BOMBER"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://nofaithstudios.com/products/pull-over-bomber"
+  }
+ }
+]
