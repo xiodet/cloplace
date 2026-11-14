@@ -5,7 +5,10 @@ on:
     inputs:
       handles:
         description: Space-separated Instagram handles
-        required: true
+        required: false
+      domains:
+        description: Space-separated store domains to check directly
+        required: false
 jobs:
   discover:
     runs-on: ubuntu-latest
@@ -17,3 +20,4 @@ jobs:
         timeout-minutes: 40
         env:
           HANDLES: ${{ inputs.handles }}
+          DOMAINS: ${{ inputs.domains }}

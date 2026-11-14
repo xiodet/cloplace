@@ -48,7 +48,9 @@ async function probe(handle, domain) {
   } catch { return null; }
 }
 
-const jobs = handles.flatMap((h) => candidates(h).map((d) => [h, d]));
+// DOMAINS="a.com b.de" checks exact stores instead of guessing from handles.
+const domains = (process.env.DOMAINS || '').split(/[\s,]+/).filter(Boolean);
+const jobs = [...handles.flatMap((h) => candidates(h).map((d) => [h, d])), ...domains.map((d) => [d, d])];
 const found = [];
 let i = 0;
 await Promise.all(Array.from({ length: 80 }, async () => {
@@ -61,4 +63,4 @@ await Promise.all(Array.from({ length: 80 }, async () => {
 found.sort((a, b) => a.handle.localeCompare(b.handle));
 for (const f of found) console.log((f.site ? 'SITE ' : 'FOUND ') + JSON.stringify(f));
 const hit = new Set(found.map((f) => f.handle));
-console.log('MISSING ' + handles.filter((h) => !hit.has(h)).join(' '));
+console.log('MISSING ' + [...handles, ...domains].filter((h) => !hit.has(h)).join(' '));
