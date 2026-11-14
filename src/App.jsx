@@ -33,7 +33,7 @@ const W = {
     index_quote: 'Every brand in the index, A to Z',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     search_quote: 'Describe what you want in plain words',
-    next: 'Next brand', see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
+    next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
   },
   ru: {
     brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
@@ -44,7 +44,7 @@ const W = {
     index_quote: 'Все бренды индекса, от A до Z',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     search_quote: 'Опиши обычными словами, что ищешь',
-    next: 'Следующий бренд', see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
+    next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
   },
 };
 
@@ -52,6 +52,8 @@ const W = {
 const PICKS = ['nofaith-studios', 'antisocial-laboratory', 'scuffers', 'racer-worldwide', 'society-de-nobodies', 'jaded-london', 'lomalab', 'lkc2000', 'fwwproject'];
 const FEATURED = [...PICKS.filter((id) => liveBrandIds.includes(id)), ...PICKS.filter((id) => !liveBrandIds.includes(id))].slice(0, 6);
 const PAGE = 12;
+const BATCH = 6;
+let homeCount = BATCH; // remembered so coming back from a brand keeps your place
 const itemsByBrand = items.reduce((m, i) => ((m[i.brandId] ||= []).push(i), m), {});
 const longestWord = (s) => Math.max(...s.split(/\s+/).map((w) => w.length));
 
@@ -174,13 +176,24 @@ function SearchBar({ initial = '' }) {
 // ── Home: white canvas, one line, six showcases of different heights ──
 function Home() {
   const { t, w } = useLang();
-  const list = FEATURED.map((id) => brandById[id]).filter(Boolean);
+  // featured first, then everyone else; more showcases arrive as you scroll (or by button)
+  const order = useMemo(() => [...FEATURED.map((id) => brandById[id]).filter(Boolean), ...brands.filter((b) => !FEATURED.includes(b.id))], []);
+  const [count, setCount] = useState(homeCount);
+  const more = useRef(null);
+  useEffect(() => { homeCount = count; }, [count]);
+  useEffect(() => {
+    const el = more.current;
+    if (!el || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) setCount((c) => Math.min(order.length, c + BATCH)); }, { rootMargin: '200px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [count, order.length]);
   return (
     <>
       <TopBar active="home" />
       <main className="home">
         <div className="title-row">
-          <span className="label rise">{w.featured}</span>
+          <span className="label rise">{t.nav_brands} · {brands.length}</span>
           <div className="giant-clip"><h1 className="home-title">Drop Index</h1></div>
         </div>
         <div className="intro rise">
@@ -191,8 +204,13 @@ function Home() {
           </div>
         </div>
         <div className="showcases">
-          {list.map((b, i) => <Showcase key={b.id} brand={b} n={i} />)}
+          {order.slice(0, count).map((b, i) => <Showcase key={b.id} brand={b} n={i % BATCH} />)}
         </div>
+        {count < order.length && (
+          <button className="more home-more" ref={more} onClick={() => setCount(Math.min(order.length, count + BATCH))}>
+            {w.more_brands(order.length - count)}
+          </button>
+        )}
         <div className="home-search rise">
           <span className="label">{t.nav_search}</span>
           <SearchBar />

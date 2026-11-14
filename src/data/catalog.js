@@ -3,12 +3,15 @@ import demoNews from './news.demo.js';
 
 // Data written by scripts/ingest.mjs. Missing files are fine: we fall back to demo data.
 const generated = import.meta.glob('./generated/*.json', { eager: true, import: 'default' });
-const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title));
 const genNews = generated['./generated/news.json'] || [];
 const stores = generated['./generated/stores.json'] || {};
 // Photos cached by the ingest script (optional). A cached copy wins over the remote URL.
 const cached = import.meta.glob('./generated/img/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
 const cachedImage = (id) => cached[`./generated/img/${id}.jpg`] || null;
+// The offline preview cannot load remote photos, so it lists only items with a cached one.
+const PREVIEW = import.meta.env.MODE === 'preview' || import.meta.env.MODE === 'single';
+const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title))
+  .filter((i) => !PREVIEW || cachedImage(i.id));
 
 // Brand = hand-written entry + facts the store publishes about itself (those win).
 const EU = ['DE', 'FR', 'PL', 'IT', 'ES', 'NL'];
