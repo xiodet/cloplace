@@ -5,6 +5,9 @@ import demoNews from './news.demo.js';
 const generated = import.meta.glob('./generated/*.json', { eager: true, import: 'default' });
 const genItems = generated['./generated/items.json'] || [];
 const genNews = generated['./generated/news.json'] || [];
+// Photos cached by the ingest script (optional). A cached copy wins over the remote URL.
+const cached = import.meta.glob('./generated/img/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
+const cachedImage = (id) => cached[`./generated/img/${id}.jpg`] || null;
 
 export const categories = {
   hoodie: { en: 'Hoodies', ru: 'Худи' },
@@ -88,7 +91,7 @@ const realByBrand = new Set(genItems.map((i) => i.brandId));
 export const items = [
   ...genItems,
   ...brands.filter((b) => !realByBrand.has(b.id)).flatMap(demoItemsFor),
-].map((i) => ({ ...i, priceUAH: Math.round(i.price * (toUAH[i.currency] || 1)) }));
+].map((i) => ({ ...i, image: cachedImage(i.id) || i.image, priceUAH: Math.round(i.price * (toUAH[i.currency] || 1)) }));
 
 export const news = [...genNews, ...demoNews].sort((a, b) => b.date.localeCompare(a.date));
 

@@ -19,6 +19,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURE = process.argv.includes('--fixture');
 const outDir = FIXTURE ? join(root, 'scripts/fixtures/out') : join(root, 'src/data/generated');
 const NEW_DAYS = 14;
+// --images: keep a small local copy of the first photo of the newest items (used by offline previews)
+const IMAGES = process.argv.includes('--images');
+const IMAGES_PER_BRAND = 12;
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
 function guessCategory(text) {
@@ -53,7 +56,7 @@ async function shopify(brand, base) {
     const price = Math.min(...prices);
     const compareAt = compare.length ? Math.max(...compare) : null;
     return {
-      id: `${brand.id}-${p.id}`,
+      id: `${brand.id}-${p.handle}`,
       brandId: brand.id,
       title: p.title,
       category: guessCategory(`${p.product_type} ${p.title} ${(p.tags || []).join(' ')}`),
@@ -119,6 +122,28 @@ async function rss(brand, url) {
   });
 }
 
+async function cacheImages(items) {
+  const dir = join(outDir, 'img');
+  await mkdir(dir, { recursive: true });
+  const perBrand = {};
+  let saved = 0;
+  for (const it of items) {
+    if (!it.image) continue;
+    perBrand[it.brandId] = (perBrand[it.brandId] || 0) + 1;
+    if (perBrand[it.brandId] > IMAGES_PER_BRAND) continue;
+    const file = join(dir, it.id + '.jpg');
+    try { await readFile(file); continue; } catch {}
+    try {
+      const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=640&format=jpg';
+      const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      await writeFile(file, Buffer.from(await res.arrayBuffer()));
+      saved++;
+    } catch (e) { console.log(`✗ image ${it.id}: ${e.message}`); }
+  }
+  console.log(`→ ${saved} new images cached`);
+}
+
 async function readJSON(path, fallback) {
   try { return JSON.parse(await readFile(path, 'utf8')); } catch { return fallback; }
 }
@@ -156,6 +181,7 @@ async function main() {
   await mkdir(outDir, { recursive: true });
   await writeFile(join(outDir, 'items.json'), JSON.stringify(items, null, 1));
   await writeFile(join(outDir, 'news.json'), JSON.stringify(news, null, 1));
+  if (IMAGES && !FIXTURE) await cacheImages(items);
   console.log(report.join('\n'));
   console.log(`→ ${items.length} items, ${news.length} news written to ${outDir}`);
 

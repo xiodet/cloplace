@@ -4,6 +4,7 @@
 // Candidates below are unverified guesses: the script skips any source that fails,
 // and logs it so it can be fixed or removed.
 export default {
+  'nofaith-studios': { shopify: 'https://nofaithstudios.com' }, // verified 2026-11-14
   'represent': { shopify: 'https://representclo.com' },
   'broken-planet': { shopify: 'https://brokenplanet.com' },
   'daily-paper': { shopify: 'https://www.dailypaperclothing.com' },

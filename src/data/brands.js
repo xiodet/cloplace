@@ -7,16 +7,25 @@
 export const brands = [
   // ── Ukraine ─────────────────────────────────────────────
   {
-    id: 'nofaith-studios', name: 'Nofaith Studios', country: 'UA', city: 'Kyiv', founded: null,
-    style: ['streetwear', 'graphic'],
+    id: 'nofaith-studios', name: 'No/Faith Studios', country: 'DE', city: 'Cologne', founded: 2017,
+    style: ['denim', 'leather', 'streetwear'],
     description: {
-      en: 'Ukrainian streetwear label with bold graphics, heavyweight hoodies and limited drops.',
-      ru: 'Украинский стритвир-бренд: смелые принты, плотные худи и лимитированные дропы.',
+      en: 'Young independent brand founded in 2017 by Luis Dobbelgarten in a bedroom in the Eifel, starting with printed shirts and reworked hoodies. Today a small team between the Eifel, Berlin and Paris, specialised in denim; leather goods and footwear are made in Italy.',
+      ru: 'Молодой независимый бренд, основанный в 2017 году Луисом Доббельгартеном в спальне в Айфеле: всё началось с футболок с принтами и переделанных худи. Сейчас это небольшая команда между Айфелем, Берлином и Парижем, специализация бренда — деним; кожаные вещи и обувь шьют в Италии.',
     },
-    website: null, instagram: null,
-    shipping: ['UA', 'EU', 'WORLD'], returns: { days: 14 }, currency: 'UAH',
+    website: 'https://nofaithstudios.com', instagram: 'nofaithstudios',
+    shipping: ['WORLD'], returns: { days: 14 }, currency: 'EUR',
+    shippingNote: {
+      en: 'Worldwide with DHL. Orders leave in 3–5 business days; leather jackets ship 4 weeks after purchase. Outside the EU customs duties may apply.',
+      ru: 'По всему миру через DHL. Отправка за 3–5 рабочих дней; кожаные куртки отправляют через 4 недели после покупки. За пределами ЕС возможны таможенные платежи.',
+    },
+    returnsNote: {
+      en: 'EU only, through the return portal; return shipping is paid by the customer. Outside the EU: defective items only.',
+      ru: 'Только для ЕС, через портал возвратов; обратную доставку оплачивает покупатель. За пределами ЕС возврат только при браке.',
+    },
     palette: ['#1b1b1b', '#e8e2d6', '#c23b22'],
-    verified: [],
+    verified: ['name', 'description', 'website', 'instagram', 'shipping', 'returns'],
+    checkedAt: '2026-11-14',
   },
   {
     id: 'sndct-kyiv', name: 'SNDCT KYIV', country: 'UA', city: 'Kyiv', founded: null,

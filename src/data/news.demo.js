@@ -6,12 +6,6 @@ const d = (daysAgo) => new Date(Date.now() - daysAgo * 864e5).toISOString().slic
 
 export default [
   {
-    id: 'demo-1', brandId: 'nofaith-studios', type: 'drop', date: d(1),
-    title: { en: 'New winter capsule', ru: 'Новая зимняя капсула' },
-    summary: { en: 'Example: a drop of heavyweight hoodies and knit beanies.', ru: 'Пример: дроп плотных худи и вязаных шапок.' },
-    source: { kind: 'demo', url: null }, demo: true,
-  },
-  {
     id: 'demo-2', brandId: 'daily-paper', type: 'sale', date: d(2),
     title: { en: 'Season sale up to −30%', ru: 'Сезонная распродажа до −30%' },
     summary: { en: 'Example: discounts on outerwear and knitwear.', ru: 'Пример: скидки на верхнюю одежду и трикотаж.' },

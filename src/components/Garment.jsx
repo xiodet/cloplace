@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 // Placeholder artwork for items without a photo: a flat garment silhouette, no outlines.
 // Monochrome on purpose; real photos replace these once the store feed is ingested.
 const paths = {
@@ -14,7 +16,9 @@ const tones = [['#f1f1f0', '#1d1f22'], ['#e9e9e8', '#ffffff'], ['#f1f1f0', '#b9b
 
 export default function Garment({ item, tone = 0 }) {
   const [bg, fg] = tones[tone % tones.length];
-  if (item.image) return <img className="tile-img" src={item.image} alt={item.title} loading="lazy" />;
+  const [broken, setBroken] = useState(false);
+  // If a photo cannot load (offline preview, blocked host), fall back to the silhouette.
+  if (item.image && !broken) return <img className="tile-img" src={item.image} alt={item.title} loading="lazy" onError={() => setBroken(true)} />;
   return (
     <svg className="tile-img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label={item.title} style={{ background: bg }}>
       <g transform="translate(50 50) scale(0.62) translate(-50 -50)">
