@@ -222,7 +222,7 @@ function Wordmark() {
 }
 
 // Header layout: 'left' (menu next to the name), 'right' (menu next to the settings), 'spread' (menu across the middle).
-const NAV_STYLE = 'left';
+const NAV_STYLE = 'right';
 
 // ── Top bar on every page: wordmark left, quiet nav right.
 function TopBar({ active }) {
