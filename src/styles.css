@@ -362,3 +362,5 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .pref-menu button { background: none; border: 0; padding: 7px 10px; font: inherit; font-size: 14px; text-align: left; color: var(--muted); cursor: pointer; border-radius: 5px; white-space: nowrap; }
 .pref-menu button:hover { background: var(--soft); color: var(--ink); }
 .pref-menu button.on { color: var(--ink); }
+.sp-gender { margin: 0 0 0 auto; gap: 18px; font-size: 16px; align-self: center; }
+@media (max-width: 860px) { .sp-gender { margin: 0; order: 3; width: 100%; } }

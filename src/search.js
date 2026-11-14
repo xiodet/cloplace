@@ -3,15 +3,24 @@
 // "ukrainian tee under €60 with returns" →  { category: 'tee', maxUAH: 2700, country: 'UA', returns: true }
 import { toUAH } from './data/rates.js';
 
+// Order matters: the first type whose word appears wins ("denim shorts" are shorts, "denim jacket" is a jacket).
 export const categoryWords = {
-  hoodie: ['худи', 'худі', 'худак', 'толстовк', 'кофт', 'свитшот', 'hoodie', 'hoody', 'sweatshirt', 'zip'],
-  tee: ['футболк', 'тишк', 'майк', 't-shirt', 'tshirt', 'tee', 'лонгслив', 'longsleeve'],
-  pants: ['штан', 'брюк', 'джинс', 'карго', 'pants', 'trousers', 'jeans', 'denim', 'cargo', 'шорт', 'shorts'],
-  jacket: ['куртк', 'пуховик', 'ветровк', 'бомбер', 'пальто', 'jacket', 'puffer', 'coat', 'bomber', 'outerwear', 'верхн'],
+  shorts: ['шорт', 'бермуд', 'shorts', 'bermuda', 'jorts'],
+  hoodie: ['худи', 'худі', 'худак', 'толстовк', 'кофт', 'свитшот', 'світшот', 'hoodie', 'hoody', 'sweatshirt', 'zip'],
+  tee: ['футболк', 'тишк', 'майк', 't-shirt', 'tshirt', 'tee', 'лонгслив', 'лонгслів', 'longsleeve'],
+  jacket: ['куртк', 'пуховик', 'ветровк', 'вітровк', 'бомбер', 'пальто', 'жилет', 'jacket', 'puffer', 'coat', 'bomber', 'outerwear', 'верхн'],
   knit: ['свитер', 'светр', 'трикотаж', 'кардиган', 'knit', 'sweater', 'cardigan', 'jumper'],
+  shirt: ['рубашк', 'сорочк', 'shirt'],
+  skirt: ['юбк', 'спідниц', 'плать', 'сукн', 'skirt', 'dress'],
+  jeans: ['джинс', 'jeans', 'denim'],
+  pants: ['штан', 'брюк', 'карго', 'pants', 'trousers', 'cargo'],
   cap: ['кепк', 'шапк', 'бини', 'панам', 'cap', ' hat', 'beanie'],
-  shoes: ['взутт', 'черевик', 'кроссовк', 'кросовк', 'кросівк', 'кеды', 'кед', 'обувь', 'ботинк', 'sneaker', 'shoe', 'boots', 'runner'],
-  accessories: ['аксесуар', 'шкарпет', 'сумк', 'шопер', 'носк', 'аксессуар', 'bag', 'tote', 'socks', 'accessor'],
+};
+
+// "women"/"жен" before "men"/"муж": the female words contain the male ones in English.
+const genderWords = {
+  w: /(^|[^a-z])(women|womens|woman|female|ladies|girls?)([^a-z]|$)|(жен|жін|девуш|дівч)[а-яіїє']*/,
+  m: /(^|[^a-z])(men|mens|man|male|guys?)([^a-z]|$)|(муж|чолов|парн|хлоп)[а-яіїє']*/,
 };
 
 const shipWords = [
@@ -51,6 +60,11 @@ export function parseQuery(raw) {
   for (const [cat, words] of Object.entries(categoryWords)) {
     const w = words.find((x) => q.includes(x));
     if (w) { out.category = cat; used.push(w); break; }
+  }
+
+  for (const [g, re] of Object.entries(genderWords)) {
+    const m = q.match(re);
+    if (m) { out.gender = g; used.push(m[0].trim()); break; }
   }
 
   // price: "до 3000", "under 3000", "<3000", "дешевле 3000", "от 1000", "1000-3000"
@@ -104,7 +118,7 @@ export function parseQuery(raw) {
   for (const u of used) rest = rest.replace(u, ' ');
   rest = rest
     .replace(/(с доставкой|з доставкою|доставка|доставкой|доставкою|with shipping|shipping|ship|delivery|deliver|с возвратом|з поверненням|возврат|return[s]?|скидк\S*|sale|грн|uah|eur|€|£|\$)/g, ' ')
-    .replace(/(?<=\s)(в|у|на|и|і|й|та|с|со|з|зі|із|до|для|по|to|in|for|with|and|the|a|of)(?=\s)/g, ' ')
+    .replace(/(?<=\s)(в|у|на|и|і|й|та|с|со|з|зі|із|до|для|по|to|in|for|with|and|the|a|of|мужские|женские|чоловічі|жіночі|для|men's|women's)(?=\s)/g, ' ')
     .replace(/[^\p{L}\d\s+&-]/gu, ' ');
   out.text = rest.split(/\s+/).filter((w) => w.length > 1);
   return out;
@@ -112,6 +126,7 @@ export function parseQuery(raw) {
 
 export function matchItem(item, brand, f) {
   if (f.category && item.category !== f.category) return false;
+  if (f.gender && item.gender && item.gender !== 'u' && item.gender !== f.gender) return false;
   if (f.maxUAH != null && item.priceUAH > f.maxUAH) return false;
   if (f.minUAH != null && item.priceUAH < f.minUAH) return false;
   if (f.ship && !brand.shipping.includes(f.ship) && !brand.shipping.includes('WORLD')) return false;

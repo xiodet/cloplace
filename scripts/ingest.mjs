@@ -33,22 +33,44 @@ function hasWord(s, w) {
 }
 const extraWords = {
   hoodie: ['crewneck', 'crew neck', 'pullover', 'hooded', 'tracksuit', 'sudadera', 'zipper', 'twinset'],
-  tee: ['shirt', 'polo', 'jersey', 'tank', 'top', 'dress', 'bodysuit', 'singlet', 'long sleeve', 'short sleeve', 'camiseta', 'chemise', 'tanktop', 'rugby', 'flannel', 'body', 'bralette', 'maglia', 'camisa', 'corset'],
-  pants: ['jogger', 'short', 'skirt', 'legging', 'jorts', 'pant', 'chino', 'bottom', 'sweatpant', 'sweatshort', 'trackpant', 'swimshort', 'jean', 'pantalon', 'pantalón', 'panttalón', 'hose', 'suit', 'workpant'],
-  jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell', 'chaqueta', 'cortavientos', 'veste', 'jacke', 'manteau', 'doudoune', 'poncho'],
+  tee: ['polo', 'jersey', 'tank', 'top', 'bodysuit', 'singlet', 'long sleeve', 'short sleeve', 'camiseta', 'chemise', 'tanktop', 'rugby', 'flannel', 'body', 'bralette', 'maglia', 'corset', 'tank top'],
+  shirt: ['camisa', 'chemise', 'button up', 'button-up', 'button down', 'oxford', 'flannel', 'overhemd', 'hemd'],
+  shorts: ['sweatshort', 'swimshort', 'swim short', 'swimshorts', 'short'],
+  jeans: ['jean', 'selvedge', 'vaquero'],
+  skirt: ['mini skirt', 'gown', 'robe', 'falda', 'jupe', 'gonna', 'kleid'],
+  pants: ['jogger', 'legging', 'pant', 'chino', 'bottom', 'sweatpant', 'trackpant', 'pantalon', 'pantalón', 'panttalón', 'hose', 'suit', 'workpant'],
+  jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell', 'chaqueta', 'cortavientos', 'veste', 'jacke', 'manteau', 'doudoune', 'poncho', 'trucker', 'overshirt'],
   cap: ['gorra', 'casquette', 'bonnet', 'balaclava', 'bucket', 'gorro', 'panama'],
   knit: ['turtleneck', 'pull'],
   shoes: ['boot', 'jordan', 'asics', 'adistar', 'beaters', 'beisser', 'derbys', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
   accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace', 'underwear', 'boxer', 'panty', 'bandana', 'tie', 'pendant', 'spray', 'mug', 'deck', 'brush', 'bufanda', 'calcetin', 'chaussette', 'echarpe', 'décapsuleur', 'voiture', 'duffle', 'musette', 'ceinture', 'sacoche', 'handbag', 'holdall', 'carabiner', 'charm', 'pin', 'chain'],
 };
-// The store's own product type is the best hint, then the title, then the tags.
+// The title names the garment most precisely ("Denim Shorts" in a store type "Bottoms"), but when the
+// store files something under shoes or accessories, that wins over a title like "Shirt Keychain".
+const CLOTHING = new Set(['tee', 'shirt', 'hoodie', 'knit', 'jacket', 'jeans', 'pants', 'shorts', 'skirt']);
 function guessCategory(type, title, tags, fallback = 'other') {
-  for (const text of [type, title, tags]) {
-    const s = String(text || '').toLowerCase();
+  const byType = matchCategory(type);
+  const byTitle = matchCategory(title);
+  if (byType && !CLOTHING.has(byType) && (!byTitle || CLOTHING.has(byTitle))) return byType;
+  return byTitle || byType || matchCategory(tags) || fallback; // nothing recognisable: plain clothing, or the brand's usual kind
+}
+function matchCategory(raw) {
+  for (const text of [raw]) {
+    // "short sleeve" is about a top, not shorts
+    const s = String(text || '').toLowerCase().replace(/short[- ]sleeved?|s\/s\b/g, ' tee ');
     if (!s) continue;
     for (const [cat, words] of Object.entries(categoryWords)) if ([...words, ...(extraWords[cat] || [])].some((w) => hasWord(s, w))) return cat;
   }
-  return fallback; // nothing recognisable: plain clothing for a clothing brand, accessories for a jewellery one
+  return null;
+}
+
+// Gender from the store's own words: product type, title, tags. Unknown or both = unisex.
+function guessGender(text) {
+  const s = ' ' + String(text || '').toLowerCase() + ' ';
+  if (/unisex/.test(s)) return 'u';
+  const w = /(^|[^a-z])(women|womens|woman|womenswear|female|ladies|damen|femme|femmes|mujer|donna|girls?)([^a-z]|$)|жін|жен/.test(s);
+  const m = /(^|[^a-z])(men|mens|man|menswear|male|herren|homme|hommes|hombre|uomo)([^a-z]|$)|чолов|муж/.test(s);
+  return w && !m ? 'w' : m && !w ? 'm' : 'u';
 }
 
 function guessNewsType(text) {
@@ -100,6 +122,7 @@ async function shopify(brand, base, currency, fallback) {
       brandId: brand.id,
       title: p.title,
       category: guessCategory(p.product_type, p.title, (Array.isArray(p.tags) ? p.tags : [p.tags]).join(' '), fallback),
+      gender: guessGender(`${p.product_type} ${p.title} ${(Array.isArray(p.tags) ? p.tags : [p.tags]).join(' ')} ${p.handle}`),
       price,
       compareAt: compareAt && compareAt > price ? compareAt : null,
       currency: currency || brand.currency,

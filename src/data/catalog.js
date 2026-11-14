@@ -29,11 +29,15 @@ function withStore(b) {
 export const brands = listed.map(withStore);
 
 export const categories = {
-  hoodie: { en: 'Hoodies', ru: 'Худи', uk: 'Худі' },
   tee: { en: 'T-shirts', ru: 'Футболки', uk: 'Футболки' },
-  pants: { en: 'Pants', ru: 'Штаны', uk: 'Штани' },
-  jacket: { en: 'Jackets', ru: 'Куртки', uk: 'Куртки' },
+  shirt: { en: 'Shirts', ru: 'Рубашки', uk: 'Сорочки' },
+  hoodie: { en: 'Hoodies', ru: 'Худи', uk: 'Худі' },
   knit: { en: 'Knitwear', ru: 'Трикотаж', uk: 'Трикотаж' },
+  jacket: { en: 'Jackets', ru: 'Куртки', uk: 'Куртки' },
+  jeans: { en: 'Jeans', ru: 'Джинсы', uk: 'Джинси' },
+  pants: { en: 'Pants', ru: 'Штаны', uk: 'Штани' },
+  shorts: { en: 'Shorts', ru: 'Шорты', uk: 'Шорти' },
+  skirt: { en: 'Skirts and dresses', ru: 'Юбки и платья', uk: 'Спідниці та сукні' },
   other: { en: 'Other clothing', ru: 'Другая одежда', uk: 'Інший одяг' },
   cap: { en: 'Caps', ru: 'Кепки', uk: 'Кепки' },
   shoes: { en: 'Shoes', ru: 'Обувь', uk: 'Взуття' },
