@@ -95,7 +95,7 @@ export const brands = [
       ru: 'Киевский бренд, известный апсайкл- и асимметричным денимом и спортивными мотивами.',
     },
     website: 'https://kseniaschnaider.com', instagram: 'kseniaschnaider',
-    shipping: ['UA', 'EU', 'WORLD'], returns: { days: 14 }, currency: 'UAH',
+    shipping: ['UA', 'EU', 'WORLD'], returns: { days: 14 }, currency: 'EUR',
     palette: ['#3a5a8c', '#c9d6ea', '#f4a261'],
     verified: ['name'],
   },

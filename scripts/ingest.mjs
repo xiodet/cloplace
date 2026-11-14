@@ -50,7 +50,7 @@ async function fetchText(url) {
 
 async function shopify(brand, base) {
   const data = JSON.parse(await fetchText(base.replace(/\/$/, '') + '/products.json?limit=250'));
-  return (data.products || []).map((p) => {
+  return (data.products || []).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0)).map((p) => {
     const prices = p.variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
     const compare = p.variants.map((v) => parseFloat(v.compare_at_price)).filter((n) => !isNaN(n));
     const price = Math.min(...prices);
@@ -80,7 +80,7 @@ function newsFromItems(brand, items) {
     const names = fresh.slice(0, 3).map((i) => i.title).join(', ');
     out.push({
       id: `${brand.id}-drop-${date}`, brandId: brand.id, type: 'drop', date,
-      title: { en: `${fresh.length} new items`, ru: `${fresh.length} новых вещей` },
+      title: { en: `New in store: ${fresh.length}`, ru: `Новинки в магазине: ${fresh.length}` },
       summary: { en: `New in: ${names}${fresh.length > 3 ? '…' : ''}`, ru: `Новинки: ${names}${fresh.length > 3 ? '…' : ''}` },
       source: { kind: 'shopify', url: fresh[0].url },
     });
@@ -190,7 +190,7 @@ async function main() {
     assert(items.length === 3, 'expected 3 items');
     assert(items.find((i) => i.title.includes('Hoodie')).category === 'hoodie', 'hoodie category');
     assert(items.find((i) => i.title.includes('Hoodie')).compareAt === 150, 'compare price');
-    assert(news.some((n) => n.type === 'drop' && n.title.en === '2 new items'), 'drop news from fresh products');
+    assert(news.some((n) => n.type === 'drop' && n.title.en === 'New in store: 2'), 'drop news from fresh products');
     assert(news.some((n) => n.source.kind === 'rss' && n.type === 'sale'), 'rss sale post');
     assert(news.some((n) => n.source.kind === 'rss' && n.type === 'collab'), 'rss collab post');
     console.log('fixture test passed');

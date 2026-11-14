@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { LangContext, dict, useLang } from './i18n.js';
-import { brands, items, news, brandById, categories, regions, formatPrice } from './data/catalog.js';
+import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds } from './data/catalog.js';
 import { countries } from './data/brands.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
@@ -33,7 +33,7 @@ const W = {
     index_quote: 'Every brand in the index, A to Z',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     search_quote: 'Describe what you want in plain words',
-    about: 'About', info: 'Information', country: 'Country',
+    more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
   },
   ru: {
     brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
@@ -44,11 +44,14 @@ const W = {
     index_quote: 'Все бренды индекса, от A до Z',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     search_quote: 'Опиши обычными словами, что ищешь',
-    about: 'О бренде', info: 'Информация', country: 'Страна',
+    more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
   },
 };
 
-const FEATURED = ['nofaith-studios', 'sndct-kyiv', 'ksenia-schnaider', 'corteiz', 'daily-paper', 'represent'];
+// Six showcases: brands with real collected photos first, then the hand-picked rest.
+const PICKS = ['nofaith-studios', 'ksenia-schnaider', 'represent', 'arte-antwerp', 'olaf-hussein', 'helas', 'sndct-kyiv', 'corteiz', 'daily-paper'];
+const FEATURED = [...PICKS.filter((id) => liveBrandIds.includes(id)), ...PICKS.filter((id) => !liveBrandIds.includes(id))].slice(0, 6);
+const PAGE = 12;
 const itemsByBrand = items.reduce((m, i) => ((m[i.brandId] ||= []).push(i), m), {});
 const longestWord = (s) => Math.max(...s.split(/\s+/).map((w) => w.length));
 
@@ -204,7 +207,7 @@ function Showcase({ brand, n }) {
   const its = itemsByBrand[brand.id] || [];
   return (
     <a className="showcase rise" style={{ '--i': n }} href={'#/brand/' + brand.id} onClick={(e) => openBrand(e, brand)}>
-      <span className="sc-art" style={{ aspectRatio: RATIOS[n % RATIOS.length] }}>{its[0] && <Garment item={its[n % its.length]} tone={n} />}</span>
+      <span className="sc-art" style={{ aspectRatio: RATIOS[n % RATIOS.length] }}>{its[0] && <Garment item={its[0].demo ? its[n % its.length] : its[0]} tone={n} />}</span>
       <span className="sc-cap">
         <span className="sc-name">{brand.name}</span>
         <span className="sc-city">{brand.city || countries[brand.country][lang]}</span>
@@ -306,6 +309,7 @@ function BrandPage({ brand }) {
   const its = itemsByBrand[brand.id] || [];
   const bn = news.filter((n) => n.brandId === brand.id);
   const isDemo = its.some((i) => i.demo);
+  const [shown, setShown] = useState(PAGE);
   const unv = (field) => (brand.verified.includes(field) ? null : <em className="unv">{t.unverified}</em>);
   const links = (
     <>
@@ -335,7 +339,8 @@ function BrandPage({ brand }) {
       <section className="rise">
         <h2>{t.items}</h2>
         {isDemo && <p className="demo-note">{t.demo_note}</p>}
-        <div className="item-grid">{its.map((i) => <ItemCard key={i.id} item={i} />)}</div>
+        <div className="item-grid">{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
+        {its.length > shown && <button className="more" onClick={() => setShown(shown + PAGE)}>{w.more(its.length - shown)}</button>}
       </section>
 
       {bn.length > 0 && (
@@ -404,7 +409,7 @@ function SearchPage({ q }) {
         <button className="reset" onClick={() => go('/search')}>{t.reset}</button>
       </div>
       {found.length
-        ? <div className="item-grid wide-grid rise">{found.map((i) => <ItemCard key={i.id} item={i} showBrand />)}</div>
+        ? <div className="item-grid wide-grid rise">{found.slice(0, 48).map((i) => <ItemCard key={i.id} item={i} showBrand />)}</div>
         : <p className="muted rise">{t.nothing}</p>}
       {items.some((i) => i.demo) && <p className="demo-note">{t.demo_note}</p>}
     </Shell>

@@ -3,7 +3,7 @@ import demoNews from './news.demo.js';
 
 // Data written by scripts/ingest.mjs. Missing files are fine: we fall back to demo data.
 const generated = import.meta.glob('./generated/*.json', { eager: true, import: 'default' });
-const genItems = generated['./generated/items.json'] || [];
+const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0);
 const genNews = generated['./generated/news.json'] || [];
 // Photos cached by the ingest script (optional). A cached copy wins over the remote URL.
 const cached = import.meta.glob('./generated/img/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
@@ -96,4 +96,6 @@ export const items = [
 export const news = [...genNews, ...demoNews].sort((a, b) => b.date.localeCompare(a.date));
 
 export const brandById = Object.fromEntries(brands.map((b) => [b.id, b]));
+// Brands that already have collected store data (real items and photos).
+export const liveBrandIds = [...realByBrand];
 export { brands };
