@@ -335,3 +335,4 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .lang.cur { padding-left: 10px; }
 .lang.cur button { font-size: 14px; }
 .home-groups { margin: 8px 0 28px; }
+.store-groups { margin: 0; gap: 16px; font-size: 15px; }

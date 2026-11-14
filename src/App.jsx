@@ -528,11 +528,15 @@ let backTo = '/'; // where "back" leads: the list the visitor came from
 
 function BrandPage({ brand }) {
   const { lang, t, w } = useLang();
-  const its = itemsByBrand[brand.id] || [];
+  // The catalogue opens on the section picked on the home page; other sections the brand has are one tap away.
+  const groups = Object.keys(GROUPS).filter((g) => groupItems(brand.id, g).length > 0);
+  const [group, setGroupState] = useState(groups.includes(homeGroup) ? homeGroup : groups[0] || 'clothes');
+  const its = groupItems(brand.id, group);
   const bn = news.filter((n) => n.brandId === brand.id);
   const { logo } = brandMedia(brand.id);
   const isDemo = its.some((i) => i.demo);
   const [shown, setShown] = useState(PAGE);
+  const setGroup = (g) => { homeGroup = g; setGroupState(g); setShown(PAGE); };
   const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 860;
   const [open, setOpen] = useState(still);
   const openRef = useRef(open);
@@ -632,6 +636,9 @@ function BrandPage({ brand }) {
             <div className="store-head">
               <a href={'#' + backTo} className="store-back" aria-label={t.back}>←</a>
               <h2><span className="sh-closed">{t.items}</span><span className="sh-open">{brand.name}</span></h2>
+              {groups.length > 1 && <span className="chips store-groups">
+                {groups.map((g) => <button key={g} className={'chip' + (group === g ? ' on' : '')} onClick={() => setGroup(g)}>{w['g_' + g]}</button>)}
+              </span>}
               <span className="muted">{t.items_found(its.length)}</span>
               {brand.website && <a className="store-link" href={brand.website} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
             </div>
