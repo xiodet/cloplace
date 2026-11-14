@@ -85,14 +85,14 @@
   "type": "sale",
   "date": "2026-11-14",
   "title": {
-   "en": "Sale: up to −79%",
-   "ru": "Скидки до −79%",
-   "uk": "Знижки до −79%"
+   "en": "Sale: up to −36%",
+   "ru": "Скидки до −36%",
+   "uk": "Знижки до −36%"
   },
   "summary": {
-   "en": "102 items discounted.",
-   "ru": "102 вещи со скидкой.",
-   "uk": "102 речі зі знижкою."
+   "en": "8 items discounted.",
+   "ru": "8 вещей со скидкой.",
+   "uk": "8 речей зі знижкою."
   },
   "source": {
    "kind": "shopify",
@@ -110,9 +110,9 @@
    "uk": "Знижки до −30%"
   },
   "summary": {
-   "en": "8 items discounted.",
-   "ru": "8 вещей со скидкой.",
-   "uk": "8 речей зі знижкою."
+   "en": "7 items discounted.",
+   "ru": "7 вещей со скидкой.",
+   "uk": "7 речей зі знижкою."
   },
   "source": {
    "kind": "shopify",
@@ -130,9 +130,9 @@
    "uk": "Знижки до −60%"
   },
   "summary": {
-   "en": "62 items discounted.",
-   "ru": "62 вещи со скидкой.",
-   "uk": "62 речі зі знижкою."
+   "en": "27 items discounted.",
+   "ru": "27 вещей со скидкой.",
+   "uk": "27 речей зі знижкою."
   },
   "source": {
    "kind": "shopify",
@@ -160,14 +160,454 @@
   }
  },
  {
+  "id": "arte-antwerp-sale-2026-11",
+  "brandId": "arte-antwerp",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −40%",
+   "ru": "Скидки до −40%",
+   "uk": "Знижки до −40%"
+  },
+  "summary": {
+   "en": "111 items discounted.",
+   "ru": "111 вещей со скидкой.",
+   "uk": "111 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://arte-antwerp.com/products/colson-heart-sweater-creme"
+  }
+ },
+ {
+  "id": "avnier-sale-2026-11",
+  "brandId": "avnier",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −64%",
+   "ru": "Скидки до −64%",
+   "uk": "Знижки до −64%"
+  },
+  "summary": {
+   "en": "21 items discounted.",
+   "ru": "21 вещь со скидкой.",
+   "uk": "21 річ зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://avnier.com/products/t-shirt-source-shock"
+  }
+ },
+ {
+  "id": "garment-workshop-sale-2026-11",
+  "brandId": "garment-workshop",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%",
+   "uk": "Знижки до −60%"
+  },
+  "summary": {
+   "en": "17 items discounted.",
+   "ru": "17 вещей со скидкой.",
+   "uk": "17 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://garmentworkshop.com/products/black-canvas-mechanic-worker-jacket"
+  }
+ },
+ {
+  "id": "grimey-sale-2026-11",
+  "brandId": "grimey",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −78%",
+   "ru": "Скидки до −78%",
+   "uk": "Знижки до −78%"
+  },
+  "summary": {
+   "en": "4 items discounted.",
+   "ru": "4 вещи со скидкой.",
+   "uk": "4 речі зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://grimey.com/products/mochila-grimey-gem-cutting-fall-21-blue-80015"
+  }
+ },
+ {
+  "id": "kaotiko-sale-2026-11",
+  "brandId": "kaotiko",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%",
+   "uk": "Знижки до −60%"
+  },
+  "summary": {
+   "en": "54 items discounted.",
+   "ru": "54 вещи со скидкой.",
+   "uk": "54 речі зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kaotikobcn.com/products/vest-ivory-heart-black"
+  }
+ },
+ {
+  "id": "low-lights-studios-sale-2026-11",
+  "brandId": "low-lights-studios",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −77%",
+   "ru": "Скидки до −77%",
+   "uk": "Знижки до −77%"
+  },
+  "summary": {
+   "en": "98 items discounted.",
+   "ru": "98 вещей со скидкой.",
+   "uk": "98 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://lowlightsstudios.com/products/marrakech-25-waffle-longsleeve-ecru"
+  }
+ },
+ {
+  "id": "misbhv-drop-2026-11-14",
+  "brandId": "misbhv",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 120",
+   "ru": "Новинки в магазине: 120",
+   "uk": "Новинки в магазині: 120"
+  },
+  "summary": {
+   "en": "New in: La Donna Del Lago T-shirt, Sankt Moritz Fur Hat, Hand Knitted Mini Skirt…",
+   "ru": "Новинки: La Donna Del Lago T-shirt, Sankt Moritz Fur Hat, Hand Knitted Mini Skirt…",
+   "uk": "Новинки: La Donna Del Lago T-shirt, Sankt Moritz Fur Hat, Hand Knitted Mini Skirt…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://misbhv.com/products/250m108-la-donna-del-lago-t-shirt-white"
+  }
+ },
+ {
+  "id": "misbhv-sale-2026-11",
+  "brandId": "misbhv",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −61%",
+   "ru": "Скидки до −61%",
+   "uk": "Знижки до −61%"
+  },
+  "summary": {
+   "en": "120 items discounted.",
+   "ru": "120 вещей со скидкой.",
+   "uk": "120 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://misbhv.com/products/250m108-la-donna-del-lago-t-shirt-white"
+  }
+ },
+ {
+  "id": "mki-miyuki-zoku-sale-2026-11",
+  "brandId": "mki-miyuki-zoku",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −74%",
+   "ru": "Скидки до −74%",
+   "uk": "Знижки до −74%"
+  },
+  "summary": {
+   "en": "115 items discounted.",
+   "ru": "115 вещей со скидкой.",
+   "uk": "115 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://mkistore.co.uk/products/mki-pigment-raisin-design-studio-t-shirt"
+  }
+ },
+ {
+  "id": "more-money-more-love-sale-2026-11",
+  "brandId": "more-money-more-love",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −70%",
+   "ru": "Скидки до −70%",
+   "uk": "Знижки до −70%"
+  },
+  "summary": {
+   "en": "118 items discounted.",
+   "ru": "118 вещей со скидкой.",
+   "uk": "118 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://moremoneymorelove.de/products/radiant-cash-zip-dark-grey-open-leg-jogger-dark-grey"
+  }
+ },
+ {
+  "id": "pegador-drop-2026-11-14",
+  "brandId": "pegador",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 21",
+   "ru": "Новинки в магазине: 21",
+   "uk": "Новинки в магазині: 21"
+  },
+  "summary": {
+   "en": "New in: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…",
+   "ru": "Новинки: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…",
+   "uk": "Новинки: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://pegador.com/products/logo-boxy-hoodie-washed-virtual-pink"
+  }
+ },
+ {
+  "id": "trendt-vision-sale-2026-11",
+  "brandId": "trendt-vision",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −13%",
+   "ru": "Скидки до −13%",
+   "uk": "Знижки до −13%"
+  },
+  "summary": {
+   "en": "15 items discounted.",
+   "ru": "15 вещей со скидкой.",
+   "uk": "15 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://trendtvision.com/products/henley-shirt-mix-match"
+  }
+ },
+ {
+  "id": "wrstbhvr-sale-2026-11",
+  "brandId": "wrstbhvr",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −30%",
+   "ru": "Скидки до −30%",
+   "uk": "Знижки до −30%"
+  },
+  "summary": {
+   "en": "59 items discounted.",
+   "ru": "59 вещей со скидкой.",
+   "uk": "59 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://wrstbhvr.com/products/marley-v2-polo-sweater-5"
+  }
+ },
+ {
+  "id": "riot-division-drop-2026-11-14",
+  "brandId": "riot-division",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 21",
+   "ru": "Новинки в магазине: 21",
+   "uk": "Новинки в магазині: 21"
+  },
+  "summary": {
+   "en": "New in: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…",
+   "ru": "Новинки: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…",
+   "uk": "Новинки: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://riotdivision.tech/products/rolled-logo-t-shirt-rd-rlts-black"
+  }
+ },
+ {
+  "id": "riot-division-sale-2026-11",
+  "brandId": "riot-division",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −60%",
+   "ru": "Скидки до −60%",
+   "uk": "Знижки до −60%"
+  },
+  "summary": {
+   "en": "10 items discounted.",
+   "ru": "10 вещей со скидкой.",
+   "uk": "10 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://riotdivision.tech/products/merino-short-beanie-hat-rd-logo-rd-mrnsbhrdl-beige"
+  }
+ },
+ {
+  "id": "ksenia-schnaider-sale-2026-11",
+  "brandId": "ksenia-schnaider",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −81%",
+   "ru": "Скидки до −81%",
+   "uk": "Знижки до −81%"
+  },
+  "summary": {
+   "en": "56 items discounted.",
+   "ru": "56 вещей со скидкой.",
+   "uk": "56 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kseniaschnaider.com/products/corruption-pants-black"
+  }
+ },
+ {
+  "id": "filling-pieces-sale-2026-11",
+  "brandId": "filling-pieces",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −39%",
+   "ru": "Скидки до −39%",
+   "uk": "Знижки до −39%"
+  },
+  "summary": {
+   "en": "12 items discounted.",
+   "ru": "12 вещей со скидкой.",
+   "uk": "12 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://fillingpieces.com/products/ace-suede-beige"
+  }
+ },
+ {
+  "id": "olaf-hussein-sale-2026-11",
+  "brandId": "olaf-hussein",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −50%",
+   "ru": "Скидки до −50%",
+   "uk": "Знижки до −50%"
+  },
+  "summary": {
+   "en": "6 items discounted.",
+   "ru": "6 вещей со скидкой.",
+   "uk": "6 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://olafhussein.com/products/10year-socks-optical-white-mocha-mousse"
+  }
+ },
+ {
+  "id": "patta-sale-2026-11",
+  "brandId": "patta",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −55%",
+   "ru": "Скидки до −55%",
+   "uk": "Знижки до −55%"
+  },
+  "summary": {
+   "en": "17 items discounted.",
+   "ru": "17 вещей со скидкой.",
+   "uk": "17 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://patta.nl/products/nike-air-force-1-retro-premium-hydrogen-blue-football-grey-hydrogen-blue"
+  }
+ },
+ {
+  "id": "the-new-originals-sale-2026-11",
+  "brandId": "the-new-originals",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −75%",
+   "ru": "Скидки до −75%",
+   "uk": "Знижки до −75%"
+  },
+  "summary": {
+   "en": "50 items discounted.",
+   "ru": "50 вещей со скидкой.",
+   "uk": "50 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://theneworiginals.eu/products/cloud-9-down-jacket-black-primaloft"
+  }
+ },
+ {
+  "id": "black-bananas-sale-2026-11",
+  "brandId": "black-bananas",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −72%",
+   "ru": "Скидки до −72%",
+   "uk": "Знижки до −72%"
+  },
+  "summary": {
+   "en": "90 items discounted.",
+   "ru": "90 вещей со скидкой.",
+   "uk": "90 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://blackbananas.com/products/commander-v2-parka-jacket-black-2"
+  }
+ },
+ {
+  "id": "soulland-sale-2026-11",
+  "brandId": "soulland",
+  "type": "sale",
+  "date": "2026-11-14",
+  "title": {
+   "en": "Sale: up to −80%",
+   "ru": "Скидки до −80%",
+   "uk": "Знижки до −80%"
+  },
+  "summary": {
+   "en": "36 items discounted.",
+   "ru": "36 вещей со скидкой.",
+   "uk": "36 речей зі знижкою."
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://soulland.com/products/reseller-flow-sweatshirt-m"
+  }
+ },
+ {
   "id": "jaded-london-drop-2026-11-13",
   "brandId": "jaded-london",
   "type": "drop",
   "date": "2026-11-13",
   "title": {
-   "en": "New in store: 145",
-   "ru": "Новинки в магазине: 145",
-   "uk": "Новинки в магазині: 145"
+   "en": "New in store: 120",
+   "ru": "Новинки в магазине: 120",
+   "uk": "Новинки в магазині: 120"
   },
   "summary": {
    "en": "New in: Black Diamante Hardcore Joggers, Black Diamante Hardcore Joggers, Printed Graffiti Indigo Colossus Jeans…",
@@ -177,6 +617,266 @@
   "source": {
    "kind": "shopify",
    "url": "https://jadedman.com/products/black-diamante-hardcore-joggers-ww"
+  }
+ },
+ {
+  "id": "cole-buxton-drop-2026-11-13",
+  "brandId": "cole-buxton",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 16",
+   "ru": "Новинки в магазине: 16",
+   "uk": "Новинки в магазині: 16"
+  },
+  "summary": {
+   "en": "New in: SUEDE HEATHROW HANDBAG, HEATHROW HANDBAG, HEATHROW HANDBAG…",
+   "ru": "Новинки: SUEDE HEATHROW HANDBAG, HEATHROW HANDBAG, HEATHROW HANDBAG…",
+   "uk": "Новинки: SUEDE HEATHROW HANDBAG, HEATHROW HANDBAG, HEATHROW HANDBAG…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://colebuxton.com/products/heathrow-handbag-khaki-copy"
+  }
+ },
+ {
+  "id": "dont-waste-culture-drop-2026-11-13",
+  "brandId": "dont-waste-culture",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 17",
+   "ru": "Новинки в магазине: 17",
+   "uk": "Новинки в магазині: 17"
+  },
+  "summary": {
+   "en": "New in: Jörn | White, Jörn | Black, Millet | Washed Black…",
+   "ru": "Новинки: Jörn | White, Jörn | Black, Millet | Washed Black…",
+   "uk": "Новинки: Jörn | White, Jörn | Black, Millet | Washed Black…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://dontwasteculture.com/products/jorn-white"
+  }
+ },
+ {
+  "id": "ienki-ienki-drop-2026-11-13",
+  "brandId": "ienki-ienki",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 46",
+   "ru": "Новинки в магазине: 46",
+   "uk": "Новинки в магазині: 46"
+  },
+  "summary": {
+   "en": "New in: SKI PANTS SHELL BLACK, FUR CROPPED KEPTAR VEST ENNIO WHITE + WHITE FUR, FUR COZY MICHLIN MICRO BROWN + BLACK FUR…",
+   "ru": "Новинки: SKI PANTS SHELL BLACK, FUR CROPPED KEPTAR VEST ENNIO WHITE + WHITE FUR, FUR COZY MICHLIN MICRO BROWN + BLACK FUR…",
+   "uk": "Новинки: SKI PANTS SHELL BLACK, FUR CROPPED KEPTAR VEST ENNIO WHITE + WHITE FUR, FUR COZY MICHLIN MICRO BROWN + BLACK FUR…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://ienki-ienki.com/products/ski-pants-shell-black"
+  }
+ },
+ {
+  "id": "represent-drop-2026-11-13",
+  "brandId": "represent",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 42",
+   "ru": "Новинки в магазине: 42",
+   "uk": "Новинки в магазині: 42"
+  },
+  "summary": {
+   "en": "New in: Initial Sweatpant - Midnight Navy, Initial Sweatpant - Jet Black, Initial Sweatpant - Ice Grey Marl…",
+   "ru": "Новинки: Initial Sweatpant - Midnight Navy, Initial Sweatpant - Jet Black, Initial Sweatpant - Ice Grey Marl…",
+   "uk": "Новинки: Initial Sweatpant - Midnight Navy, Initial Sweatpant - Jet Black, Initial Sweatpant - Ice Grey Marl…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://uk.representclo.com/products/initial-sweatpant-midnight-navy"
+  }
+ },
+ {
+  "id": "filling-pieces-drop-2026-11-13",
+  "brandId": "filling-pieces",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 15",
+   "ru": "Новинки в магазине: 15",
+   "uk": "Новинки в магазині: 15"
+  },
+  "summary": {
+   "en": "New in: Mondo Float White / Grey, Mondo Mix Black, Mondo Mix Chocolate…",
+   "ru": "Новинки: Mondo Float White / Grey, Mondo Mix Black, Mondo Mix Chocolate…",
+   "uk": "Новинки: Mondo Float White / Grey, Mondo Mix Black, Mondo Mix Chocolate…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://fillingpieces.com/products/mondo-float-white-grey"
+  }
+ },
+ {
+  "id": "patta-drop-2026-11-13",
+  "brandId": "patta",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 60",
+   "ru": "Новинки в магазине: 60",
+   "uk": "Новинки в магазині: 60"
+  },
+  "summary": {
+   "en": "New in: Nike Air Max Goadome Low SP (LT BRITISH TAN/METALLIC OCHRE), Nike Air Max Goadome Low SP (Black-twilight marsh), By Parra Tape your face kraft tape 2 pack (Brown)…",
+   "ru": "Новинки: Nike Air Max Goadome Low SP (LT BRITISH TAN/METALLIC OCHRE), Nike Air Max Goadome Low SP (Black-twilight marsh), By Parra Tape your face kraft tape 2 pack (Brown)…",
+   "uk": "Новинки: Nike Air Max Goadome Low SP (LT BRITISH TAN/METALLIC OCHRE), Nike Air Max Goadome Low SP (Black-twilight marsh), By Parra Tape your face kraft tape 2 pack (Brown)…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://patta.nl/products/nike-air-max-goadome-low-sp-lt-british-tan-metallic-ochre"
+  }
+ },
+ {
+  "id": "black-bananas-drop-2026-11-13",
+  "brandId": "black-bananas",
+  "type": "drop",
+  "date": "2026-11-13",
+  "title": {
+   "en": "New in store: 14",
+   "ru": "Новинки в магазине: 14",
+   "uk": "Новинки в магазині: 14"
+  },
+  "summary": {
+   "en": "New in: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…",
+   "ru": "Новинки: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…",
+   "uk": "Новинки: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://blackbananas.com/products/kids-jump-hoodie-grey"
+  }
+ },
+ {
+  "id": "doomsday-drop-2026-11-12",
+  "brandId": "doomsday",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 13",
+   "ru": "Новинки в магазине: 13",
+   "uk": "Новинки в магазині: 13"
+  },
+  "summary": {
+   "en": "New in: Doomsday Coal & Black Checked Jacket, Doomsday Navy & Black Checked Jacket, Doomsday Sand & Khaki Checked Jacket…",
+   "ru": "Новинки: Doomsday Coal & Black Checked Jacket, Doomsday Navy & Black Checked Jacket, Doomsday Sand & Khaki Checked Jacket…",
+   "uk": "Новинки: Doomsday Coal & Black Checked Jacket, Doomsday Navy & Black Checked Jacket, Doomsday Sand & Khaki Checked Jacket…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://doomsdayco.com/products/doomsday-coal-black-checked-jacket"
+  }
+ },
+ {
+  "id": "kaotiko-drop-2026-11-12",
+  "brandId": "kaotiko",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 28",
+   "ru": "Новинки в магазине: 28",
+   "uk": "Новинки в магазині: 28"
+  },
+  "summary": {
+   "en": "New in: Chaleco Ivory Heart Black, Chaqueta Nature Lake, Chaqueta Work Crudo…",
+   "ru": "Новинки: Chaleco Ivory Heart Black, Chaqueta Nature Lake, Chaqueta Work Crudo…",
+   "uk": "Новинки: Chaleco Ivory Heart Black, Chaqueta Nature Lake, Chaqueta Work Crudo…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kaotikobcn.com/products/vest-ivory-heart-black"
+  }
+ },
+ {
+  "id": "more-money-more-love-drop-2026-11-12",
+  "brandId": "more-money-more-love",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 21",
+   "ru": "Новинки в магазине: 21",
+   "uk": "Новинки в магазині: 21"
+  },
+  "summary": {
+   "en": "New in: RADIANT CASH ZIP DARK GREY + OPEN LEG JOGGER DARK GREY, DOUBLE SCRIPT RAGLAN LONGSLEEVE, Triple Reversible Set (Mix & Match)…",
+   "ru": "Новинки: RADIANT CASH ZIP DARK GREY + OPEN LEG JOGGER DARK GREY, DOUBLE SCRIPT RAGLAN LONGSLEEVE, Triple Reversible Set (Mix & Match)…",
+   "uk": "Новинки: RADIANT CASH ZIP DARK GREY + OPEN LEG JOGGER DARK GREY, DOUBLE SCRIPT RAGLAN LONGSLEEVE, Triple Reversible Set (Mix & Match)…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://moremoneymorelove.de/products/radiant-cash-zip-dark-grey-open-leg-jogger-dark-grey"
+  }
+ },
+ {
+  "id": "named-collective-drop-2026-11-12",
+  "brandId": "named-collective",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 41",
+   "ru": "Новинки в магазине: 41",
+   "uk": "Новинки в магазині: 41"
+  },
+  "summary": {
+   "en": "New in: WIRED STUDDED OVERSIZED SWEATPANTS GREY MARL, WIRED STUDDED ZIP HOODIE GREY MARL, WIRED RHINESTONE OVERSIZED SWEATPANTS BLACK…",
+   "ru": "Новинки: WIRED STUDDED OVERSIZED SWEATPANTS GREY MARL, WIRED STUDDED ZIP HOODIE GREY MARL, WIRED RHINESTONE OVERSIZED SWEATPANTS BLACK…",
+   "uk": "Новинки: WIRED STUDDED OVERSIZED SWEATPANTS GREY MARL, WIRED STUDDED ZIP HOODIE GREY MARL, WIRED RHINESTONE OVERSIZED SWEATPANTS BLACK…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://namedcollective.com/products/wired-studded-oversized-sweatpants-grey-marl"
+  }
+ },
+ {
+  "id": "ksenia-schnaider-drop-2026-11-12",
+  "brandId": "ksenia-schnaider",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 18",
+   "ru": "Новинки в магазине: 18",
+   "uk": "Новинки в магазині: 18"
+  },
+  "summary": {
+   "en": "New in: Jungle Jeans, Illusion Sweater with Denim Back Detail, Jungle Denim Jacket with Hood…",
+   "ru": "Новинки: Jungle Jeans, Illusion Sweater with Denim Back Detail, Jungle Denim Jacket with Hood…",
+   "uk": "Новинки: Jungle Jeans, Illusion Sweater with Denim Back Detail, Jungle Denim Jacket with Hood…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kseniaschnaider.com/products/reworked-square-jeans-copy-1"
+  }
+ },
+ {
+  "id": "soulland-drop-2026-11-12",
+  "brandId": "soulland",
+  "type": "drop",
+  "date": "2026-11-12",
+  "title": {
+   "en": "New in store: 5",
+   "ru": "Новинки в магазине: 5",
+   "uk": "Новинки в магазині: 5"
+  },
+  "summary": {
+   "en": "New in: VORONTSOV L/S T, LA SOCIETE T-shirt, POODLE T-shirt…",
+   "ru": "Новинки: VORONTSOV L/S T, LA SOCIETE T-shirt, POODLE T-shirt…",
+   "uk": "Новинки: VORONTSOV L/S T, LA SOCIETE T-shirt, POODLE T-shirt…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://soulland.com/products/vorontsov-l-s-t-t-shirt-white"
   }
  },
  {
@@ -197,6 +897,166 @@
   "source": {
    "kind": "shopify",
    "url": "https://societydenobodies.com/products/konsum-camo-bomber-ss26"
+  }
+ },
+ {
+  "id": "drole-de-monsieur-drop-2026-11-10",
+  "brandId": "drole-de-monsieur",
+  "type": "drop",
+  "date": "2026-11-10",
+  "title": {
+   "en": "New in store: 65",
+   "ru": "Новинки в магазине: 65",
+   "uk": "Новинки в магазині: 65"
+  },
+  "summary": {
+   "en": "New in: Slogan Trackpants, Slogan Trackjacket, Slogan Trackjacket…",
+   "ru": "Новинки: Slogan Trackpants, Slogan Trackjacket, Slogan Trackjacket…",
+   "uk": "Новинки: Slogan Trackpants, Slogan Trackjacket, Slogan Trackjacket…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://droledemonsieur.com/products/slogan-trackpants"
+  }
+ },
+ {
+  "id": "iuter-drop-2026-11-10",
+  "brandId": "iuter",
+  "type": "drop",
+  "date": "2026-11-10",
+  "title": {
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1",
+   "uk": "Новинки в магазині: 1"
+  },
+  "summary": {
+   "en": "New in: SHAKE FUR ZIP NECK BLACK",
+   "ru": "Новинки: SHAKE FUR ZIP NECK BLACK",
+   "uk": "Новинки: SHAKE FUR ZIP NECK BLACK"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://iuter.com/products/shake-fur-zip-neck-black"
+  }
+ },
+ {
+  "id": "olaf-hussein-drop-2026-11-10",
+  "brandId": "olaf-hussein",
+  "type": "drop",
+  "date": "2026-11-10",
+  "title": {
+   "en": "New in store: 10",
+   "ru": "Новинки в магазине: 10",
+   "uk": "Новинки в магазині: 10"
+  },
+  "summary": {
+   "en": "New in: SIGNATURE LS TEE | BLACK, HARVEST LS TEE | PLAZA TAUPE, HARVEST LS TEE | CHARCOAL…",
+   "ru": "Новинки: SIGNATURE LS TEE | BLACK, HARVEST LS TEE | PLAZA TAUPE, HARVEST LS TEE | CHARCOAL…",
+   "uk": "Новинки: SIGNATURE LS TEE | BLACK, HARVEST LS TEE | PLAZA TAUPE, HARVEST LS TEE | CHARCOAL…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://olafhussein.com/products/signature-lss-tee-black"
+  }
+ },
+ {
+  "id": "the-new-originals-drop-2026-11-10",
+  "brandId": "the-new-originals",
+  "type": "drop",
+  "date": "2026-11-10",
+  "title": {
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1",
+   "uk": "Новинки в магазині: 1"
+  },
+  "summary": {
+   "en": "New in: AIRBRUSHED BIG LOGO HOODIE | Mid Grey Melange",
+   "ru": "Новинки: AIRBRUSHED BIG LOGO HOODIE | Mid Grey Melange",
+   "uk": "Новинки: AIRBRUSHED BIG LOGO HOODIE | Mid Grey Melange"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://theneworiginals.eu/products/airbrushed-big-logo-hoodie-mid-grey-melange"
+  }
+ },
+ {
+  "id": "arte-antwerp-drop-2026-11-09",
+  "brandId": "arte-antwerp",
+  "type": "drop",
+  "date": "2026-11-09",
+  "title": {
+   "en": "New in store: 120",
+   "ru": "Новинки в магазине: 120",
+   "uk": "Новинки в магазині: 120"
+  },
+  "summary": {
+   "en": "New in: Stencil Sunfade Longsleeve - Bordeaux, Plaid Wool Scarf - Plaid, Sunfade Scarf - Navy…",
+   "ru": "Новинки: Stencil Sunfade Longsleeve - Bordeaux, Plaid Wool Scarf - Plaid, Sunfade Scarf - Navy…",
+   "uk": "Новинки: Stencil Sunfade Longsleeve - Bordeaux, Plaid Wool Scarf - Plaid, Sunfade Scarf - Navy…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://arte-antwerp.com/products/stencil-sunfade-longsleeve-bordeaux"
+  }
+ },
+ {
+  "id": "mki-miyuki-zoku-drop-2026-11-09",
+  "brandId": "mki-miyuki-zoku",
+  "type": "drop",
+  "date": "2026-11-09",
+  "title": {
+   "en": "New in store: 120",
+   "ru": "Новинки в магазине: 120",
+   "uk": "Новинки в магазині: 120"
+  },
+  "summary": {
+   "en": "New in: MKI V2 SHERPA SHORTS, MKI SIGNATURE OVERLAY T-SHIRT, MKI ARCH HOODY…",
+   "ru": "Новинки: MKI V2 SHERPA SHORTS, MKI SIGNATURE OVERLAY T-SHIRT, MKI ARCH HOODY…",
+   "uk": "Новинки: MKI V2 SHERPA SHORTS, MKI SIGNATURE OVERLAY T-SHIRT, MKI ARCH HOODY…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://mkistore.co.uk/products/mki-lilac-v2-sherpa-shorts"
+  }
+ },
+ {
+  "id": "nude-project-drop-2026-11-09",
+  "brandId": "nude-project",
+  "type": "drop",
+  "date": "2026-11-09",
+  "title": {
+   "en": "New in store: 68",
+   "ru": "Новинки в магазине: 68",
+   "uk": "Новинки в магазині: 68"
+  },
+  "summary": {
+   "en": "New in: Tribeca Tracksuit Pants, Skyline Quarter-Zip, Rooftop Knit Sweater…",
+   "ru": "Новинки: Tribeca Tracksuit Pants, Skyline Quarter-Zip, Rooftop Knit Sweater…",
+   "uk": "Новинки: Tribeca Tracksuit Pants, Skyline Quarter-Zip, Rooftop Knit Sweater…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://nude-project.com/products/tribeca-tracksuit-pants"
+  }
+ },
+ {
+  "id": "peso-drop-2026-11-09",
+  "brandId": "peso",
+  "type": "drop",
+  "date": "2026-11-09",
+  "title": {
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1",
+   "uk": "Новинки в магазині: 1"
+  },
+  "summary": {
+   "en": "New in: Logo Raws Open Leg Jogger",
+   "ru": "Новинки: Logo Raws Open Leg Jogger",
+   "uk": "Новинки: Logo Raws Open Leg Jogger"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://pesoclo.com/products/raws-open-leg-jogger-11"
   }
  },
  {
@@ -237,6 +1097,46 @@
   "source": {
    "kind": "shopify",
    "url": "https://scuffers.com/products/new-raw-black-puffer"
+  }
+ },
+ {
+  "id": "trendt-vision-drop-2026-11-06",
+  "brandId": "trendt-vision",
+  "type": "drop",
+  "date": "2026-11-06",
+  "title": {
+   "en": "New in store: 15",
+   "ru": "Новинки в магазине: 15",
+   "uk": "Новинки в магазині: 15"
+  },
+  "summary": {
+   "en": "New in: Henley Shirt - Mix & Match, Ribbed Slim Tee - Mix & Match, Reversible Down Jacket + Raw Denim…",
+   "ru": "Новинки: Henley Shirt - Mix & Match, Ribbed Slim Tee - Mix & Match, Reversible Down Jacket + Raw Denim…",
+   "uk": "Новинки: Henley Shirt - Mix & Match, Ribbed Slim Tee - Mix & Match, Reversible Down Jacket + Raw Denim…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://trendtvision.com/products/henley-shirt-mix-match"
+  }
+ },
+ {
+  "id": "carne-bollente-drop-2026-11-05",
+  "brandId": "carne-bollente",
+  "type": "drop",
+  "date": "2026-11-05",
+  "title": {
+   "en": "New in store: 35",
+   "ru": "Новинки в магазине: 35",
+   "uk": "Новинки в магазині: 35"
+  },
+  "summary": {
+   "en": "New in: Two Climbing Cuties, The Big Ass-ent, Seeing Double…",
+   "ru": "Новинки: Two Climbing Cuties, The Big Ass-ent, Seeing Double…",
+   "uk": "Новинки: Two Climbing Cuties, The Big Ass-ent, Seeing Double…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://carnebollente.com/products/two-climbing-cuties-dark-brown"
   }
  },
  {
@@ -297,6 +1197,26 @@
   "source": {
    "kind": "shopify",
    "url": "https://nofaithstudios.com/products/pull-over-bomber"
+  }
+ },
+ {
+  "id": "avnier-drop-2026-11-03",
+  "brandId": "avnier",
+  "type": "drop",
+  "date": "2026-11-03",
+  "title": {
+   "en": "New in store: 2",
+   "ru": "Новинки в магазине: 2",
+   "uk": "Новинки в магазині: 2"
+  },
+  "summary": {
+   "en": "New in: PULL TOKYEUX, JOGGING AVRAPP",
+   "ru": "Новинки: PULL TOKYEUX, JOGGING AVRAPP",
+   "uk": "Новинки: PULL TOKYEUX, JOGGING AVRAPP"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://avnier.com/products/pull-tokyeux-avnier-x-saint-james"
   }
  }
 ]
