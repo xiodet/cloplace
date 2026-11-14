@@ -1,0 +1,4 @@
+scripts/fixtures/out/
+node_modules/
+dist/
+dist-single/

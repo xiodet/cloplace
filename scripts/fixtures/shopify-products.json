@@ -1,0 +1,5 @@
+{"products":[
+ {"id":1,"title":"Owners Club Hoodie","handle":"owners-club-hoodie","product_type":"Hoodies","tags":["new"],"published_at":"2026-11-10T10:00:00Z","images":[{"src":"https://cdn.example/hoodie.jpg"}],"variants":[{"price":"120.00","compare_at_price":"150.00","available":true}]},
+ {"id":2,"title":"Initial Tee","handle":"initial-tee","product_type":"T-Shirts","tags":[],"published_at":"2026-11-12T10:00:00Z","images":[],"variants":[{"price":"55.00","compare_at_price":null,"available":true}]},
+ {"id":3,"title":"Cargo Pant","handle":"cargo-pant","product_type":"","tags":["bottoms"],"published_at":"2026-08-01T10:00:00Z","images":[],"variants":[{"price":"140.00","compare_at_price":null,"available":false}]}
+]}
