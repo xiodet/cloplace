@@ -513,7 +513,6 @@ function IndexPage() {
                     const bits = [b.style?.[0], b.closed ? w.cl_tile : n ? t.items_found(n) : null, picked.names.length > 1 ? b.city : null, ships(b) ? null : w.m_noship].filter(Boolean);
                     return (
                       <a key={b.id} className="mp-brand" href={'#/brand/' + b.id}>
-                        <span className="mp-logo"><b>{b.name[0]}</b><Logo src={brandMedia(b.id).logo} /></span>
                         <span className="mp-bname">{b.name}<small>{bits.join(' · ')}</small></span>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
                       </a>

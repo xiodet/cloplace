@@ -265,13 +265,10 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .mp-back:hover { text-decoration: underline; text-underline-offset: 3px; }
 .mp-city { animation: rise .5s var(--ease-out) both; }
 .mp-brands { margin-top: 22px; }
-.mp-brand { display: grid; grid-template-columns: 40px minmax(0, 1fr) 16px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); transition: padding .3s var(--ease-out); }
+.mp-brand { display: grid; grid-template-columns: minmax(0, 1fr) 16px; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); transition: padding .3s var(--ease-out); }
 .mp-brand:last-child { border-bottom: 1px solid var(--line); }
 .mp-brand:hover { padding-left: 8px; }
 .mp-brand > svg { color: var(--dim); }
-.mp-logo { position: relative; width: 40px; height: 40px; border-radius: 6px; background: var(--soft); overflow: hidden; display: grid; place-items: center; }
-.mp-logo b { font-weight: 500; font-size: 17px; text-transform: uppercase; }
-.mp-logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--bg); }
 .mp-bname { display: flex; flex-direction: column; gap: 1px; font-size: 16px; min-width: 0; }
 .mp-bname small { font-size: 13px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mp-latest { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
