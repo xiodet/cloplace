@@ -445,18 +445,18 @@
   "type": "sale",
   "date": "2026-11-14",
   "title": {
-   "en": "Sale: up to −81%",
-   "ru": "Скидки до −81%",
-   "uk": "Знижки до −81%"
+   "en": "Sale: up to −79%",
+   "ru": "Скидки до −79%",
+   "uk": "Знижки до −79%"
   },
   "summary": {
-   "en": "57 items discounted.",
-   "ru": "57 вещей со скидкой.",
-   "uk": "57 речей зі знижкою."
+   "en": "52 items discounted.",
+   "ru": "52 вещи со скидкой.",
+   "uk": "52 речі зі знижкою."
   },
   "source": {
    "kind": "shopify",
-   "url": "https://kseniaschnaider.com/products/wide-leg-jeans-with-embroidered-cherries-copy"
+   "url": "https://kseniaschnaider.com/products/wavy-sweater"
   }
  },
  {
@@ -585,18 +585,38 @@
   "type": "drop",
   "date": "2026-11-14",
   "title": {
-   "en": "New in store: 21",
-   "ru": "Новинки в магазине: 21",
-   "uk": "Новинки в магазині: 21"
+   "en": "New in store: 31",
+   "ru": "Новинки в магазине: 31",
+   "uk": "Новинки в магазині: 31"
   },
   "summary": {
-   "en": "New in: Grey Demi Denim, Grey Demi Denim, Wide Leg Jeans with Embroidered Cherries…",
-   "ru": "Новинки: Grey Demi Denim, Grey Demi Denim, Wide Leg Jeans with Embroidered Cherries…",
-   "uk": "Новинки: Grey Demi Denim, Grey Demi Denim, Wide Leg Jeans with Embroidered Cherries…"
+   "en": "New in: Wavy Sweater, T-shirt with Cardholder Detail, Illusion Sweater with Denim Back Detail…",
+   "ru": "Новинки: Wavy Sweater, T-shirt with Cardholder Detail, Illusion Sweater with Denim Back Detail…",
+   "uk": "Новинки: Wavy Sweater, T-shirt with Cardholder Detail, Illusion Sweater with Denim Back Detail…"
   },
   "source": {
    "kind": "shopify",
-   "url": "https://kseniaschnaider.com/products/grey-demi-denim-copy-1"
+   "url": "https://kseniaschnaider.com/products/wavy-sweater"
+  }
+ },
+ {
+  "id": "dont-waste-culture-drop-2026-11-14",
+  "brandId": "dont-waste-culture",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 19",
+   "ru": "Новинки в магазине: 19",
+   "uk": "Новинки в магазині: 19"
+  },
+  "summary": {
+   "en": "New in: Zeth | White, Zeth | Black, Jörn | White…",
+   "ru": "Новинки: Zeth | White, Zeth | Black, Jörn | White…",
+   "uk": "Новинки: Zeth | White, Zeth | Black, Jörn | White…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://dontwasteculture.com/products/zeth"
   }
  },
  {
