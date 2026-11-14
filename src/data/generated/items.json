@@ -6994,19 +6994,6 @@
   "publishedAt": "2024-02-06T19:54:01+01:00"
  },
  {
-  "id": "2819-jewelry-gift-card",
-  "brandId": "2819-jewelry",
-  "title": "GIFT CARD [DIGITAL]",
-  "category": "accessories",
-  "price": 56.22,
-  "compareAt": null,
-  "currency": "EUR",
-  "url": "https://2819jewelry.de/products/gift-card",
-  "image": "https://cdn.shopify.com/s/files/1/0921/8949/1537/files/1_75aa23ff-b003-45e7-901f-5deb554a25ac.png?v=1793799390",
-  "inStock": true,
-  "publishedAt": "2026-11-04T14:32:14+01:00"
- },
- {
   "id": "2819-jewelry-stab-pendant-burned",
   "brandId": "2819-jewelry",
   "title": "QUENTIN ESSER X 2819 STAB PENDANT",
@@ -12660,19 +12647,6 @@
   "image": "https://cdn.shopify.com/s/files/1/0106/3144/6628/files/K_Capsule_Doll_Core_Snapback_FL_3_FF.jpg?v=1772469958",
   "inStock": true,
   "publishedAt": "2026-03-02T19:24:23+02:00"
- },
- {
-  "id": "racer-worldwide-racer-gift-card",
-  "brandId": "racer-worldwide",
-  "title": "Racer Gift Card",
-  "category": "accessories",
-  "price": 50,
-  "compareAt": null,
-  "currency": "EUR",
-  "url": "https://racerworldwide.net/products/racer-gift-card",
-  "image": "https://cdn.shopify.com/s/files/1/0106/3144/6628/files/gift_card_racer.jpg?v=1771507476",
-  "inStock": true,
-  "publishedAt": "2026-02-19T15:26:43+02:00"
  },
  {
   "id": "racer-worldwide-monster-high™-x-racer-frankie-skirt-black",
@@ -21825,19 +21799,6 @@
   "image": "https://cdn.shopify.com/s/files/1/0838/6353/5889/files/4-A.webp?v=1787645302",
   "inStock": true,
   "publishedAt": "2026-09-17T11:36:35+02:00"
- },
- {
-  "id": "monateo-monateo-gift-card",
-  "brandId": "monateo",
-  "title": "monateo gift card",
-  "category": "accessories",
-  "price": 56.34,
-  "compareAt": null,
-  "currency": "EUR",
-  "url": "https://monateo.com/products/monateo-gift-card",
-  "image": "https://cdn.shopify.com/s/files/1/0838/6353/5889/files/BOX_d803c7bd-54ae-4e4d-85e1-9cdeff4244db.png?v=1782979619",
-  "inStock": true,
-  "publishedAt": "2026-07-02T10:07:50+02:00"
  },
  {
   "id": "monateo-shipping-protection",
