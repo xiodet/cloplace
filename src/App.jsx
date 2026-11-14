@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { LangContext, dict, useLang } from './i18n.js';
 import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
@@ -33,7 +33,7 @@ const W = {
     index_quote: 'Every brand in the index, A to Z',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     search_quote: 'Describe what you want in plain words',
-    scroll: 'Scroll to the clothes', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
+    next: 'Next brand', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
   },
   ru: {
     brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
@@ -44,7 +44,7 @@ const W = {
     index_quote: 'Все бренды индекса, от A до Z',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     search_quote: 'Опиши обычными словами, что ищешь',
-    scroll: 'Листай к вещам', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
+    next: 'Следующий бренд', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
   },
 };
 
@@ -105,6 +105,7 @@ export default function App() {
   else if (page === 'news') body = <NewsPage />;
   else if (page === 'search') body = <SearchPage q={route.params.get('q') || ''} />;
   else body = <Home />;
+  if (page !== 'brand') backTo = window.location.hash.replace(/^#/, '') || '/';
 
   return <LangContext.Provider value={{ lang, t: dict[lang], w: W[lang], setLang }}>{body}</LangContext.Provider>;
 }
@@ -309,91 +310,154 @@ function ItemCard({ item, showBrand }) {
   );
 }
 
-// ── Brand page: intro with the giant name, then the clothes take over the whole
-// screen as you scroll, then the practical information underneath.
+// ── Brand page. Two states of one layout:
+//   closed — giant name on the left, description and the clothes in the reading column;
+//   open   — after a little scrolling the name leaves and the clothes spread over the whole
+//            screen, like browsing the brand's own store. Scrolling back to the top closes it.
+// Tiles travel between the two layouts with a FLIP animation.
+let backTo = '/'; // where "back" leads: the list the visitor came from
+
 function BrandPage({ brand }) {
   const { lang, t, w } = useLang();
   const its = itemsByBrand[brand.id] || [];
   const bn = news.filter((n) => n.brandId === brand.id);
-  const { hero } = brandMedia(brand.id);
-  const unv = (field) => (brand.verified.includes(field) ? null : <em className="unv">{t.unverified}</em>);
-  return (
-    <>
-      <Shell word={brand.name.toLowerCase()} quote={brand.style.join(', ')} by={[brand.city, countries[brand.country][lang]].filter(Boolean).join(', ')} foot={false}>
-        <a href="#/" className="back rise">{t.back}</a>
-        <p className="lead rise">{brand.description[lang]}</p>
-        {hero
-          ? <img className="hero-photo rise" src={hero} alt={brand.name} />
-          : (
-            <div className="hero-collage collage rise">
-              {its.slice(0, 3).map((it, i) => <span key={it.id} className="tile"><Garment item={it} tone={i} /></span>)}
-            </div>
-          )}
-        <p className="scroll-hint rise">{w.scroll} ↓</p>
-      </Shell>
-
-      <Store brand={brand} its={its} />
-
-      <div className="below">
-        <section className="below-row">
-          <h2>{w.info}</h2>
-          <dl className="facts">
-            <div><dt>{w.country}</dt><dd>{countries[brand.country][lang]}{brand.city ? ', ' + brand.city : ''}</dd></div>
-            {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
-            <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
-            <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
-            <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
-            <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : t.no_returns}{unv('returns')}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
-          </dl>
-        </section>
-        {bn.length > 0 && (
-          <section className="below-row">
-            <h2>{t.news_from}</h2>
-            <div className="news-list">{bn.map((n) => <NewsCard key={n.id} n={n} />)}</div>
-          </section>
-        )}
-        <footer className="foot"><span>{t.footer}</span></footer>
-      </div>
-    </>
-  );
-}
-
-// The clothes. While this section scrolls into view it grows from the width of the
-// reading column to the full screen (--p goes 0 → 1), like stepping into the brand's store.
-function Store({ brand, its }) {
-  const { t, w } = useLang();
-  const ref = useRef(null);
-  const [shown, setShown] = useState(PAGE);
+  const { logo } = brandMedia(brand.id);
   const isDemo = its.some((i) => i.demo);
+  const [shown, setShown] = useState(PAGE);
+  const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 860;
+  const [open, setOpen] = useState(still);
+  const openRef = useRef(open);
+  const grid = useRef(null);
+  const page = useRef(null);
+  const before = useRef(null);
+  const unv = (field) => (brand.verified.includes(field) ? null : <em className="unv">{t.unverified}</em>);
+  const idx = brands.indexOf(brand);
+  const next = brands[(idx + 1) % brands.length];
+
+  // open / close on scroll, with hysteresis so it never flickers
   useEffect(() => {
-    const el = ref.current;
-    const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 860;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const vh = window.innerHeight;
-      const raw = still() ? 1 : Math.min(1, Math.max(0, (vh - el.getBoundingClientRect().top) / (vh * 0.8)));
-      el.style.setProperty('--p', (raw * raw * (3 - 2 * raw)).toFixed(4)); // smoothstep
+    const on = () => {
+      const want = still() ? true : openRef.current ? window.scrollY > 24 : window.scrollY > 70;
+      if (want === openRef.current) return;
+      before.current = still() ? null : [...grid.current.children].map((el) => el.getBoundingClientRect());
+      openRef.current = want;
+      setOpen(want);
     };
-    const on = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
     window.addEventListener('scroll', on, { passive: true });
     window.addEventListener('resize', on);
-    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); cancelAnimationFrame(raf); };
+    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); };
   }, []);
+
+  // FLIP: start every tile where it was, then let it glide to its new place
+  useLayoutEffect(() => {
+    const first = before.current;
+    before.current = null;
+    if (!first) return;
+    [...grid.current.children].forEach((el, i) => {
+      const a = first[i];
+      if (!a) return;
+      const b = el.getBoundingClientRect();
+      el.style.transition = 'none';
+      el.style.transformOrigin = '0 0';
+      el.style.transform = `translate(${a.left - b.left}px, ${a.top - b.top}px) scale(${a.width / b.width})`;
+      el.getBoundingClientRect();
+      el.style.transition = `transform .85s cubic-bezier(.76, 0, .24, 1) ${Math.min(i, 8) * 18}ms`;
+      el.style.transform = '';
+    });
+  }, [open]);
+
+  // back: Esc, or swipe right on a touch screen (the page follows the finger)
+  useEffect(() => {
+    const leave = () => go(backTo);
+    const key = (e) => { if (e.key === 'Escape') leave(); };
+    let sx = 0, sy = 0, dx = 0, drag = false;
+    const el = page.current;
+    const start = (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; drag = false; };
+    const move = (e) => {
+      dx = e.touches[0].clientX - sx;
+      const dy = e.touches[0].clientY - sy;
+      if (!drag && dx > 12 && Math.abs(dx) > Math.abs(dy) * 1.5) drag = true;
+      if (drag) {
+        el.style.transition = 'none';
+        el.style.transform = `translateX(${Math.max(0, dx) * 0.7}px)`;
+        el.style.opacity = String(Math.max(0.3, 1 - dx / 500));
+      }
+    };
+    const end = () => {
+      if (!drag) return;
+      el.style.transition = 'transform .3s ease, opacity .3s ease';
+      if (dx > 90) { el.style.transform = 'translateX(100vw)'; el.style.opacity = '0'; setTimeout(leave, 180); }
+      else { el.style.transform = ''; el.style.opacity = ''; }
+      drag = false;
+    };
+    window.addEventListener('keydown', key);
+    el.addEventListener('touchstart', start, { passive: true });
+    el.addEventListener('touchmove', move, { passive: true });
+    el.addEventListener('touchend', end);
+    return () => {
+      window.removeEventListener('keydown', key);
+      el.removeEventListener('touchstart', start); el.removeEventListener('touchmove', move); el.removeEventListener('touchend', end);
+    };
+  }, []);
+
   return (
-    <section className="store" ref={ref}>
-      <div className="store-inner">
-        <div className="store-head">
-          <h2>{brand.name}</h2>
-          <span className="muted">{t.items_found(its.length)}</span>
-          {brand.website && <a href={brand.website} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
+    <>
+      <TopBar />
+      <div className={'brand' + (open ? ' open' : '')} ref={page}>
+        <aside className="side">
+          <blockquote className="quote">
+            <p>{brand.style.join(', ')}</p>
+            <cite>{[brand.city, countries[brand.country][lang]].filter(Boolean).join(', ')}</cite>
+          </blockquote>
+          <div className="giant-clip"><h1 className="giant" style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
+        </aside>
+
+        <div className="brand-intro">
+          <a href={'#' + backTo} className="back rise">{t.back}</a>
+          {logo && <img className="brand-logo rise" src={logo} alt="" />}
+          <p className="lead rise">{brand.description[lang]}</p>
         </div>
-        {isDemo && <p className="demo-note">{t.demo_note}</p>}
-        <div className="store-grid">{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
-        {its.length > shown && <button className="more" onClick={() => setShown(shown + PAGE)}>{w.more(its.length - shown)}</button>}
+
+        <section className="store">
+          <div className="store-inner">
+            <div className="store-head">
+              <a href={'#' + backTo} className="store-back" aria-label={t.back}>←</a>
+              <h2><span className="sh-closed">{t.items}</span><span className="sh-open">{brand.name}</span></h2>
+              <span className="muted">{t.items_found(its.length)}</span>
+              {brand.website && <a className="store-link" href={brand.website} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
+            </div>
+            {isDemo && <p className="demo-note">{t.demo_note}</p>}
+            <div className="store-grid" ref={grid}>{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
+            {its.length > shown && <button className="more" onClick={() => setShown(shown + PAGE)}>{w.more(its.length - shown)}</button>}
+          </div>
+        </section>
+
+        <div className="below">
+          <section className="below-row">
+            <h2>{w.info}</h2>
+            <dl className="facts">
+              <div><dt>{w.country}</dt><dd>{countries[brand.country][lang]}{brand.city ? ', ' + brand.city : ''}</dd></div>
+              {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
+              <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
+              <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
+              <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
+              <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : t.no_returns}{unv('returns')}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
+            </dl>
+          </section>
+          {bn.length > 0 && (
+            <section className="below-row">
+              <h2>{t.news_from}</h2>
+              <div className="news-list">{bn.map((n) => <NewsCard key={n.id} n={n} />)}</div>
+            </section>
+          )}
+          <a className="next-brand" href={'#/brand/' + next.id} onClick={(e) => openBrand(e, next)}>
+            <span className="muted">{w.next}</span>
+            <span className="nb-name">{next.name} →</span>
+          </a>
+          <footer className="foot"><span>{t.footer}</span></footer>
+        </div>
       </div>
-    </section>
+    </>
   );
 }
 

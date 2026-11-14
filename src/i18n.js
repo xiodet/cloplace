@@ -25,7 +25,7 @@ export const dict = {
     unverified: 'not verified yet',
     no_link: 'link coming soon',
     news_types: { drop: 'Drop', sale: 'Sale', collab: 'Collab', news: 'News' },
-    back: '← All brands',
+    back: '← Back',
     footer: 'Hobby project. Brand names and logos belong to their owners.',
   },
   ru: {
@@ -52,7 +52,7 @@ export const dict = {
     unverified: 'ещё не проверено',
     no_link: 'ссылка скоро',
     news_types: { drop: 'Дроп', sale: 'Скидки', collab: 'Коллаб', news: 'Новость' },
-    back: '← Все бренды',
+    back: '← Назад',
     footer: 'Хобби-проект. Названия и логотипы брендов принадлежат их владельцам.',
   },
 };

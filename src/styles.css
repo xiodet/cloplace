@@ -89,9 +89,6 @@ img.tile-img { object-fit: contain; mix-blend-mode: multiply; }
 .back { display: inline-block; font-size: 13px; color: var(--muted); margin-bottom: 20px; transition: color .2s; }
 .back:hover { color: var(--ink); }
 .lead { font-size: 24px; line-height: 1.15; letter-spacing: -0.035em; font-weight: 500; text-wrap: balance; }
-.hero-photo { display: block; margin-top: 28px; width: 100%; height: auto; }
-.hero-collage { margin-top: 28px; }
-.scroll-hint { margin-top: 28px; padding-bottom: 40px; font-size: 13px; color: var(--muted); }
 .hero-img { margin-top: 28px; aspect-ratio: 5 / 6; background: var(--soft); overflow: hidden; max-width: 100%; }
 
 .facts { margin: 0; }
@@ -117,17 +114,27 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .demo-note { font-size: 13px; color: var(--muted); margin: -6px 0 20px; }
 .wide-grid + .demo-note { margin-top: 32px; }
 
-/* the clothes: grows from the reading column to the full screen while scrolling in */
-.store { --p: 1; padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
-.store-inner { margin-left: calc((1 - var(--p)) * (42vw - var(--pad))); width: calc(460px + var(--p) * (100% - 460px)); max-width: 100%; }
-.store-head { position: sticky; top: calc(var(--top) + env(safe-area-inset-top, 0px)); z-index: 5; background: var(--bg); display: flex; align-items: baseline; gap: 16px; padding: 14px 0; opacity: var(--p); white-space: nowrap; overflow: hidden; }
+/* ── brand page: closed (name + column) ⇄ open (clothes across the screen) ── */
+.brand .side { position: fixed; left: 0; top: calc(var(--top) + env(safe-area-inset-top, 0px)); width: 42vw; transition: opacity .45s ease, transform .85s var(--ease); }
+.brand.open .side { opacity: 0; transform: translateX(-8vw); pointer-events: none; }
+.brand-intro { margin-left: 42vw; max-width: 484px; padding: 20px var(--pad) 0 0; }
+.brand-logo { display: block; width: 44px; height: 44px; object-fit: contain; margin-bottom: 16px; }
+.store { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); overflow-anchor: none; }
+.store-inner { margin-left: calc(42vw - var(--pad)); width: 460px; max-width: 100%; }
+.brand.open .store-inner { margin-left: 0; width: 100%; }
+.store-head { position: sticky; top: calc(var(--top) + env(safe-area-inset-top, 0px)); z-index: 5; background: var(--bg); display: flex; align-items: baseline; gap: 14px; padding: 28px 0 14px; white-space: nowrap; }
 .store-head h2 { font-size: 22px; letter-spacing: -0.03em; margin: 0; }
-.store-head a { margin-left: auto; }
-.store-head a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.store-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(4px + var(--p) * 36px) calc(4px + var(--p) * 12px); }
-.store .item-body { opacity: var(--p); }
-.store .item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.store .demo-note { opacity: var(--p); margin: 0 0 16px; }
+.store-link { margin-left: auto; }
+.store-link:hover, .store-back:hover { text-decoration: underline; text-underline-offset: 3px; }
+.store-back, .sh-open { display: none; }
+.brand.open .store-back, .brand.open .sh-open { display: inline; }
+.brand.open .sh-closed { display: none; }
+.store-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
+.brand.open .store-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 44px 16px; }
+.store-grid .item-card { will-change: transform; }
+.next-brand { display: flex; flex-direction: column; gap: 4px; margin-top: 120px; padding-top: 20px; border-top: 1px solid var(--ink); }
+.nb-name { font-size: clamp(36px, 6vw, 96px); letter-spacing: -0.055em; line-height: 1; transition: padding .35s var(--ease-out); }
+.next-brand:hover .nb-name { padding-left: 16px; }
 
 /* information under the clothes */
 .below { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
@@ -183,7 +190,7 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 
 @media (max-width: 1100px) {
   .showcases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .store-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .brand.open .store-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 860px) {
   :root { --pad: 16px; --w: 88vw; --top: 104px; }
@@ -193,11 +200,14 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
   .home-title { font-size: 17vw; }
   .intro { padding: 32px 0; font-size: 19px; }
   .showcases { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .store-inner { margin-left: 0; width: 100%; }
-  .store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .brand .side { position: static; width: auto; }
+  .brand.open .side { opacity: 1; transform: none; pointer-events: auto; }
+  .brand-intro { margin-left: 0; max-width: none; padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); }
+  .store-inner, .brand.open .store-inner { margin-left: 0; width: 100%; }
+  .brand.open .store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
+  .store-head { top: calc(var(--top) + env(safe-area-inset-top, 0px)); }
   .below-row { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 72px; }
-  .hero-collage { margin-top: 28px; }
-.scroll-hint { display: none; }
+
   .home-search { margin-top: 64px; }
   .shell { grid-template-columns: minmax(0, 1fr); }
   .side { position: static; height: auto; gap: 40px; padding-bottom: 28px; padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
