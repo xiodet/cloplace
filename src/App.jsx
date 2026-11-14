@@ -5,6 +5,7 @@ import { countries } from './data/brands.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
 import Logo from './components/Logo.jsx';
+import BrandMap, { clusterBrands } from './components/BrandMap.jsx';
 
 // ── tiny hash router: #/  #/brands  #/brand/:id  #/news  #/search?q=...
 function useRoute() {
@@ -245,29 +246,58 @@ function Showcase({ brand, n }) {
 function IndexPage() {
   const { lang, t, w } = useLang();
   const [origin, setOrigin] = useState('ALL');
-  const list = brands
+  const [place, setPlace] = useState(null);
+  const [hotBrand, setHotBrand] = useState(null);
+  const [hotPlace, setHotPlace] = useState(null);
+  const L = lang === 'ru'
+    ? { hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', reset: 'Показать все' }
+    : { hint: 'Select a pin to see the brands from that city', reset: 'Show all' };
+  const inOrigin = brands
     .filter((b) => origin === 'ALL' || (origin === 'UA' ? b.country === 'UA' : b.country !== 'UA'))
     .sort((a, b) => a.name.localeCompare(b.name));
+  const clusters = useMemo(() => clusterBrands(inOrigin), [origin]);
+  const picked = clusters.find((c) => c.key === place);
+  const hovered = clusters.find((c) => c.key === hotPlace);
+  const list = picked ? inOrigin.filter((b) => picked.brands.includes(b)) : inOrigin;
   return (
-    <Shell word={w.index} quote={w.index_quote} by={t.brands_count(list.length)} wide active="index">
-      <div className="row-head rise">
-        <h2>{t.all_brands}</h2>
-        <div className="chips">
-          {[['ALL', t.any], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
-            <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => setOrigin(k)}>{label}</button>
+    <>
+      <TopBar active="index" />
+      <main className="index-page">
+        <div className="ix-top">
+          <div className="ix-side rise">
+            <p className="np-lead">{w.index_quote}</p>
+            <div className="ix-tools">
+              <div className="chips">
+                {[['ALL', t.any], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
+                  <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => { setOrigin(k); setPlace(null); }}>{label}</button>
+                ))}
+              </div>
+              {picked
+                ? <p className="ix-picked"><span>{picked.names.join(', ')}</span><span className="muted">{t.brands_count(picked.brands.length)}</span><button className="chip on" onClick={() => setPlace(null)}>{L.reset} ×</button></p>
+                : <p className="muted ix-hint">{L.hint}</p>}
+            </div>
+          </div>
+          <div className="rise" style={{ '--i': 2 }}>
+            <BrandMap clusters={clusters} selected={place} hot={hotBrand} onSelect={setPlace} onHover={setHotPlace} />
+          </div>
+        </div>
+        <div className="row-head ix-head">
+          <h2>{picked ? picked.names.join(', ') : t.all_brands}</h2>
+          <span className="muted">{t.brands_count(list.length)}</span>
+        </div>
+        <div className="index-list">
+          {list.map((b) => (
+            <a key={b.id} className={'index-row' + (hovered?.brands.includes(b) ? ' hot' : '')} href={'#/brand/' + b.id} onClick={(e) => openBrand(e, b)}
+              onMouseEnter={() => setHotBrand(b.id)} onMouseLeave={() => setHotBrand(null)}>
+              <span className="ir-name">{b.name}</span>
+              <span className="ir-style">{b.style.join(', ')}</span>
+              <span className="ir-city">{b.city ? b.city + ', ' : ''}{countries[b.country][lang]}</span>
+            </a>
           ))}
         </div>
-      </div>
-      <div className="index-list rise">
-        {list.map((b) => (
-          <a key={b.id} className="index-row" href={'#/brand/' + b.id} onClick={(e) => openBrand(e, b)}>
-            <span className="ir-name">{b.name}</span>
-            <span className="ir-style">{b.style.join(', ')}</span>
-            <span className="ir-city">{b.city || countries[b.country][lang]}</span>
-          </a>
-        ))}
-      </div>
-    </Shell>
+        <footer className="foot"><span>{t.footer}</span></footer>
+      </main>
+    </>
   );
 }
 

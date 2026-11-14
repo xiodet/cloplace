@@ -1,3 +1,4 @@
+const ruPlural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many);
 import { createContext, useContext } from 'react';
 
 export const dict = {
@@ -7,12 +8,12 @@ export const dict = {
     search_ph: 'e.g. hoodie under 3000 UAH shipping to Kyiv',
     search_btn: 'Search',
     latest_news: 'Latest news', all_news: 'All news',
-    all_brands: 'All brands', brands_count: (n) => `${n} brands`,
+    all_brands: 'All brands', brands_count: (n) => `${n} ${n === 1 ? 'brand' : 'brands'}`,
     filters: 'Filters', category: 'Clothing type', any: 'Any',
     price: 'Price, ₴', from: 'from', to: 'to',
     ship_to: 'Ships to', returns: 'Returns', returns_only: 'Only with returns',
     sale_only: 'Only on sale', origin: 'Brand country', reset: 'Reset',
-    items_found: (n) => `${n} items`, brands_found: (n) => `${n} brands`,
+    items_found: (n) => `${n} ${n === 1 ? 'item' : 'items'}`, brands_found: (n) => `${n} ${n === 1 ? 'brand' : 'brands'}`,
     understood: 'Understood as',
     nothing: 'Nothing found. Try removing a filter.',
     show_items: 'Items', show_brands: 'Brands',
@@ -34,12 +35,12 @@ export const dict = {
     search_ph: 'например: худи до 3000 грн с доставкой в Киев',
     search_btn: 'Найти',
     latest_news: 'Свежие новости', all_news: 'Все новости',
-    all_brands: 'Все бренды', brands_count: (n) => `${n} брендов`,
+    all_brands: 'Все бренды', brands_count: (n) => `${n} ${ruPlural(n, 'бренд', 'бренда', 'брендов')}`,
     filters: 'Фильтры', category: 'Тип одежды', any: 'Любой',
     price: 'Цена, ₴', from: 'от', to: 'до',
     ship_to: 'Доставка в', returns: 'Возврат', returns_only: 'Только с возвратом',
     sale_only: 'Только со скидкой', origin: 'Страна бренда', reset: 'Сбросить',
-    items_found: (n) => `${n} вещей`, brands_found: (n) => `${n} брендов`,
+    items_found: (n) => `${n} ${ruPlural(n, 'вещь', 'вещи', 'вещей')}`, brands_found: (n) => `${n} ${ruPlural(n, 'бренд', 'бренда', 'брендов')}`,
     understood: 'Понял как',
     nothing: 'Ничего не найдено. Попробуй убрать фильтр.',
     show_items: 'Вещи', show_brands: 'Бренды',

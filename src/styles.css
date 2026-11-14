@@ -195,6 +195,38 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .ir-name { font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -0.045em; font-weight: 500; line-height: 1.05; }
 .ir-style, .ir-city { color: var(--muted); font-size: 13px; }
 
+/* index page: map with brand pins, then the full-width list */
+.index-page { padding: 20px max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px)); }
+.ix-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 32px; align-items: stretch; }
+.ix-side { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.ix-tools { display: flex; flex-direction: column; gap: 14px; }
+.ix-tools .chips { margin: 0; }
+.ix-hint { font-size: 13px; max-width: 30ch; }
+.ix-picked { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; font-size: 22px; letter-spacing: -0.03em; }
+.ix-picked .muted, .ix-picked .chip { font-size: 13px; letter-spacing: 0; }
+.ix-head { margin-top: 56px; }
+.index-page .index-row { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, .8fr); padding: 16px 0; }
+.index-page .index-row:last-child { border-bottom: 1px solid var(--line); }
+.index-page .ir-name { font-size: clamp(26px, 3.6vw, 54px); }
+.index-page .ir-city { text-align: right; }
+.index-row.hot { padding-left: 14px; }
+.map { position: relative; width: 100%; }
+.map svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.map path { fill: var(--soft); stroke: var(--bg); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.pin { position: absolute; width: 24px; height: 24px; transform: translate(-50%, -50%); border-radius: 50%; border: 0; padding: 0; background: none; cursor: pointer; font: inherit; color: var(--ink); z-index: 1; }
+.pin-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 10px; height: 10px; border-radius: 10px; background: var(--ink); color: var(--bg); font-size: 11px; line-height: 18px; text-align: center; box-shadow: 0 0 0 3px var(--bg); transition: transform .3s var(--ease-out), box-shadow .3s; }
+.pin-dot:not(:empty) { min-width: 18px; height: 18px; }
+.pin-label { position: absolute; left: calc(50% + 14px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; text-align: left; white-space: nowrap; font-size: 12px; line-height: 1.2; color: var(--muted); pointer-events: none; transition: color .2s; }
+.pin.flip .pin-label { left: auto; right: calc(50% + 14px); text-align: right; }
+.pin-brands { display: none; color: var(--ink); font-size: 13px; }
+.pin:hover, .pin.lit { z-index: 3; }
+.pin:hover .pin-dot, .pin.lit .pin-dot { transform: translate(-50%, -50%) scale(1.35); }
+.pin.on .pin-dot { box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--ink); }
+.pin:hover .pin-label, .pin.lit .pin-label { color: var(--ink); background: var(--bg); padding: 4px 8px; border-radius: 6px; margin: 0 -2px; box-shadow: 0 1px 12px rgba(0, 0, 0, .08); }
+.pin:hover .pin-brands, .pin.lit .pin-brands { display: block; }
+.pin:focus-visible { outline: none; }
+.pin:focus-visible .pin-dot { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--ink); }
+
 /* search */
 .search-page { padding: 20px max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px)); }
 .sp-bar .searchbar input { font-size: clamp(26px, 3.6vw, 52px); letter-spacing: -0.05em; padding: 14px 0 16px; }
@@ -262,6 +294,12 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
   .nr-brand, .nr-text { grid-column: 1 / -1; }
   .nr-name { font-size: 30px; }
   .nr-slot:empty { display: none; }
+  .ix-top { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .index-page .index-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .index-page .ir-name { font-size: 28px; }
+  .pin-label { display: none; }
+  .pin.lit .pin-label, .pin:hover .pin-label { display: flex; }
+  .ix-head { margin-top: 40px; }
   .search-page .item-grid.wide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; }
   .nr-thumbs { grid-column: 1 / -1; justify-content: start; grid-template-columns: repeat(3, 64px); }
   .nr-out { top: 16px; transform: none; }
