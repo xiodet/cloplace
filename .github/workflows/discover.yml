@@ -21,3 +21,5 @@ jobs:
         env:
           HANDLES: ${{ inputs.handles }}
           DOMAINS: ${{ inputs.domains }}
+          CONC: ${{ inputs.domains && 12 || 80 }}
+          TIMEOUT: ${{ inputs.domains && 15000 || 7000 }}

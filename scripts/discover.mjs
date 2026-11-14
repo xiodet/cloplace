@@ -27,7 +27,7 @@ function candidates(h) {
 // A store that is not on Shopify: report the page title so a person can judge.
 async function plain(handle, domain) {
   try {
-    const res = await fetch(`https://${domain}/`, { signal: AbortSignal.timeout(7000), redirect: 'follow', headers: { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' } });
+    const res = await fetch(`https://${domain}/`, { signal: AbortSignal.timeout(+(process.env.TIMEOUT || 7000)), redirect: 'follow', headers: { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' } });
     if (!res.ok) return null;
     const html = (await res.text()).slice(0, 200000);
     if (!/cart|basket|shop|store|корзин|кошик|warenkorb|panier/i.test(html)) return null;
@@ -40,7 +40,7 @@ async function plain(handle, domain) {
 
 async function probe(handle, domain) {
   try {
-    const res = await fetch(`https://${domain}/meta.json`, { signal: AbortSignal.timeout(7000), redirect: 'follow', headers: { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' } });
+    const res = await fetch(`https://${domain}/meta.json`, { signal: AbortSignal.timeout(+(process.env.TIMEOUT || 7000)), redirect: 'follow', headers: { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' } });
     if (!res.ok || !(res.headers.get('content-type') || '').includes('json')) return null;
     const m = await res.json();
     if (!m.name || !m.currency) return null;
@@ -53,7 +53,7 @@ const domains = (process.env.DOMAINS || '').split(/[\s,]+/).filter(Boolean);
 const jobs = [...handles.flatMap((h) => candidates(h).map((d) => [h, d])), ...domains.map((d) => [d, d])];
 const found = [];
 let i = 0;
-await Promise.all(Array.from({ length: 80 }, async () => {
+await Promise.all(Array.from({ length: +(process.env.CONC || 80) }, async () => {
   while (i < jobs.length) {
     const [h, d] = jobs[i++];
     const r = (await probe(h, d)) || (await plain(h, d));
