@@ -52,7 +52,7 @@ function Header() {
   const { lang, t, setLang } = useLang();
   return (
     <header className="header">
-      <a href="#/" className="logo">DROP<span>/</span>INDEX</a>
+      <a href="#/" className="logo">Drop<span>/</span>Index</a>
       <nav>
         <a href="#/">{t.nav_brands}</a>
         <a href="#/news">{t.nav_news}</a>
@@ -116,7 +116,7 @@ function Home() {
         <div className="section-head">
           <h2>{t.all_brands} <small>{t.brands_count(list.length)}</small></h2>
           <div className="chips">
-            {[['ALL', '★'], ['UA', '🇺🇦 UA'], ['EU', '🇪🇺 EU']].map(([k, label]) => (
+            {[['ALL', ''], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
               <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => setOrigin(k)}>
                 {k === 'ALL' ? t.any : label}
               </button>
@@ -138,16 +138,15 @@ function BrandCard({ brand }) {
     <a className="brand-card" href={'#/brand/' + brand.id}>
       <div className="brand-card-head">
         <h3>{brand.name}</h3>
-        <span className="meta">{countries[brand.country].flag} {brand.city || countries[brand.country][lang]}</span>
+        <span className="meta">{brand.city || countries[brand.country][lang]}</span>
       </div>
       <div className="collage">
-        {its.map((it, i) => <div key={i} className={'tile t' + i}><Garment item={it} palette={rot(brand.palette, i)} /></div>)}
+        {its.map((it, i) => <div key={i} className={'tile t' + i}><Garment item={it} tone={i} /></div>)}
       </div>
       <div className="tags">{brand.style.map((s) => <span key={s}>{s}</span>)}</div>
     </a>
   );
 }
-const rot = (p, i) => (i % 2 ? [p[1], p[2], p[0]] : p);
 
 function NewsCard({ n }) {
   const { lang, t } = useLang();
@@ -194,7 +193,7 @@ function ItemCard({ item }) {
   const Tag = item.url ? 'a' : 'div';
   return (
     <Tag className="item-card" {...(item.url ? { href: item.url, target: '_blank', rel: 'noreferrer' } : {})}>
-      <div className="item-img"><Garment item={item} palette={b.palette} />{item.demo && <span className="demo on-img">{t.demo_badge}</span>}</div>
+      <div className="item-img"><Garment item={item} />{item.demo && <span className="demo on-img">{t.demo_badge}</span>}</div>
       <div className="item-body">
         <span className="item-brand">{b.name}</span>
         <span className="item-title">{item.title}</span>
@@ -216,9 +215,9 @@ function BrandPage({ brand }) {
   return (
     <div className="brand-page">
       <a href="#/" className="back">{t.back}</a>
-      <div className="brand-hero" style={{ '--b0': brand.palette[0], '--b1': brand.palette[1], '--b2': brand.palette[2] }}>
+      <div className="brand-hero">
         <div>
-          <span className="meta">{countries[brand.country].flag} {countries[brand.country][lang]}{brand.city ? ' · ' + brand.city : ''}{brand.founded ? ` · ${t.founded} ${brand.founded}` : ''}</span>
+          <span className="meta">{countries[brand.country][lang]}{brand.city ? ' · ' + brand.city : ''}{brand.founded ? ` · ${t.founded} ${brand.founded}` : ''}</span>
           <h1>{brand.name}</h1>
           <p>{brand.description[lang]}</p>
           <div className="tags">{brand.style.map((s) => <span key={s}>{s}</span>)}</div>
@@ -278,7 +277,7 @@ function SearchPage({ q }) {
   if (f.minUAH != null) chips.push(`${t.from} ${Math.round(f.minUAH)} ₴`);
   if (f.maxUAH != null) chips.push(`${t.to} ${Math.round(f.maxUAH)} ₴`);
   if (f.ship) chips.push(`${t.ship_to}: ${regions[f.ship][lang]}`);
-  if (f.country) chips.push(countries[f.country].flag + ' ' + countries[f.country][lang]);
+  if (f.country) chips.push(countries[f.country][lang]);
   if (f.returns) chips.push(t.returns_only);
   if (f.onSale) chips.push(t.sale_only);
   if (f.text?.length) chips.push('“' + f.text.join(' ') + '”');
@@ -313,7 +312,7 @@ function SearchPage({ q }) {
           <label>{t.origin}
             <select value={f.country || ''} onChange={(e) => set('country', e.target.value)}>
               <option value="">{t.any}</option>
-              {Object.entries(countries).map(([k, v]) => <option key={k} value={k}>{v.flag} {v[lang]}</option>)}
+              {Object.entries(countries).map(([k, v]) => <option key={k} value={k}>{v[lang]}</option>)}
             </select>
           </label>
           <label className="check"><input type="checkbox" checked={!!f.returns} onChange={(e) => set('returns', e.target.checked)} /> {t.returns_only}</label>

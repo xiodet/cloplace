@@ -11,15 +11,18 @@ const paths = {
   accessories: 'M28 36 L72 36 L76 86 L24 86 Z M38 36 Q38 18 50 18 Q62 18 62 36',
 };
 
-export default function Garment({ item, palette }) {
-  const [bg, fg, accent] = palette;
+// Monochrome on purpose: the site is black and white, real photos bring the colour.
+const tones = [['#f3f3f3', '#ffffff', '#111111'], ['#e9e9e9', '#111111', '#111111'], ['#f3f3f3', '#d0d0d0', '#111111']];
+
+export default function Garment({ item, tone = 0 }) {
+  const [bg, fg, accent] = tones[tone % tones.length];
   if (item.image) return <img className="tile-img" src={item.image} alt={item.title} loading="lazy" />;
   return (
     <svg className="tile-img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label={item.title}>
       <rect width="100" height="100" fill={bg} />
-      <path d={paths[item.category] || paths.tee} fill={fg} stroke={accent} strokeWidth="2" strokeLinejoin="round" />
+      <path d={paths[item.category] || paths.tee} fill={fg} stroke={accent} strokeWidth="1" strokeLinejoin="round" />
       {item.category === 'hoodie' && (
-        <g fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round">
+        <g fill="none" stroke={fg === '#111111' ? '#ffffff' : accent} strokeWidth="1" strokeLinecap="round">
           <path d="M40 28 Q50 36 60 28" />
           <path d="M38 66 L62 66 L58 80 L42 80 Z" />
           <path d="M46 34 L46 44 M54 34 L54 44" />
