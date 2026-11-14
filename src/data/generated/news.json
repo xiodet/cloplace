@@ -180,26 +180,6 @@
   }
  },
  {
-  "id": "avnier-sale-2026-11",
-  "brandId": "avnier",
-  "type": "sale",
-  "date": "2026-11-14",
-  "title": {
-   "en": "Sale: up to −64%",
-   "ru": "Скидки до −64%",
-   "uk": "Знижки до −64%"
-  },
-  "summary": {
-   "en": "21 items discounted.",
-   "ru": "21 вещь со скидкой.",
-   "uk": "21 річ зі знижкою."
-  },
-  "source": {
-   "kind": "shopify",
-   "url": "https://avnier.com/products/t-shirt-source-shock"
-  }
- },
- {
   "id": "garment-workshop-sale-2026-11",
   "brandId": "garment-workshop",
   "type": "sale",
@@ -560,26 +540,6 @@
   }
  },
  {
-  "id": "black-bananas-sale-2026-11",
-  "brandId": "black-bananas",
-  "type": "sale",
-  "date": "2026-11-14",
-  "title": {
-   "en": "Sale: up to −72%",
-   "ru": "Скидки до −72%",
-   "uk": "Знижки до −72%"
-  },
-  "summary": {
-   "en": "90 items discounted.",
-   "ru": "90 вещей со скидкой.",
-   "uk": "90 речей зі знижкою."
-  },
-  "source": {
-   "kind": "shopify",
-   "url": "https://blackbananas.com/products/commander-v2-parka-jacket-black-2"
-  }
- },
- {
   "id": "soulland-sale-2026-11",
   "brandId": "soulland",
   "type": "sale",
@@ -597,6 +557,26 @@
   "source": {
    "kind": "shopify",
    "url": "https://soulland.com/products/reseller-flow-sweatshirt-m"
+  }
+ },
+ {
+  "id": "carne-bollente-drop-2026-11-14",
+  "brandId": "carne-bollente",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 36",
+   "ru": "Новинки в магазине: 36",
+   "uk": "Новинки в магазині: 36"
+  },
+  "summary": {
+   "en": "New in: CB x Plain 'Welcum to Napoli', Two Climbing Cuties, The Big Ass-ent…",
+   "ru": "Новинки: CB x Plain 'Welcum to Napoli', Two Climbing Cuties, The Big Ass-ent…",
+   "uk": "Новинки: CB x Plain 'Welcum to Napoli', Two Climbing Cuties, The Big Ass-ent…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://carnebollente.com/products/cb-x-plain-welcum-to-napoli"
   }
  },
  {
@@ -737,26 +717,6 @@
   "source": {
    "kind": "shopify",
    "url": "https://patta.nl/products/nike-air-max-goadome-low-sp-lt-british-tan-metallic-ochre"
-  }
- },
- {
-  "id": "black-bananas-drop-2026-11-13",
-  "brandId": "black-bananas",
-  "type": "drop",
-  "date": "2026-11-13",
-  "title": {
-   "en": "New in store: 14",
-   "ru": "Новинки в магазине: 14",
-   "uk": "Новинки в магазині: 14"
-  },
-  "summary": {
-   "en": "New in: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…",
-   "ru": "Новинки: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…",
-   "uk": "Новинки: KIDS JUMP HOODIE | Grey, KIDS JUMP DENIM | Black, KIDS SKETCH HOODY | Black…"
-  },
-  "source": {
-   "kind": "shopify",
-   "url": "https://blackbananas.com/products/kids-jump-hoodie-grey"
   }
  },
  {
@@ -1197,26 +1157,6 @@
   "source": {
    "kind": "shopify",
    "url": "https://nofaithstudios.com/products/pull-over-bomber"
-  }
- },
- {
-  "id": "avnier-drop-2026-11-03",
-  "brandId": "avnier",
-  "type": "drop",
-  "date": "2026-11-03",
-  "title": {
-   "en": "New in store: 2",
-   "ru": "Новинки в магазине: 2",
-   "uk": "Новинки в магазині: 2"
-  },
-  "summary": {
-   "en": "New in: PULL TOKYEUX, JOGGING AVRAPP",
-   "ru": "Новинки: PULL TOKYEUX, JOGGING AVRAPP",
-   "uk": "Новинки: PULL TOKYEUX, JOGGING AVRAPP"
-  },
-  "source": {
-   "kind": "shopify",
-   "url": "https://avnier.com/products/pull-tokyeux-avnier-x-saint-james"
   }
  }
 ]
