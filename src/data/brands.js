@@ -124,12 +124,6 @@ export const brands = [
     website: 'https://arte-antwerp.com', instagram: null,
   },
   {
-    ...found, id: "avnier", name: "Avnier", country: 'FR', city: "Paris",
-    style: ["streetwear", "functional"],
-    description: { en: "Paris label making functional, durable clothing and accessories.", ru: "Парижский бренд функциональной и долговечной одежды и аксессуаров.", uk: "Паризький бренд функціонального й довговічного одягу та аксесуарів." },
-    website: 'https://avnier.com', instagram: null,
-  },
-  {
     ...found, id: "bluemarble", name: "Bluemarble", country: 'FR', city: "Paris",
     style: ["menswear"],
     description: { en: "French menswear brand created by Anthony Alvarez, based in Paris.", ru: "Французский бренд мужской одежды, созданный Энтони Альваресом. Базируется в Париже.", uk: "Французький бренд чоловічого одягу, створений Ентоні Альваресом. Базується в Парижі." },
@@ -328,12 +322,6 @@ export const brands = [
     website: 'https://theneworiginals.eu', instagram: null,
   },
   {
-    ...found, id: "black-bananas", name: "Black Bananas", country: 'NL', city: "The Hague",
-    style: ["streetwear"],
-    description: { en: "Dutch streetwear brand from The Hague.", ru: "Нидерландский стритвир-бренд из Гааги.", uk: "Нідерландський стрітвір-бренд із Гааги." },
-    website: 'https://blackbananas.com', instagram: null,
-  },
-  {
     ...found, id: "polar-skate-co", name: "Polar Skate Co.", country: 'SE', city: "Malmö",
     style: ["skate"],
     description: { en: "Skateboard company from Malmö known for its wide-leg jeans.", ru: "Скейтерский бренд из Мальмё, известный широкими джинсами.", uk: "Скейтерський бренд із Мальме, відомий широкими джинсами." },
@@ -344,12 +332,6 @@ export const brands = [
     style: ["menswear", "streetwear"],
     description: { en: "Copenhagen fashion brand with seasonal collections.", ru: "Копенгагенский модный бренд с сезонными коллекциями.", uk: "Копенгагенський модний бренд із сезонними колекціями." },
     website: 'https://soulland.com', instagram: null,
-  },
-  {
-    ...found, id: "eytys", name: "Eytys", country: 'SE', city: "Stockholm",
-    style: ["footwear", "denim"],
-    description: { en: "Stockholm brand refining classics: chunky footwear and denim.", ru: "Стокгольмский бренд, переосмысляющий классику: массивная обувь и деним.", uk: "Стокгольмський бренд, що переосмислює класику: масивне взуття та денім." },
-    website: 'https://eytys.com', instagram: null, currency: 'SEK',
   },
 ];
 

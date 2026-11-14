@@ -21,7 +21,6 @@ export default {
   'monateo': { shopify: 'https://monateo.com', mostly: 'accessories' },
   '6pm': { shopify: 'https://6pmseason.com' },
   'arte-antwerp': { shopify: 'https://arte-antwerp.com' },
-  'avnier': { shopify: 'https://avnier.com' },
   'bluemarble': { shopify: 'https://bluemarbleparis.com' },
   'carne-bollente': { shopify: 'https://carnebollente.com' },
   'cole-buxton': { shopify: 'https://colebuxton.com' },
@@ -55,8 +54,6 @@ export default {
   'olaf-hussein': { shopify: 'https://olafhussein.com' },
   'patta': { shopify: 'https://patta.nl' },
   'the-new-originals': { shopify: 'https://theneworiginals.eu' },
-  'black-bananas': { shopify: 'https://blackbananas.com' },
   'polar-skate-co': { shopify: 'https://polarskateco.com' },
   'soulland': { shopify: 'https://soulland.com' },
-  'eytys': { shopify: 'https://eytys.com', mostly: 'shoes' },
 };

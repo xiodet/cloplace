@@ -38,7 +38,7 @@ const extraWords = {
   jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell', 'chaqueta', 'cortavientos', 'veste', 'jacke', 'manteau', 'doudoune', 'poncho'],
   cap: ['gorra', 'casquette', 'bonnet', 'balaclava', 'bucket', 'gorro', 'panama'],
   knit: ['turtleneck', 'pull'],
-  shoes: ['boot', 'jordan', 'asics', 'adistar', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
+  shoes: ['boot', 'jordan', 'asics', 'adistar', 'beaters', 'beisser', 'derbys', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
   accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace', 'underwear', 'boxer', 'panty', 'bandana', 'tie', 'pendant', 'spray', 'mug', 'deck', 'brush', 'bufanda', 'calcetin', 'chaussette', 'echarpe', 'décapsuleur', 'voiture', 'duffle', 'musette', 'ceinture', 'sacoche', 'handbag', 'holdall', 'carabiner', 'charm', 'pin', 'chain'],
 };
 // The store's own product type is the best hint, then the title, then the tags.
