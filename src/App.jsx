@@ -33,7 +33,7 @@ const W = {
     index_quote: 'Every brand in the index, A to Z',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     search_quote: 'Describe what you want in plain words',
-    next: 'Next brand', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
+    next: 'Next brand', see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
   },
   ru: {
     brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
@@ -44,12 +44,12 @@ const W = {
     index_quote: 'Все бренды индекса, от A до Z',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     search_quote: 'Опиши обычными словами, что ищешь',
-    next: 'Следующий бренд', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
+    next: 'Следующий бренд', see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
   },
 };
 
 // Six showcases: brands with real collected photos first, then the hand-picked rest.
-const PICKS = ['nofaith-studios', 'ksenia-schnaider', 'represent', 'arte-antwerp', 'olaf-hussein', 'helas', 'sndct-kyiv', 'corteiz', 'daily-paper'];
+const PICKS = ['nofaith-studios', 'antisocial-laboratory', 'scuffers', 'racer-worldwide', 'society-de-nobodies', 'jaded-london', 'vicinity', 'lomalab', 'lkc2000', 'fwwproject'];
 const FEATURED = [...PICKS.filter((id) => liveBrandIds.includes(id)), ...PICKS.filter((id) => !liveBrandIds.includes(id))].slice(0, 6);
 const PAGE = 12;
 const itemsByBrand = items.reduce((m, i) => ((m[i.brandId] ||= []).push(i), m), {});
@@ -441,7 +441,7 @@ function BrandPage({ brand }) {
               <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
               <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
               <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
-              <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : t.no_returns}{unv('returns')}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
+              <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : <span className="muted">{w.see_store}</span>}{brand.returns?.days ? unv('returns') : null}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
             </dl>
           </section>
           {bn.length > 0 && (

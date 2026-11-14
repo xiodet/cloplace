@@ -1,13 +1,28 @@
-import { brands } from './brands.js';
+import { brands as listed } from './brands.js';
 import demoNews from './news.demo.js';
 
 // Data written by scripts/ingest.mjs. Missing files are fine: we fall back to demo data.
 const generated = import.meta.glob('./generated/*.json', { eager: true, import: 'default' });
 const genItems = (generated['./generated/items.json'] || []).filter((i) => i.price > 0);
 const genNews = generated['./generated/news.json'] || [];
+const stores = generated['./generated/stores.json'] || {};
 // Photos cached by the ingest script (optional). A cached copy wins over the remote URL.
 const cached = import.meta.glob('./generated/img/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
 const cachedImage = (id) => cached[`./generated/img/${id}.jpg`] || null;
+
+// Brand = hand-written entry + facts the store publishes about itself (those win).
+const EU = ['DE', 'FR', 'PL', 'IT', 'ES', 'NL'];
+function withStore(b) {
+  const st = stores[b.id];
+  if (!st) return b;
+  const ships = st.shipsTo || [];
+  const shipping = [ships.includes('UA') && 'UA', EU.some((c) => ships.includes(c)) && 'EU', ships.includes('US') && ships.length > 60 && 'WORLD'].filter(Boolean);
+  const out = { ...b, currency: st.currency || b.currency };
+  if (shipping.length) { out.shipping = shipping; out.verified = [...new Set([...b.verified, 'shipping'])]; }
+  if (!b.returns && st.returnDays) out.returns = { days: st.returnDays };
+  return out;
+}
+export const brands = listed.map(withStore);
 
 export const categories = {
   hoodie: { en: 'Hoodies', ru: 'Худи' },
@@ -103,4 +118,3 @@ export function brandMedia(id) {
   return { logo: find('logo'), hero: find('hero') };
 }
 export const liveBrandIds = [...realByBrand];
-export { brands };

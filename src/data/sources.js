@@ -1,18 +1,22 @@
 // Where the ingest script collects data from, per brand.
-//   shopify: store root; the script reads <root>/products.json (public on most Shopify stores)
+//   shopify: store root; the script reads /products.json, /meta.json and the refund policy
 //   rss:     any RSS/Atom feed (brand blog, news page, Telegram-to-RSS bridge, etc.)
-// Candidates below are unverified guesses: the script skips any source that fails,
-// and logs it so it can be fixed or removed.
+// All stores below answered on 2026-11-14 (found with scripts/discover.mjs).
 export default {
-  'nofaith-studios': { shopify: 'https://nofaithstudios.com' }, // verified 2026-11-14
-  'represent': { shopify: 'https://representclo.com' },
-  'broken-planet': { shopify: 'https://brokenplanet.com' },
-  'daily-paper': { shopify: 'https://www.dailypaperclothing.com' },
-  'olaf-hussein': { shopify: 'https://olafhussein.com' },
-  'arte-antwerp': { shopify: 'https://arte-antwerp.com' },
-  'helas': { shopify: 'https://helascaps.com' },
-  'drole-de-monsieur': { shopify: 'https://drolemonsieur.com' },
-  'places-faces': { shopify: 'https://www.placesplusfaces.com' },
-  'ienki-ienki': { shopify: 'https://ienkiienki.com' },
-  'ksenia-schnaider': { shopify: 'https://kseniaschnaider.com' },
+  'antisocial-laboratory': { shopify: 'https://antisocialaboratory.online' },
+  'fwwproject': { shopify: 'https://fwwpjct.com' },
+  'nofaith-studios': { shopify: 'https://nofaithstudios.com' },
+  'society-de-nobodies': { shopify: 'https://societydenobodies.com' },
+  'vicinity': { shopify: 'https://vicinity.de' },
+  'club-de-presage': { shopify: 'https://clubpresage.com' },
+  'divention': { shopify: 'https://divention.de' },
+  'obvune': { shopify: 'https://obvune.com' },
+  '2819-jewelry': { shopify: 'https://2819jewelry.de' },
+  'scuffers': { shopify: 'https://scuffers.com' },
+  'racer-worldwide': { shopify: 'https://racerworldwide.net' },
+  'lomalab': { shopify: 'https://lomalab.store' },
+  'lkc2000': { shopify: 'https://lostkidsclub2000.com' },
+  'jaded-london': { shopify: 'https://jadedman.com' },
+  'undersoul': { shopify: 'https://undersoulwear.com' },
+  'monateo': { shopify: 'https://monateo.com' },
 };

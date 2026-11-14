@@ -7,7 +7,7 @@
 // Writes src/data/generated/items.json and news.json. The site falls back to demo
 // data for any brand without collected items. News is merged with the previous run,
 // so the feed keeps its history.
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,7 +21,7 @@ const outDir = FIXTURE ? join(root, 'scripts/fixtures/out') : join(root, 'src/da
 const NEW_DAYS = 14;
 // --images: keep a small local copy of the first photo of the newest items (used by offline previews)
 const IMAGES = process.argv.includes('--images');
-const IMAGES_PER_BRAND = 12;
+const IMAGES_PER_BRAND = 8;
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
 function guessCategory(text) {
@@ -48,7 +48,21 @@ async function fetchText(url) {
   return res.text();
 }
 
-async function shopify(brand, base) {
+// Store facts published by Shopify itself: country, city, currency, ships-to list.
+async function storeInfo(base) {
+  const root = base.replace(/\/$/, '');
+  const m = JSON.parse(await fetchText(root + '/meta.json'));
+  const info = { name: m.name, country: m.country, city: m.city, currency: m.currency, shipsTo: m.ships_to_countries || [] };
+  // Return window: first "N days" mentioned in the refund policy. A guess, shown as unverified.
+  try {
+    const policy = (await fetchText(root + '/policies/refund-policy')).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<[^>]+>/g, ' ');
+    const hit = policy.match(/(\d{1,2})\s*[- ]?\s*(?:calendar |business |working )?(?:days|day|tage|tagen|jours|días|dias|giorni|dni|днів|дней|дня)/i);
+    if (hit && +hit[1] >= 7 && +hit[1] <= 60) info.returnDays = +hit[1];
+  } catch {}
+  return info;
+}
+
+async function shopify(brand, base, currency) {
   const data = JSON.parse(await fetchText(base.replace(/\/$/, '') + '/products.json?limit=250'));
   return (data.products || []).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0)).map((p) => {
     const prices = p.variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
@@ -62,7 +76,7 @@ async function shopify(brand, base) {
       category: guessCategory(`${p.product_type} ${p.title} ${(p.tags || []).join(' ')}`),
       price,
       compareAt: compareAt && compareAt > price ? compareAt : null,
-      currency: brand.currency,
+      currency: currency || brand.currency,
       url: `${base.replace(/\/$/, '')}/products/${p.handle}`,
       image: p.images?.[0]?.src || null,
       inStock: p.variants.some((v) => v.available !== false),
@@ -134,7 +148,7 @@ async function cacheImages(items) {
     const file = join(dir, it.id + '.jpg');
     try { await readFile(file); continue; } catch {}
     try {
-      const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=640&format=jpg';
+      const url = it.image + (it.image.includes('?') ? '&' : '?') + 'width=480&format=jpg';
       const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await writeFile(file, Buffer.from(await res.arrayBuffer()));
@@ -183,16 +197,20 @@ async function readJSON(path, fallback) {
 }
 
 async function main() {
-  const srcs = FIXTURE ? { 'represent': { shopify: 'https://fixture.test', rss: 'https://fixture.test/feed' } } : sources;
+  const srcs = FIXTURE ? { 'scuffers': { shopify: 'https://fixture.test', rss: 'https://fixture.test/feed' } } : sources;
   const items = [];
+  const stores = {};
   let news = [];
+  if (IMAGES && !FIXTURE) await rm(join(outDir, 'img'), { recursive: true, force: true }); // photos are re-collected each run
   const report = [];
   for (const brand of brands) {
     const s = srcs[brand.id];
     if (!s) continue;
     if (s.shopify) {
       try {
-        const its = await shopify(brand, s.shopify);
+        const info = FIXTURE ? null : await storeInfo(s.shopify).catch((e) => (report.push(`✗ ${brand.id} store info: ${e.message}`), null));
+        if (info) stores[brand.id] = info;
+        const its = await shopify(brand, s.shopify, info?.currency);
         items.push(...its);
         news.push(...newsFromItems(brand, its));
         report.push(`✓ ${brand.id} shopify: ${its.length} items`);
@@ -212,12 +230,14 @@ async function main() {
   }
   // merge with previous news so history survives; newest version of an id wins
   const prev = FIXTURE ? [] : await readJSON(join(outDir, 'news.json'), []);
-  const byId = new Map(prev.map((n) => [n.id, n]));
+  const known = new Set(brands.map((b) => b.id));
+  const byId = new Map(prev.filter((n) => known.has(n.brandId)).map((n) => [n.id, n]));
   for (const n of news) byId.set(n.id, n);
   news = [...byId.values()].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 500);
 
   await mkdir(outDir, { recursive: true });
   await writeFile(join(outDir, 'items.json'), JSON.stringify(items, null, 1));
+  if (!FIXTURE) await writeFile(join(outDir, 'stores.json'), JSON.stringify(stores, null, 1));
   await writeFile(join(outDir, 'news.json'), JSON.stringify(news, null, 1));
   if (IMAGES && !FIXTURE) await cacheImages(items);
   console.log(report.join('\n'));

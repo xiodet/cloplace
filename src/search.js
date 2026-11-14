@@ -23,10 +23,12 @@ const shipWords = [
 const countryWords = {
   UA: ['украинск', 'український', 'українськ', 'ukrainian'],
   GB: ['британ', 'английск', 'лондонск', 'british', 'uk brand', 'london brand'],
-  NL: ['голланд', 'нидерланд', 'dutch', 'amsterdam'],
+  DE: ['немецк', 'германск', 'german'],
+  ES: ['испанск', 'spanish'],
+  IT: ['итальянск', 'italian'],
+  PL: ['польск', 'polish'],
   FR: ['французск', 'french'],
-  SE: ['шведск', 'swedish'],
-  DK: ['датск', 'danish'],
+  EE: ['эстонск', 'estonian'],
 };
 
 const currencyWords = [
