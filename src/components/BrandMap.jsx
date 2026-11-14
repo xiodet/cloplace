@@ -50,10 +50,12 @@ export default function BrandMap({ clusters, selected, hot, onSelect, onHover, f
       {clusters.map((c) => {
         const on = selected === c.key;
         const lit = on || c.brands.some((b) => b.id === hot);
+        // in a crowded area only the bigger pin keeps its label; the rest show it on hover
+        const quiet = clusters.some((o) => o !== c && Math.hypot(o.x - c.x, o.y - c.y) < 62 && (o.brands.length > c.brands.length || (o.brands.length === c.brands.length && o.key < c.key)));
         return (
           <button
             key={c.key}
-            className={'pin' + (on ? ' on' : '') + (lit ? ' lit' : '') + (c.x * v.z + (v.x / 100) * europe.w > europe.w * 0.72 ? ' flip' : '')}
+            className={'pin' + (on ? ' on' : '') + (lit ? ' lit' : '') + (quiet ? ' quiet' : '') + (c.x * v.z + (v.x / 100) * europe.w > europe.w * 0.72 ? ' flip' : '')}
             style={{ left: (c.x / europe.w) * 100 + '%', top: (c.y / europe.h) * 100 + '%' }}
             onClick={() => onSelect(on ? null : c.key)}
             onMouseEnter={() => onHover(c.key)} onMouseLeave={() => onHover(null)}
