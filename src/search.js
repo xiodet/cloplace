@@ -4,14 +4,14 @@
 import { toUAH } from './data/rates.js';
 
 export const categoryWords = {
-  hoodie: ['худи', 'худак', 'толстовк', 'кофт', 'свитшот', 'hoodie', 'hoody', 'sweatshirt', 'zip'],
+  hoodie: ['худи', 'худі', 'худак', 'толстовк', 'кофт', 'свитшот', 'hoodie', 'hoody', 'sweatshirt', 'zip'],
   tee: ['футболк', 'тишк', 'майк', 't-shirt', 'tshirt', 'tee', 'лонгслив', 'longsleeve'],
   pants: ['штан', 'брюк', 'джинс', 'карго', 'pants', 'trousers', 'jeans', 'denim', 'cargo', 'шорт', 'shorts'],
   jacket: ['куртк', 'пуховик', 'ветровк', 'бомбер', 'пальто', 'jacket', 'puffer', 'coat', 'bomber', 'outerwear', 'верхн'],
-  knit: ['свитер', 'трикотаж', 'кардиган', 'knit', 'sweater', 'cardigan', 'jumper'],
+  knit: ['свитер', 'светр', 'трикотаж', 'кардиган', 'knit', 'sweater', 'cardigan', 'jumper'],
   cap: ['кепк', 'шапк', 'бини', 'панам', 'cap', ' hat', 'beanie'],
-  shoes: ['кроссовк', 'кросовк', 'кросівк', 'кеды', 'кед', 'обувь', 'ботинк', 'sneaker', 'shoe', 'boots', 'runner'],
-  accessories: ['сумк', 'шопер', 'носк', 'аксессуар', 'bag', 'tote', 'socks', 'accessor'],
+  shoes: ['взутт', 'черевик', 'кроссовк', 'кросовк', 'кросівк', 'кеды', 'кед', 'обувь', 'ботинк', 'sneaker', 'shoe', 'boots', 'runner'],
+  accessories: ['аксесуар', 'шкарпет', 'сумк', 'шопер', 'носк', 'аксессуар', 'bag', 'tote', 'socks', 'accessor'],
 };
 
 const shipWords = [
@@ -22,13 +22,13 @@ const shipWords = [
 
 const countryWords = {
   UA: ['украинск', 'український', 'українськ', 'ukrainian'],
-  GB: ['британ', 'английск', 'лондонск', 'british', 'uk brand', 'london brand'],
-  DE: ['немецк', 'германск', 'german'],
-  ES: ['испанск', 'spanish'],
-  IT: ['итальянск', 'italian'],
-  PL: ['польск', 'polish'],
-  FR: ['французск', 'french'],
-  EE: ['эстонск', 'estonian'],
+  GB: ['британськ', 'британ', 'английск', 'лондонск', 'british', 'uk brand', 'london brand'],
+  DE: ['німецьк', 'немецк', 'германск', 'german'],
+  ES: ['іспанськ', 'испанск', 'spanish'],
+  IT: ['італійськ', 'итальянск', 'italian'],
+  PL: ['польськ', 'польск', 'polish'],
+  FR: ['французьк', 'французск', 'french'],
+  EE: ['естонськ', 'эстонск', 'estonian'],
 };
 
 const currencyWords = [
@@ -104,7 +104,7 @@ export function parseQuery(raw) {
   for (const u of used) rest = rest.replace(u, ' ');
   rest = rest
     .replace(/(с доставкой|з доставкою|доставка|доставкой|доставкою|with shipping|shipping|ship|delivery|deliver|с возвратом|з поверненням|возврат|return[s]?|скидк\S*|sale|грн|uah|eur|€|£|\$)/g, ' ')
-    .replace(/(?<=\s)(в|у|на|и|і|с|со|з|зі|до|для|по|to|in|for|with|and|the|a|of)(?=\s)/g, ' ')
+    .replace(/(?<=\s)(в|у|на|и|і|й|та|с|со|з|зі|із|до|для|по|to|in|for|with|and|the|a|of)(?=\s)/g, ' ')
     .replace(/[^\p{L}\d\s+&-]/gu, ' ');
   out.text = rest.split(/\s+/).filter((w) => w.length > 1);
   return out;

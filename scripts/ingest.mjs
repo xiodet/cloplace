@@ -85,6 +85,7 @@ async function shopify(brand, base, currency) {
   });
 }
 
+const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many);
 function newsFromItems(brand, items) {
   const out = [];
   const cutoff = new Date(now - NEW_DAYS * 864e5);
@@ -94,8 +95,8 @@ function newsFromItems(brand, items) {
     const names = fresh.slice(0, 3).map((i) => i.title).join(', ');
     out.push({
       id: `${brand.id}-drop-${date}`, brandId: brand.id, type: 'drop', date,
-      title: { en: `New in store: ${fresh.length}`, ru: `Новинки в магазине: ${fresh.length}` },
-      summary: { en: `New in: ${names}${fresh.length > 3 ? '…' : ''}`, ru: `Новинки: ${names}${fresh.length > 3 ? '…' : ''}` },
+      title: { en: `New in store: ${fresh.length}`, ru: `Новинки в магазине: ${fresh.length}`, uk: `Новинки в магазині: ${fresh.length}` },
+      summary: { en: `New in: ${names}${fresh.length > 3 ? '…' : ''}`, ru: `Новинки: ${names}${fresh.length > 3 ? '…' : ''}`, uk: `Новинки: ${names}${fresh.length > 3 ? '…' : ''}` },
       source: { kind: 'shopify', url: fresh[0].url },
     });
   }
@@ -105,8 +106,8 @@ function newsFromItems(brand, items) {
     const week = now.toISOString().slice(0, 10);
     out.push({
       id: `${brand.id}-sale-${week.slice(0, 7)}`, brandId: brand.id, type: 'sale', date: week,
-      title: { en: `Sale: up to −${maxOff}%`, ru: `Скидки до −${maxOff}%` },
-      summary: { en: `${sale.length} items discounted.`, ru: `${sale.length} вещей со скидкой.` },
+      title: { en: `Sale: up to −${maxOff}%`, ru: `Скидки до −${maxOff}%`, uk: `Знижки до −${maxOff}%` },
+      summary: { en: `${sale.length} items discounted.`, ru: `${sale.length} ${plural(sale.length, 'вещь', 'вещи', 'вещей')} со скидкой.`, uk: `${sale.length} ${plural(sale.length, 'річ', 'речі', 'речей')} зі знижкою.` },
       source: { kind: 'shopify', url: sale[0].url },
     });
   }

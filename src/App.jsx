@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { LangContext, dict, useLang } from './i18n.js';
+import { LangContext, dict, useLang, pick, LANGS, dateLocale } from './i18n.js';
 import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
 import { parseQuery, matchItem } from './search.js';
@@ -27,26 +27,40 @@ const go = (h) => { window.location.hash = h; };
 // Extra copy for this layout (kept next to the layout that uses it).
 const W = {
   en: {
-    brands: 'brands', index: 'index', index_nav: 'Index',
-    intro: 'A growing index of independent labels: what they make, what it costs, where they ship and how returns work. News on drops and sales is collected for you.', news: 'news', search: 'search',
-    quote: 'Ukrainian and European streetwear, collected in one place',
+    headline: 'Independent streetwear brands. Prices, shipping and returns in one place.',
+    lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
     quote_by: 'Drop Index',
-    featured: 'Selected brands', all: (n) => `All ${n} brands`,
-    index_quote: 'Every brand in the index, A to Z',
+    index_quote: 'Where the brands are based',
     news_quote: 'Drops, sales and collaborations, collected automatically',
-    search_quote: 'Describe what you want in plain words',
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
+    note: 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
+    map_hint: 'Select a pin to see the brands from that city', map_reset: 'Show all',
+    n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
+    c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
-    brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
-    intro: 'Растущий индекс независимых брендов: что они делают, сколько это стоит, куда доставляют и как устроен возврат. Новости о дропах и скидках собираются автоматически.', news: 'новости', search: 'поиск',
-    quote: 'Украинский и европейский стритвир, собранный в одном месте',
+    headline: 'Независимые стритвир-бренды. Цены, доставка и возвраты в одном месте.',
+    lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
     quote_by: 'Drop Index',
-    featured: 'Избранные бренды', all: (n) => `Все ${n} брендов`,
-    index_quote: 'Все бренды индекса, от A до Z',
+    index_quote: 'Где находятся бренды',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
-    search_quote: 'Опиши обычными словами, что ищешь',
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
+    note: 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
+    map_hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', map_reset: 'Показать все',
+    n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
+    c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
+  },
+  uk: {
+    headline: 'Незалежні стрітвір-бренди. Ціни, доставка й повернення в одному місці.',
+    lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
+    quote_by: 'Drop Index',
+    index_quote: 'Де розташовані бренди',
+    news_quote: 'Дропи, знижки та колаборації, зібрані автоматично',
+    next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
+    note: 'Drop Index — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
+    map_hint: 'Натисніть на точку, щоб побачити бренди з цього міста', map_reset: 'Показати всі',
+    n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
+    c_ship: 'доставка', c_world: 'доставка по всьому світу', c_ret: (d) => `повернення ${d} днів`, c_drop: 'новий дроп',
   },
 };
 
@@ -95,7 +109,7 @@ function openBrand(e, brand) {
 }
 
 function readLang() {
-  try { return localStorage.getItem('lang') || 'ru'; } catch { return 'ru'; }
+  try { const l = localStorage.getItem('lang'); return dict[l] ? l : 'ru'; } catch { return 'ru'; }
 }
 
 export default function App() {
@@ -124,12 +138,12 @@ function TopBar({ active }) {
       <a href="#/" className="logo">Drop Index</a>
       <nav className="nav">
         <a href="#/" className={active === 'home' ? 'on' : ''}>{t.nav_brands}</a>
-        <a href="#/brands" className={active === 'index' ? 'on' : ''}>{W[lang].index_nav}</a>
-        <a href="#/news" className={active === 'news' ? 'on' : ''}>{t.nav_news}</a>
         <a href="#/search" className={active === 'search' ? 'on' : ''}>{t.nav_search}</a>
+        <a href="#/brands" className={active === 'index' ? 'on' : ''}>{t.nav_map}</a>
+        <a href="#/news" className={active === 'news' ? 'on' : ''}>{t.nav_news}</a>
         <span className="lang" role="group" aria-label="Language">
-          {['en', 'ru'].map((l) => (
-            <button key={l} className={l === lang ? 'on' : ''} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
+          {LANGS.map(([l, label]) => (
+            <button key={l} className={l === lang ? 'on' : ''} onClick={() => setLang(l)}>{label}</button>
           ))}
         </span>
       </nav>
@@ -197,15 +211,11 @@ function Home() {
       <TopBar active="home" />
       <main className="home">
         <div className="title-row">
-          <span className="label rise">{t.nav_brands} · {brands.length}</span>
-          <div className="giant-clip"><h1 className="home-title">Drop Index</h1></div>
+          <div className="giant-clip"><h1 className="home-title">{w.headline}</h1></div>
         </div>
         <div className="intro rise">
-          <p className="intro-left">{w.quote}</p>
-          <div className="intro-right">
-            <p>{w.intro}</p>
-            <a className="btn" href="#/brands">{w.all(brands.length)}</a>
-          </div>
+          <p>{w.lead}</p>
+          <span className="intro-count">{t.brands_count(brands.length)}</span>
         </div>
         <div className="showcases">
           {order.slice(0, count).map((b, i) => <Showcase key={b.id} brand={b} n={i % BATCH} />)}
@@ -216,12 +226,35 @@ function Home() {
           </button>
         )}
         <div className="home-note rise">
-          <p>{lang === 'ru'
-            ? 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.'
-            : 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.'}</p>
+          <p>{w.note}</p>
         </div>
       </main>
     </>
+  );
+}
+
+// One line of facts under the photos: price range, shipping, returns, and what is new.
+function ShowcaseMeta({ brand, items: its }) {
+  const { lang, t, w } = useLang();
+  const real = its.filter((i) => !i.demo && i.price > 0);
+  const prices = real.map((i) => i.price);
+  const sale = real.filter((i) => i.compareAt > i.price);
+  const off = sale.length >= 3 ? Math.max(...sale.map((i) => Math.round((1 - i.price / i.compareAt) * 100))) : 0;
+  const drop = news.find((n) => n.brandId === brand.id && n.type === 'drop' && Date.now() - new Date(n.date) < 14 * 864e5);
+  const facts = [
+    prices.length > 0 && `${formatPrice(Math.min(...prices), real[0].currency)} – ${formatPrice(Math.max(...prices), real[0].currency)}`,
+    brand.shipping.length > 0 && (brand.shipping.includes('WORLD') ? w.c_world : `${w.c_ship} ${brand.shipping.join(', ')}`),
+    brand.returns?.days && w.c_ret(brand.returns.days),
+  ].filter(Boolean);
+  if (!facts.length && !off && !drop) return null;
+  return (
+    <span className="sc-meta">
+      <span className="sc-facts">{facts.join(' · ')}</span>
+      <span className="sc-tags">
+        {off > 0 && <span className="sc-tag">sale −{off}%</span>}
+        {drop && <span className="sc-tag">{w.c_drop} · {new Date(drop.date).toLocaleDateString(dateLocale[lang], { day: 'numeric', month: 'short' })}</span>}
+      </span>
+    </span>
   );
 }
 
@@ -235,11 +268,12 @@ function Showcase({ brand, n }) {
     <a className="showcase rise" style={{ '--i': n }} href={'#/brand/' + brand.id} onClick={(e) => openBrand(e, brand)}>
       <span className="sc-head">
         <span className="sc-name">{brand.name}</span>
-        <span className="sc-city">{brand.city || countries[brand.country][lang]}</span>
+        <span className="sc-city">{brand.city || pick(countries[brand.country], lang)}</span>
       </span>
       <span className="sc-art collage">
         {its.map((it, i) => <span key={i} className="tile"><Garment item={it} tone={i} /></span>)}
       </span>
+      <ShowcaseMeta brand={brand} items={base} />
     </a>
   );
 }
@@ -251,9 +285,6 @@ function IndexPage() {
   const [place, setPlace] = useState(null);
   const [hotBrand, setHotBrand] = useState(null);
   const [hotPlace, setHotPlace] = useState(null);
-  const L = lang === 'ru'
-    ? { hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', reset: 'Показать все' }
-    : { hint: 'Select a pin to see the brands from that city', reset: 'Show all' };
   const inOrigin = brands
     .filter((b) => origin === 'ALL' || (origin === 'UA' ? b.country === 'UA' : b.country !== 'UA'))
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -275,8 +306,8 @@ function IndexPage() {
                 ))}
               </div>
               {picked
-                ? <p className="ix-picked"><span>{picked.names.join(', ')}</span><span className="muted">{t.brands_count(picked.brands.length)}</span><button className="chip on" onClick={() => setPlace(null)}>{L.reset} ×</button></p>
-                : <p className="muted ix-hint">{L.hint}</p>}
+                ? <p className="ix-picked"><span>{picked.names.join(', ')}</span><span className="muted">{t.brands_count(picked.brands.length)}</span><button className="chip on" onClick={() => setPlace(null)}>{w.map_reset} ×</button></p>
+                : <p className="muted ix-hint">{w.map_hint}</p>}
             </div>
           </div>
           <div className="rise" style={{ '--i': 2 }}>
@@ -293,7 +324,7 @@ function IndexPage() {
               onMouseEnter={() => setHotBrand(b.id)} onMouseLeave={() => setHotBrand(null)}>
               <span className="ir-name">{b.name}</span>
               <span className="ir-style">{b.style.join(', ')}</span>
-              <span className="ir-city">{b.city ? b.city + ', ' : ''}{countries[b.country][lang]}</span>
+              <span className="ir-city">{b.city ? b.city + ', ' : ''}{pick(countries[b.country], lang)}</span>
             </a>
           ))}
         </div>
@@ -311,10 +342,10 @@ function NewsCard({ n }) {
       <div className="news-top">
         <span>{t.news_types[n.type]}</span>
         {n.demo && <span className="demo">{t.demo_badge}</span>}
-        <time>{new Date(n.date).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'short' })}</time>
+        <time>{new Date(n.date).toLocaleDateString(dateLocale[lang], { day: 'numeric', month: 'short' })}</time>
       </div>
-      <h3>{n.title[lang]}</h3>
-      <p>{n.summary[lang]}</p>
+      <h3>{pick(n.title, lang)}</h3>
+      <p>{pick(n.summary, lang)}</p>
       <div className="news-links">
         {b && <a href={'#/brand/' + b.id}>{b.name} →</a>}
         {n.source?.url && <a href={n.source.url} target="_blank" rel="noreferrer">↗</a>}
@@ -328,9 +359,9 @@ function NewsRow({ n, i }) {
   const b = brandById[n.brandId];
   if (!b) return null;
   const base = itemsByBrand[b.id] || [];
-  const pick = n.type === 'sale' ? base.filter((x) => x.compareAt) : base;
-  const thumbs = (pick.length ? pick : base).slice(0, 3);
-  const date = new Date(n.date).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'short' });
+  const chosen = n.type === 'sale' ? base.filter((x) => x.compareAt) : base;
+  const thumbs = (chosen.length ? chosen : base).slice(0, 3);
+  const date = new Date(n.date).toLocaleDateString(dateLocale[lang], { day: 'numeric', month: 'short' });
   return (
     <article className="news-row rise" style={{ '--i': Math.min(i, 8) }}>
       <a className="nr-main" href={'#/brand/' + b.id}>
@@ -339,8 +370,8 @@ function NewsRow({ n, i }) {
           <span className="nr-name">{b.name}</span>
         </span>
         <span className="nr-text">
-          <span className="nr-title">{n.title[lang]}</span>
-          <span className="nr-sum">{n.summary[lang]}</span>
+          <span className="nr-title">{pick(n.title, lang)}</span>
+          <span className="nr-sum">{pick(n.summary, lang)}</span>
         </span>
         <span className="nr-thumbs">
           {thumbs.map((it, k) => <span key={k} className="nr-thumb"><Garment item={it} tone={k} /></span>)}
@@ -356,9 +387,6 @@ function NewsPage() {
   const [type, setType] = useState('all');
   const [brand, setBrand] = useState('all');
   const [sort, setSort] = useState('new');
-  const L = lang === 'ru'
-    ? { all: 'Все бренды', brand: 'Бренд', sort: 'Сортировка', new: 'Сначала новые', old: 'Сначала старые', az: 'По бренду, А–Я', empty: 'Новостей по этому фильтру пока нет', reset: 'Сбросить' }
-    : { all: 'All brands', brand: 'Brand', sort: 'Sort', new: 'Newest first', old: 'Oldest first', az: 'By brand, A–Z', empty: 'No news for this filter yet', reset: 'Reset' };
   const kinds = ['all', 'drop', 'sale', 'collab', 'news'].filter((k) => k === 'all' || news.some((n) => n.type === k));
   const withNews = brands.filter((b) => news.some((n) => n.brandId === b.id)).sort((a, b) => a.name.localeCompare(b.name));
   const list = news
@@ -380,23 +408,23 @@ function NewsPage() {
                 </button>
               ))}
             </div>
-            <label className="np-select"><span>{L.brand}</span>
+            <label className="np-select"><span>{w.n_brand}</span>
               <select value={brand} onChange={(e) => setBrand(e.target.value)}>
-                <option value="all">{L.all}</option>
+                <option value="all">{w.n_all}</option>
                 {withNews.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </label>
-            <label className="np-select"><span>{L.sort}</span>
+            <label className="np-select"><span>{w.n_sort}</span>
               <select value={sort} onChange={(e) => setSort(e.target.value)}>
-                <option value="new">{L.new}</option>
-                <option value="old">{L.old}</option>
-                <option value="az">{L.az}</option>
+                <option value="new">{w.n_new}</option>
+                <option value="old">{w.n_old}</option>
+                <option value="az">{w.n_az}</option>
               </select>
             </label>
           </div>
         </div>
         <div className="np-list" key={type + brand + sort}>{list.map((n, i) => <NewsRow key={n.id} n={n} i={i} />)}</div>
-        {!list.length && <p className="np-empty">{L.empty}. <button className="chip on" onClick={() => { setType('all'); setBrand('all'); }}>{L.reset}</button></p>}
+        {!list.length && <p className="np-empty">{w.n_empty}. <button className="chip on" onClick={() => { setType('all'); setBrand('all'); }}>{w.n_reset}</button></p>}
         <footer className="foot"><span>{t.footer}</span></footer>
       </main>
     </>
@@ -519,7 +547,7 @@ function BrandPage({ brand }) {
         <aside className="side">
           <blockquote className="quote">
             <p>{brand.style.join(', ')}</p>
-            <cite>{[brand.city, countries[brand.country][lang]].filter(Boolean).join(', ')}</cite>
+            <cite>{[brand.city, pick(countries[brand.country], lang)].filter(Boolean).join(', ')}</cite>
           </blockquote>
           <div className="giant-clip"><h1 className="giant" style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
         </aside>
@@ -527,7 +555,7 @@ function BrandPage({ brand }) {
         <div className="brand-intro">
           <a href={'#' + backTo} className="back rise">{t.back}</a>
           <Logo className="brand-logo rise" src={logo} />
-          <p className="lead rise">{brand.description[lang]}</p>
+          <p className="lead rise">{pick(brand.description, lang)}</p>
         </div>
 
         <section className="store">
@@ -548,12 +576,12 @@ function BrandPage({ brand }) {
           <section className="below-row">
             <h2>{w.info}</h2>
             <dl className="facts">
-              <div><dt>{w.country}</dt><dd>{countries[brand.country][lang]}{brand.city ? ', ' + brand.city : ''}</dd></div>
+              <div><dt>{w.country}</dt><dd>{pick(countries[brand.country], lang)}{brand.city ? ', ' + brand.city : ''}</dd></div>
               {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
               <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
               <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
-              <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
-              <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : <span className="muted">{w.see_store}</span>}{brand.returns?.days ? unv('returns') : null}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
+              <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => pick(regions[r], lang)).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{pick(brand.shippingNote, lang)}</small>}</dd></div>
+              <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : <span className="muted">{w.see_store}</span>}{brand.returns?.days ? unv('returns') : null}{brand.returnsNote && <small>{pick(brand.returnsNote, lang)}</small>}</dd></div>
             </dl>
           </section>
           {bn.length > 0 && (
@@ -586,11 +614,11 @@ function SearchPage({ q }) {
   const found = items.filter((i) => matchItem(i, brandById[i.brandId], f));
 
   const chips = [];
-  if (f.category) chips.push(categories[f.category][lang]);
+  if (f.category) chips.push(pick(categories[f.category], lang));
   if (f.minUAH != null) chips.push(`${t.from} ${Math.round(f.minUAH)} ₴`);
   if (f.maxUAH != null) chips.push(`${t.to} ${Math.round(f.maxUAH)} ₴`);
-  if (f.ship) chips.push(`${t.ship_to}: ${regions[f.ship][lang]}`);
-  if (f.country) chips.push(countries[f.country][lang]);
+  if (f.ship) chips.push(`${t.ship_to}: ${pick(regions[f.ship], lang)}`);
+  if (f.country) chips.push(pick(countries[f.country], lang));
   if (f.returns) chips.push(t.returns_only);
   if (f.onSale) chips.push(t.sale_only);
   if (f.text?.length) chips.push('“' + f.text.join(' ') + '”');
@@ -608,7 +636,7 @@ function SearchPage({ q }) {
         <label>{t.category}
           <select id="f-cat" value={f.category || ''} onChange={(e) => set('category', e.target.value)}>
             <option value="">{t.any}</option>
-            {Object.entries(categories).map(([k, v]) => <option key={k} value={k}>{v[lang]}</option>)}
+            {Object.entries(categories).map(([k, v]) => <option key={k} value={k}>{pick(v, lang)}</option>)}
           </select>
         </label>
         <label>{t.price}
@@ -620,13 +648,13 @@ function SearchPage({ q }) {
         <label>{t.ship_to}
           <select id="f-ship" value={f.ship || ''} onChange={(e) => set('ship', e.target.value)}>
             <option value="">{t.any}</option>
-            {Object.entries(regions).map(([k, v]) => <option key={k} value={k}>{v[lang]}</option>)}
+            {Object.entries(regions).map(([k, v]) => <option key={k} value={k}>{pick(v, lang)}</option>)}
           </select>
         </label>
         <label>{t.origin}
           <select id="f-country" value={f.country || ''} onChange={(e) => set('country', e.target.value)}>
             <option value="">{t.any}</option>
-            {Object.entries(countries).map(([k, v]) => <option key={k} value={k}>{v[lang]}</option>)}
+            {Object.entries(countries).map(([k, v]) => <option key={k} value={k}>{pick(v, lang)}</option>)}
           </select>
         </label>
         <label className="check"><input id="f-ret" type="checkbox" checked={!!f.returns} onChange={(e) => set('returns', e.target.checked)} /> {t.returns_only}</label>

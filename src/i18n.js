@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 export const dict = {
   en: {
     tagline: 'Ukrainian and European streetwear brands in one place',
-    nav_brands: 'Brands', nav_news: 'News', nav_search: 'Search',
+    nav_brands: 'Brands', nav_news: 'News', nav_search: 'Items', nav_map: 'Map',
     search_ph: 'e.g. hoodie under 3000 UAH shipping to Kyiv',
     search_btn: 'Search',
     latest_news: 'Latest news', all_news: 'All news',
@@ -31,7 +31,7 @@ export const dict = {
   },
   ru: {
     tagline: 'Украинские и европейские стритвир-бренды в одном месте',
-    nav_brands: 'Бренды', nav_news: 'Новости', nav_search: 'Поиск',
+    nav_brands: 'Бренды', nav_news: 'Новости', nav_search: 'Вещи', nav_map: 'Карта',
     search_ph: 'например: худи до 3000 грн с доставкой в Киев',
     search_btn: 'Найти',
     latest_news: 'Свежие новости', all_news: 'Все новости',
@@ -56,7 +56,39 @@ export const dict = {
     back: '← Назад',
     footer: 'Хобби-проект. Названия и логотипы брендов принадлежат их владельцам.',
   },
+  uk: {
+    tagline: 'Українські та європейські стрітвір-бренди в одному місці',
+    nav_brands: 'Бренди', nav_news: 'Новини', nav_search: 'Речі', nav_map: 'Мапа',
+    search_ph: 'наприклад: худі до 3000 грн з доставкою в Київ',
+    search_btn: 'Знайти',
+    latest_news: 'Свіжі новини', all_news: 'Усі новини',
+    all_brands: 'Усі бренди', brands_count: (n) => `${n} ${ruPlural(n, 'бренд', 'бренди', 'брендів')}`,
+    filters: 'Фільтри', category: 'Тип одягу', any: 'Будь-який',
+    price: 'Ціна, ₴', from: 'від', to: 'до',
+    ship_to: 'Доставка в', returns: 'Повернення', returns_only: 'Лише з поверненням',
+    sale_only: 'Лише зі знижкою', origin: 'Країна бренду', reset: 'Скинути',
+    items_found: (n) => `${n} ${ruPlural(n, 'річ', 'речі', 'речей')}`, brands_found: (n) => `${n} ${ruPlural(n, 'бренд', 'бренди', 'брендів')}`,
+    understood: 'Зрозумів як',
+    nothing: 'Нічого не знайдено. Спробуй прибрати фільтр.',
+    show_items: 'Речі', show_brands: 'Бренди',
+    website: 'Сайт', instagram: 'Instagram', shop: 'До магазину',
+    shipping: 'Доставка', returns_days: (d) => `Повернення протягом ${d} днів`, no_returns: 'Без повернення',
+    items: 'Речі', news_from: 'Новини',
+    founded: 'Заснований',
+    demo_badge: 'ДЕМО',
+    demo_note: 'Демо-дані. Речі, ціни, доставка й повернення — заглушки, доки не підключено автозбір із магазинів.',
+    unverified: 'ще не перевірено',
+    no_link: 'посилання скоро',
+    news_types: { drop: 'Дроп', sale: 'Знижки', collab: 'Колаб', news: 'Новина' },
+    back: '← Назад',
+    footer: 'Хобі-проєкт. Назви та логотипи брендів належать їхнім власникам.',
+  },
 };
+
+export const LANGS = [['en', 'EN'], ['ru', 'RU'], ['uk', 'UA']];
+export const dateLocale = { en: 'en-GB', ru: 'ru-RU', uk: 'uk-UA' };
+// Pick a translation; Ukrainian falls back to English, everything else to Russian.
+export const pick = (o, lang) => (o == null ? '' : o[lang] ?? (lang === 'uk' ? o.en : o.ru) ?? o.en ?? '');
 
 export const LangContext = createContext({ lang: 'ru', t: dict.ru, setLang: () => {} });
 export const useLang = () => useContext(LangContext);

@@ -28,20 +28,20 @@ function withStore(b) {
 export const brands = listed.map(withStore);
 
 export const categories = {
-  hoodie: { en: 'Hoodies', ru: 'Худи' },
-  tee: { en: 'T-shirts', ru: 'Футболки' },
-  pants: { en: 'Pants', ru: 'Штаны' },
-  jacket: { en: 'Jackets', ru: 'Куртки' },
-  knit: { en: 'Knitwear', ru: 'Трикотаж' },
-  cap: { en: 'Caps', ru: 'Кепки' },
-  shoes: { en: 'Shoes', ru: 'Обувь' },
-  accessories: { en: 'Accessories', ru: 'Аксессуары' },
+  hoodie: { en: 'Hoodies', ru: 'Худи', uk: 'Худі' },
+  tee: { en: 'T-shirts', ru: 'Футболки', uk: 'Футболки' },
+  pants: { en: 'Pants', ru: 'Штаны', uk: 'Штани' },
+  jacket: { en: 'Jackets', ru: 'Куртки', uk: 'Куртки' },
+  knit: { en: 'Knitwear', ru: 'Трикотаж', uk: 'Трикотаж' },
+  cap: { en: 'Caps', ru: 'Кепки', uk: 'Кепки' },
+  shoes: { en: 'Shoes', ru: 'Обувь', uk: 'Взуття' },
+  accessories: { en: 'Accessories', ru: 'Аксессуары', uk: 'Аксесуари' },
 };
 
 export const regions = {
-  UA: { en: 'Ukraine', ru: 'Украина' },
-  EU: { en: 'EU', ru: 'ЕС' },
-  WORLD: { en: 'Worldwide', ru: 'Весь мир' },
+  UA: { en: 'Ukraine', ru: 'Украина', uk: 'Україна' },
+  EU: { en: 'EU', ru: 'ЕС', uk: 'ЄС' },
+  WORLD: { en: 'Worldwide', ru: 'Весь мир', uk: 'Увесь світ' },
 };
 
 import { toUAH, currencySign } from './rates.js';
