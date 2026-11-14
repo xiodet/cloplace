@@ -24,7 +24,7 @@ p { margin: 0; }
 @keyframes up { from { opacity: 0; transform: translateY(28%); } to { opacity: 1; transform: none; } }
 .rise { animation: rise .8s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 70ms + 120ms); }
 .giant, .home-title { animation: up 1s var(--ease-out) both; }
-.from-fx .giant { animation: none; }
+.from-fx .giant, .giant.still { animation: none; }
 .giant span, .fx-name span { display: block; white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .rise, .giant, .home-title { animation: none; } }
 

@@ -784,6 +784,10 @@ function BrandPage({ brand }) {
     };
   }, []);
 
+  // Arrived through the growing showcase: the name is already in place, so it must not rise
+  // again when that transition ends (it used to replay its entrance a moment later).
+  const [arrived] = useState(() => document.documentElement.classList.contains('from-fx'));
+
   return (
     <>
       <TopBar />
@@ -793,7 +797,7 @@ function BrandPage({ brand }) {
             <p>{brand.style.join(', ')}</p>
             <cite>{[brand.city, pick(countries[brand.country], lang)].filter(Boolean).join(', ')}</cite>
           </blockquote>
-          <div className="giant-clip"><h1 className="giant" style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
+          <div className="giant-clip"><h1 className={'giant' + (arrived ? ' still' : '')} style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
         </aside>
 
         <div className="brand-intro">
