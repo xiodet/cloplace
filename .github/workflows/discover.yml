@@ -1,0 +1,18 @@
+# Manual helper: look up brand stores by Instagram handle (see scripts/discover.mjs).
+name: discover
+on:
+  workflow_dispatch:
+    inputs:
+      handles:
+        description: Space-separated Instagram handles
+        required: true
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node scripts/discover.mjs
+        env:
+          HANDLES: ${{ inputs.handles }}
