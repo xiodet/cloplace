@@ -97,5 +97,10 @@ export const news = [...genNews, ...demoNews].sort((a, b) => b.date.localeCompar
 
 export const brandById = Object.fromEntries(brands.map((b) => [b.id, b]));
 // Brands that already have collected store data (real items and photos).
+// Logo mark and campaign photo collected from the brand's own site, when available.
+export function brandMedia(id) {
+  const find = (kind) => ['png', 'jpg', 'webp'].map((e) => cached[`./generated/img/_${kind}-${id}.${e}`]).find(Boolean) || null;
+  return { logo: find('logo'), hero: find('hero') };
+}
 export const liveBrandIds = [...realByBrand];
 export { brands };

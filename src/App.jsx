@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { LangContext, dict, useLang } from './i18n.js';
-import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds } from './data/catalog.js';
+import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
@@ -33,7 +33,7 @@ const W = {
     index_quote: 'Every brand in the index, A to Z',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     search_quote: 'Describe what you want in plain words',
-    more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
+    scroll: 'Scroll to the clothes', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
   },
   ru: {
     brands: 'бренды', index: 'индекс', index_nav: 'Индекс',
@@ -44,7 +44,7 @@ const W = {
     index_quote: 'Все бренды индекса, от A до Z',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     search_quote: 'Опиши обычными словами, что ищешь',
-    more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
+    scroll: 'Листай к вещам', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
   },
 };
 
@@ -131,7 +131,7 @@ function TopBar({ active }) {
 }
 
 // ── Inner pages: quote top-left, giant word bottom-left, content column.
-function Shell({ word, quote, by, wide, active, links, children }) {
+function Shell({ word, quote, by, wide, active, links, foot = true, children }) {
   const { t } = useLang();
   return (
     <>
@@ -146,10 +146,12 @@ function Shell({ word, quote, by, wide, active, links, children }) {
         </aside>
         <div className="main">
           <main className="content">{children}</main>
-          <footer className="foot">
-            <span>{t.footer}</span>
-            {links && <span className="foot-links">{links}</span>}
-          </footer>
+          {foot && (
+            <footer className="foot">
+              <span>{t.footer}</span>
+              {links && <span className="foot-links">{links}</span>}
+            </footer>
+          )}
         </div>
       </div>
     </>
@@ -169,8 +171,6 @@ function SearchBar({ initial = '' }) {
 }
 
 // ── Home: white canvas, one line, six showcases of different heights ──
-const RATIOS = ['1 / 1', '3 / 4', '4 / 5', '5 / 3', '4 / 3', '1 / 1.15'];
-
 function Home() {
   const { t, w } = useLang();
   const list = FEATURED.map((id) => brandById[id]).filter(Boolean);
@@ -202,15 +202,21 @@ function Home() {
   );
 }
 
+// Showcase per the sketch: logo and name on top, a collage of the brand's clothes below.
 function Showcase({ brand, n }) {
   const { lang } = useLang();
-  const its = itemsByBrand[brand.id] || [];
+  const base = itemsByBrand[brand.id] || [];
+  const its = base.length ? Array.from({ length: 3 }, (_, i) => base[i % base.length]) : [];
+  const { logo } = brandMedia(brand.id);
   return (
     <a className="showcase rise" style={{ '--i': n }} href={'#/brand/' + brand.id} onClick={(e) => openBrand(e, brand)}>
-      <span className="sc-art" style={{ aspectRatio: RATIOS[n % RATIOS.length] }}>{its[0] && <Garment item={its[0].demo ? its[n % its.length] : its[0]} tone={n} />}</span>
-      <span className="sc-cap">
+      <span className="sc-head">
+        {logo && <img className="sc-logo" src={logo} alt="" />}
         <span className="sc-name">{brand.name}</span>
         <span className="sc-city">{brand.city || countries[brand.country][lang]}</span>
+      </span>
+      <span className="sc-art collage">
+        {its.map((it, i) => <span key={i} className="tile"><Garment item={it} tone={i} /></span>)}
       </span>
     </a>
   );
@@ -303,53 +309,87 @@ function ItemCard({ item, showBrand }) {
   );
 }
 
-// ── Brand page ──────────────────────────────────────────────
+// ── Brand page: intro with the giant name, then the clothes take over the whole
+// screen as you scroll, then the practical information underneath.
 function BrandPage({ brand }) {
   const { lang, t, w } = useLang();
   const its = itemsByBrand[brand.id] || [];
   const bn = news.filter((n) => n.brandId === brand.id);
-  const isDemo = its.some((i) => i.demo);
-  const [shown, setShown] = useState(PAGE);
+  const { hero } = brandMedia(brand.id);
   const unv = (field) => (brand.verified.includes(field) ? null : <em className="unv">{t.unverified}</em>);
-  const links = (
+  return (
     <>
-      {brand.instagram && <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">Instagram</a>}
-      {brand.website && <a href={brand.website} target="_blank" rel="noreferrer">{t.website}</a>}
+      <Shell word={brand.name.toLowerCase()} quote={brand.style.join(', ')} by={[brand.city, countries[brand.country][lang]].filter(Boolean).join(', ')} foot={false}>
+        <a href="#/" className="back rise">{t.back}</a>
+        <p className="lead rise">{brand.description[lang]}</p>
+        {hero
+          ? <img className="hero-photo rise" src={hero} alt={brand.name} />
+          : <div className="hero-img rise">{its[0] && <Garment item={its[0]} tone={0} />}</div>}
+        <p className="scroll-hint rise">{w.scroll} ↓</p>
+      </Shell>
+
+      <Store brand={brand} its={its} />
+
+      <div className="below">
+        <section className="below-row">
+          <h2>{w.info}</h2>
+          <dl className="facts">
+            <div><dt>{w.country}</dt><dd>{countries[brand.country][lang]}{brand.city ? ', ' + brand.city : ''}</dd></div>
+            {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
+            <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
+            <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
+            <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
+            <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : t.no_returns}{unv('returns')}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
+          </dl>
+        </section>
+        {bn.length > 0 && (
+          <section className="below-row">
+            <h2>{t.news_from}</h2>
+            <div className="news-list">{bn.map((n) => <NewsCard key={n.id} n={n} />)}</div>
+          </section>
+        )}
+        <footer className="foot"><span>{t.footer}</span></footer>
+      </div>
     </>
   );
+}
+
+// The clothes. While this section scrolls into view it grows from the width of the
+// reading column to the full screen (--p goes 0 → 1), like stepping into the brand's store.
+function Store({ brand, its }) {
+  const { t, w } = useLang();
+  const ref = useRef(null);
+  const [shown, setShown] = useState(PAGE);
+  const isDemo = its.some((i) => i.demo);
+  useEffect(() => {
+    const el = ref.current;
+    const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 860;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      const raw = still() ? 1 : Math.min(1, Math.max(0, (vh - el.getBoundingClientRect().top) / (vh * 0.8)));
+      el.style.setProperty('--p', (raw * raw * (3 - 2 * raw)).toFixed(4)); // smoothstep
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); cancelAnimationFrame(raf); };
+  }, []);
   return (
-    <Shell word={brand.name.toLowerCase()} quote={brand.style.join(', ')} by={[brand.city, countries[brand.country][lang]].filter(Boolean).join(', ')} links={links}>
-      <a href="#/" className="back rise">{t.back}</a>
-      <p className="lead rise">{brand.description[lang]}</p>
-
-      <div className="hero-img rise">{its[0] && <Garment item={its[0]} tone={0} />}</div>
-
-      <section className="rise">
-        <h2>{w.info}</h2>
-        <dl className="facts">
-          <div><dt>{w.country}</dt><dd>{countries[brand.country][lang]}{brand.city ? ', ' + brand.city : ''}</dd></div>
-          {brand.founded && <div><dt>{t.founded}</dt><dd>{brand.founded}</dd></div>}
-          <div><dt>{t.website}</dt><dd>{brand.website ? <a href={brand.website} target="_blank" rel="noreferrer">{brand.website.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span className="muted">{t.no_link}</span>}{brand.website && unv('website')}</dd></div>
-          <div><dt>Instagram</dt><dd>{brand.instagram ? <a href={'https://instagram.com/' + brand.instagram} target="_blank" rel="noreferrer">@{brand.instagram}</a> : <span className="muted">{t.no_link}</span>}{brand.instagram && unv('instagram')}</dd></div>
-          <div><dt>{t.shipping}</dt><dd>{brand.shipping.map((r) => regions[r][lang]).join(', ')}{unv('shipping')}{brand.shippingNote && <small>{brand.shippingNote[lang]}</small>}</dd></div>
-          <div><dt>{t.returns}</dt><dd>{brand.returns?.days ? t.returns_days(brand.returns.days) : t.no_returns}{unv('returns')}{brand.returnsNote && <small>{brand.returnsNote[lang]}</small>}</dd></div>
-        </dl>
-      </section>
-
-      <section className="rise">
-        <h2>{t.items}</h2>
+    <section className="store" ref={ref}>
+      <div className="store-inner">
+        <div className="store-head">
+          <h2>{brand.name}</h2>
+          <span className="muted">{t.items_found(its.length)}</span>
+          {brand.website && <a href={brand.website} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
+        </div>
         {isDemo && <p className="demo-note">{t.demo_note}</p>}
-        <div className="item-grid">{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
+        <div className="store-grid">{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
         {its.length > shown && <button className="more" onClick={() => setShown(shown + PAGE)}>{w.more(its.length - shown)}</button>}
-      </section>
-
-      {bn.length > 0 && (
-        <section className="rise">
-          <h2>{t.news_from}</h2>
-          <div className="news-list">{bn.map((n) => <NewsCard key={n.id} n={n} />)}</div>
-        </section>
-      )}
-    </Shell>
+      </div>
+    </section>
   );
 }
 

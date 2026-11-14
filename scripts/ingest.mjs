@@ -144,6 +144,38 @@ async function cacheImages(items) {
   console.log(`→ ${saved} new images cached`);
 }
 
+// Brand visuals from the store's homepage: logo mark (site icon) and a campaign photo (og:image).
+async function brandMedia(brand, base) {
+  const dir = join(outDir, 'img');
+  await mkdir(dir, { recursive: true });
+  const html = await fetchText(base);
+  const abs = (u) => new URL(u.replace(/&amp;/g, '&'), base).href;
+  const attr = (tag, name) => (tag.match(new RegExp(name + '=["\']([^"\']+)["\']')) || [])[1];
+  const links = html.match(/<link[^>]+>/g) || [];
+  const icon = links.find((l) => /rel=["']apple-touch-icon/.test(l)) || links.find((l) => /rel=["'](shortcut )?icon["']/.test(l));
+  const og = (html.match(/<meta[^>]+property=["']og:image(:secure_url)?["'][^>]*>/) || [])[0];
+  const out = {};
+  const save = async (kind, url) => {
+    const res = await fetch(url, { headers: { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' }, signal: AbortSignal.timeout(20000) });
+    const type = res.headers.get('content-type') || '';
+    const ext = type.includes('png') ? 'png' : type.includes('jpeg') ? 'jpg' : type.includes('webp') ? 'webp' : null;
+    if (!res.ok || !ext) throw new Error(`${kind}: HTTP ${res.status} ${type}`);
+    await writeFile(join(dir, `_${kind}-${brand.id}.${ext}`), Buffer.from(await res.arrayBuffer()));
+    out[kind] = true;
+  };
+  if (icon && attr(icon, 'href')) {
+    // Shopify serves icons at 32px by default; ask for a larger render.
+    const url = abs(attr(icon, 'href')).replace(/([?&])width=\d+/, '$1width=256').replace(/([?&])height=\d+/, '$1height=256');
+    await save('logo', url).catch((e) => console.log(`✗ ${brand.id} ${e.message}`));
+  }
+  if (og && attr(og, 'content')) {
+    let url = abs(attr(og, 'content'));
+    if (/cdn\.shopify\.com|\/cdn\/shop\//.test(url)) url = url.replace(/([?&])width=\d+/, '$1width=1400');
+    await save('hero', url).catch((e) => console.log(`✗ ${brand.id} ${e.message}`));
+  }
+  return out;
+}
+
 async function readJSON(path, fallback) {
   try { return JSON.parse(await readFile(path, 'utf8')); } catch { return fallback; }
 }
@@ -162,6 +194,10 @@ async function main() {
         items.push(...its);
         news.push(...newsFromItems(brand, its));
         report.push(`✓ ${brand.id} shopify: ${its.length} items`);
+        if (IMAGES && !FIXTURE) {
+          const m = await brandMedia(brand, s.shopify).catch((e) => (report.push(`✗ ${brand.id} media: ${e.message}`), {}));
+          report.push(`  ${brand.id} media: ${Object.keys(m).join(', ') || 'none'}`);
+        }
       } catch (e) { report.push(`✗ ${brand.id} shopify: ${e.message}`); }
     }
     if (s.rss) {

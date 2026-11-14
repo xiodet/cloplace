@@ -10,7 +10,7 @@ export const dict = {
     all_brands: 'All brands', brands_count: (n) => `${n} brands`,
     filters: 'Filters', category: 'Clothing type', any: 'Any',
     price: 'Price, ₴', from: 'from', to: 'to',
-    ship_to: 'Ships to', returns: 'Free returns window', returns_only: 'Only with returns',
+    ship_to: 'Ships to', returns: 'Returns', returns_only: 'Only with returns',
     sale_only: 'Only on sale', origin: 'Brand country', reset: 'Reset',
     items_found: (n) => `${n} items`, brands_found: (n) => `${n} brands`,
     understood: 'Understood as',
