@@ -4,6 +4,7 @@ import { brands, items, news, brandById, categories, regions, formatPrice, liveB
 import { countries } from './data/brands.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
+import Logo from './components/Logo.jsx';
 
 // ── tiny hash router: #/  #/brands  #/brand/:id  #/news  #/search?q=...
 function useRoute() {
@@ -304,7 +305,7 @@ function NewsRow({ n, i }) {
       <a className="nr-main" href={'#/brand/' + b.id}>
         <span className="nr-meta"><time>{date}</time><span>{t.news_types[n.type]}</span></span>
         <span className="nr-brand">
-          {logo && <img className="nr-logo" src={logo} alt="" />}
+          <span className="nr-slot"><Logo className="nr-logo" src={logo} /></span>
           <span className="nr-name">{b.name}</span>
         </span>
         <span className="nr-text">
@@ -495,7 +496,7 @@ function BrandPage({ brand }) {
 
         <div className="brand-intro">
           <a href={'#' + backTo} className="back rise">{t.back}</a>
-          {logo && <img className="brand-logo rise" src={logo} alt="" />}
+          <Logo className="brand-logo rise" src={logo} />
           <p className="lead rise">{brand.description[lang]}</p>
         </div>
 
