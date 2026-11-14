@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     outDir: mode === 'single' ? 'dist-single' : mode === 'preview' ? 'dist-preview' : 'dist',
     assetsInlineLimit: mode === 'preview' ? 0 : undefined,
     rollupOptions: mode === 'preview'
-      ? { output: { entryFileNames: 'assets/app.js', chunkFileNames: 'assets/[name].js', assetFileNames: 'assets/[name][extname]' } }
+      ? { output: { entryFileNames: 'assets/app.js', chunkFileNames: 'assets/[name].js', assetFileNames: (a) => (/\.(jpe?g|png|webp)$/.test(a.name || '') ? 'i/[hash:6][extname]' : 'assets/[name][extname]') } }
       : {},
   },
 }));

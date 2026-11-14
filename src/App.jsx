@@ -291,21 +291,59 @@ function NewsCard({ n }) {
   );
 }
 
+function NewsRow({ n, i }) {
+  const { lang, t } = useLang();
+  const b = brandById[n.brandId];
+  if (!b) return null;
+  const { logo } = brandMedia(b.id);
+  const base = itemsByBrand[b.id] || [];
+  const pick = n.type === 'sale' ? base.filter((x) => x.compareAt) : base;
+  const thumbs = (pick.length ? pick : base).slice(0, 3);
+  const date = new Date(n.date).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'short' });
+  return (
+    <article className="news-row rise" style={{ '--i': Math.min(i, 8) }}>
+      <a className="nr-main" href={'#/brand/' + b.id}>
+        <span className="nr-meta"><time>{date}</time><span>{t.news_types[n.type]}</span></span>
+        <span className="nr-brand">
+          {logo && <img className="nr-logo" src={logo} alt="" />}
+          <span className="nr-name">{b.name}</span>
+        </span>
+        <span className="nr-text">
+          <span className="nr-title">{n.title[lang]}</span>
+          <span className="nr-sum">{n.summary[lang]}</span>
+        </span>
+        <span className="nr-thumbs">
+          {thumbs.map((it, k) => <span key={k} className="nr-thumb"><Garment item={it} tone={k} /></span>)}
+        </span>
+      </a>
+      {n.source?.url && <a className="nr-out" href={n.source.url} target="_blank" rel="noreferrer" aria-label={t.website}>↗</a>}
+    </article>
+  );
+}
+
 function NewsPage() {
   const { t, w } = useLang();
   const [type, setType] = useState('all');
+  const kinds = ['all', 'drop', 'sale', 'collab', 'news'].filter((k) => k === 'all' || news.some((n) => n.type === k));
   const list = news.filter((n) => type === 'all' || n.type === type);
   return (
-    <Shell word={w.news} quote={w.news_quote} active="news">
-      <div className="chips rise">
-        {['all', 'drop', 'sale', 'collab', 'news'].map((k) => (
-          <button key={k} className={type === k ? 'chip on' : 'chip'} onClick={() => setType(k)}>
-            {k === 'all' ? t.any : t.news_types[k]}
-          </button>
-        ))}
-      </div>
-      <div className="news-list rise">{list.map((n) => <NewsCard key={n.id} n={n} />)}</div>
-    </Shell>
+    <>
+      <TopBar active="news" />
+      <main className="news-page">
+        <div className="np-head rise">
+          <p className="np-lead">{w.news_quote}</p>
+          <div className="chips">
+            {kinds.map((k) => (
+              <button key={k} className={type === k ? 'chip on' : 'chip'} onClick={() => setType(k)}>
+                {k === 'all' ? t.any : t.news_types[k]}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="np-list">{list.map((n, i) => <NewsRow key={n.id} n={n} i={i} />)}</div>
+        <footer className="foot"><span>{t.footer}</span></footer>
+      </main>
+    </>
   );
 }
 
