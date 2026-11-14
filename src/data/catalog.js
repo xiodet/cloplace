@@ -47,9 +47,14 @@ export const regions = {
 import { toUAH, currencySign } from './rates.js';
 export { toUAH, currencySign };
 
+// Prices are shown in the currency the visitor picked (rough rates from rates.js), rounded to whole units.
+let shown = 'EUR';
+export const setShownCurrency = (c) => { shown = c; };
 export function formatPrice(amount, currency) {
-  const s = currencySign[currency] || currency + ' ';
-  return currency === 'UAH' ? `${amount.toLocaleString('uk-UA')} ${s}` : `${s}${amount}`;
+  const v = currency === shown || !toUAH[currency] ? amount : Math.round((amount * toUAH[currency]) / toUAH[shown]);
+  const c = toUAH[currency] ? shown : currency;
+  const s = currencySign[c] || c + ' ';
+  return c === 'UAH' ? `${Math.round(v).toLocaleString('uk-UA')} ${s}` : `${s}${v}`;
 }
 
 // ── Demo items ───────────────────────────────────────────────

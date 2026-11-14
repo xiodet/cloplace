@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { LangContext, dict, useLang, pick, LANGS, dateLocale, ruPlural } from './i18n.js';
-import { brands, items, news, brandById, categories, regions, formatPrice, toUAH, liveBrandIds, brandMedia } from './data/catalog.js';
+import { brands, items, news, brandById, categories, regions, formatPrice, setShownCurrency, toUAH, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
 import { cities } from './data/cities.js';
 import { places, guessCountry, estimate } from './data/places.js';
@@ -39,7 +39,7 @@ const W = {
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
     note: 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
     map_hint: 'Select a pin to see the brands from that city', map_reset: 'Show all',
-    g_clothes: 'Clothing', g_acc: 'Accessories', g_shoes: 'Shoes', s_def: 'Mixed', s_lo: 'Cheapest first', s_hi: 'Priciest first', s_sale: 'Biggest discount', n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
+    g_clothes: 'Clothing', g_acc: 'Accessories', g_shoes: 'Shoes', s_az: 'A–Z', s_def: 'Mixed', s_lo: 'Cheapest first', s_hi: 'Priciest first', s_sale: 'Biggest discount', n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
@@ -53,7 +53,7 @@ const W = {
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
     note: 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
     map_hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', map_reset: 'Показать все',
-    g_clothes: 'Одежда', g_acc: 'Аксессуары', g_shoes: 'Обувь', s_def: 'Вперемешку', s_lo: 'Сначала дешевле', s_hi: 'Сначала дороже', s_sale: 'Самая большая скидка', n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
+    g_clothes: 'Одежда', g_acc: 'Аксессуары', g_shoes: 'Обувь', s_az: 'По алфавиту', s_def: 'Вперемешку', s_lo: 'Сначала дешевле', s_hi: 'Сначала дороже', s_sale: 'Самая большая скидка', n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
   },
   uk: {
@@ -67,7 +67,7 @@ const W = {
     next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
     note: 'Drop Index — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
     map_hint: 'Натисніть на точку, щоб побачити бренди з цього міста', map_reset: 'Показати всі',
-    g_clothes: 'Одяг', g_acc: 'Аксесуари', g_shoes: 'Взуття', s_def: 'Упереміш', s_lo: 'Спочатку дешевші', s_hi: 'Спочатку дорожчі', s_sale: 'Найбільша знижка', n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
+    g_clothes: 'Одяг', g_acc: 'Аксесуари', g_shoes: 'Взуття', s_az: 'За алфавітом', s_def: 'Упереміш', s_lo: 'Спочатку дешевші', s_hi: 'Спочатку дорожчі', s_sale: 'Найбільша знижка', n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
     c_ship: 'доставка', c_world: 'доставка по всьому світу', c_ret: (d) => `повернення ${d} днів`, c_drop: 'новий дроп',
   },
 };
@@ -116,6 +116,10 @@ function openBrand(e, brand) {
   }, 760);
 }
 
+const CURS = [['EUR', '€'], ['USD', '$'], ['UAH', '₴']];
+function readCur() {
+  try { const c = localStorage.getItem('cur'); return CURS.some((x) => x[0] === c) ? c : 'EUR'; } catch { return 'EUR'; }
+}
 function readLang() {
   try { const l = localStorage.getItem('lang'); return dict[l] ? l : 'ru'; } catch { return 'ru'; }
 }
@@ -124,6 +128,9 @@ export default function App() {
   const [lang, setLangState] = useState(readLang);
   const setLang = (l) => { setLangState(l); try { localStorage.setItem('lang', l); } catch {} };
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
+  const [cur, setCurState] = useState(readCur);
+  const setCur = (c) => { setCurState(c); try { localStorage.setItem('cur', c); } catch {} };
+  setShownCurrency(cur);
   const route = useRoute();
   const [page, arg] = route.parts;
 
@@ -135,12 +142,12 @@ export default function App() {
   else body = <Home />;
   if (page !== 'brand') backTo = window.location.hash.replace(/^#/, '') || '/';
 
-  return <LangContext.Provider value={{ lang, t: dict[lang], w: W[lang], setLang }}>{body}</LangContext.Provider>;
+  return <LangContext.Provider value={{ lang, t: dict[lang], w: W[lang], setLang, cur, setCur }}>{body}</LangContext.Provider>;
 }
 
 // ── Top bar on every page: wordmark left, quiet nav right.
 function TopBar({ active }) {
-  const { lang, t, setLang } = useLang();
+  const { lang, t, setLang, cur, setCur } = useLang();
   return (
     <header className="top">
       <a href="#/" className="logo">Drop Index</a>
@@ -152,6 +159,11 @@ function TopBar({ active }) {
         <span className="lang" role="group" aria-label="Language">
           {LANGS.map(([l, label]) => (
             <button key={l} className={l === lang ? 'on' : ''} onClick={() => setLang(l)}>{label}</button>
+          ))}
+        </span>
+        <span className="lang cur" role="group" aria-label="Currency">
+          {CURS.map(([c, sign]) => (
+            <button key={c} className={c === cur ? 'on' : ''} title={c} onClick={() => setCur(c)}>{sign}</button>
           ))}
         </span>
       </nav>
@@ -200,11 +212,30 @@ function SearchBar({ initial = '' }) {
 }
 
 // ── Home: white canvas, one line, six showcases of different heights ──
+let homeGroup = 'clothes';
+let homeSort = 'def';
+// Items of one group for a brand; a brand without clothes still shows what it has.
+function groupItems(id, group) {
+  const all = itemsByBrand[id] || [];
+  const g = all.filter((i) => GROUPS[group].includes(i.category));
+  return g.length || group !== 'clothes' ? g : all;
+}
 function Home() {
   const { t, w, lang } = useLang();
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
-  const order = HOME_ORDER;
+  const [group, setGroupState] = useState(homeGroup);
+  const [sort, setSortState] = useState(homeSort);
+  const order = useMemo(() => {
+    const list = HOME_ORDER.filter((b) => group === 'clothes' || groupItems(b.id, group).length > 0);
+    const mid = (b) => { const p = groupItems(b.id, group).filter((i) => !i.demo && i.price > 0).map(priceUAH).sort((x, y) => x - y); return p.length ? p[p.length >> 1] : Infinity; };
+    if (sort === 'az') return [...list].sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === 'lo') return [...list].sort((a, b) => mid(a) - mid(b));
+    if (sort === 'hi') return [...list].sort((a, b) => (mid(b) === Infinity ? -1 : mid(b)) - (mid(a) === Infinity ? -1 : mid(a)));
+    return list;
+  }, [group, sort]);
   const [count, setCount] = useState(homeCount);
+  const setGroup = (g) => { homeGroup = g; setGroupState(g); setCount(BATCH); };
+  const setSort = (v) => { homeSort = v; setSortState(v); setCount(BATCH); };
   const more = useRef(null);
   useEffect(() => { homeCount = count; }, [count]);
   useEffect(() => {
@@ -225,8 +256,21 @@ function Home() {
           <p>{w.lead}</p>
           <span className="intro-count">{t.brands_count(brands.length)}</span>
         </div>
-        <div className="showcases">
-          {order.slice(0, count).map((b, i) => <Showcase key={b.id} brand={b} n={i % BATCH} />)}
+        <div className="sp-groups home-groups rise">
+          <div className="chips">
+            {[['clothes', w.g_clothes], ['acc', w.g_acc], ['shoes', w.g_shoes]].map(([k, l]) => <button key={k} className={'chip' + (group === k ? ' on' : '')} onClick={() => setGroup(k)}>{l}</button>)}
+          </div>
+          <label className="np-select"><span>{w.n_sort}</span>
+            <select id="h-sort" value={sort} onChange={(e) => setSort(e.target.value)}>
+              <option value="def">{w.s_def}</option>
+              <option value="az">{w.s_az}</option>
+              <option value="lo">{w.s_lo}</option>
+              <option value="hi">{w.s_hi}</option>
+            </select>
+          </label>
+        </div>
+        <div className="showcases" key={group + sort}>
+          {order.slice(0, count).map((b, i) => <Showcase key={b.id} brand={b} group={group} n={i % BATCH} />)}
         </div>
         {count < order.length && (
           <button className="more home-more" ref={more} onClick={() => setCount(Math.min(order.length, count + BATCH))}>
@@ -250,7 +294,7 @@ function ShowcaseMeta({ brand, items: its }) {
   const off = sale.length >= 3 ? Math.max(...sale.map((i) => Math.round((1 - i.price / i.compareAt) * 100))) : 0;
   const drop = news.find((n) => n.brandId === brand.id && n.type === 'drop' && Date.now() - new Date(n.date) < 14 * 864e5);
   const facts = [
-    prices.length > 0 && `${formatPrice(Math.min(...prices), real[0].currency)} – ${formatPrice(Math.max(...prices), real[0].currency)}`,
+    prices.length > 0 && [...new Set([formatPrice(Math.min(...prices), real[0].currency), formatPrice(Math.max(...prices), real[0].currency)])].join(' – '),
     brand.shipping.length > 0 && (brand.shipping.includes('WORLD') ? w.c_world : `${w.c_ship} ${brand.shipping.join(', ')}`),
     brand.returns?.days && w.c_ret(brand.returns.days),
   ].filter(Boolean);
@@ -267,9 +311,9 @@ function ShowcaseMeta({ brand, items: its }) {
 }
 
 // Showcase per the sketch: logo and name on top, a collage of the brand's clothes below.
-function Showcase({ brand, n }) {
+function Showcase({ brand, group = 'clothes', n }) {
   const { lang } = useLang();
-  const base = itemsByBrand[brand.id] || [];
+  const base = groupItems(brand.id, group);
   const its = base.length ? Array.from({ length: 3 }, (_, i) => base[i % base.length]) : [];
   const { logo } = brandMedia(brand.id);
   return (
@@ -637,7 +681,9 @@ function interleave(list) {
   return list.map((i) => [i, (seen[i.brandId] = (seen[i.brandId] || 0) + 1)]).sort((a, b) => a[1] - b[1]).map((x) => x[0]);
 }
 function SearchPage({ q }) {
-  const { lang, t, w } = useLang();
+  const { lang, t, w, cur } = useLang();
+  const rate = toUAH[cur];
+  const sign = CURS.find((c) => c[0] === cur)[1];
   const parsed = useMemo(() => parseQuery(q), [q]);
   const [f, setF] = useState(parsed);
   useEffect(() => setF(parsed), [parsed]);
@@ -657,8 +703,8 @@ function SearchPage({ q }) {
 
   const chips = [];
   if (f.category) chips.push(pick(categories[f.category], lang));
-  if (f.minUAH != null) chips.push(`${t.from} ${Math.round(f.minUAH)} ₴`);
-  if (f.maxUAH != null) chips.push(`${t.to} ${Math.round(f.maxUAH)} ₴`);
+  if (f.minUAH != null) chips.push(`${t.from} ${sign}${Math.round(f.minUAH / rate)}`);
+  if (f.maxUAH != null) chips.push(`${t.to} ${sign}${Math.round(f.maxUAH / rate)}`);
   if (f.ship) chips.push(`${t.ship_to}: ${pick(regions[f.ship], lang)}`);
   if (f.country) chips.push(pick(countries[f.country], lang));
   if (f.returns) chips.push(t.returns_only);
@@ -694,10 +740,10 @@ function SearchPage({ q }) {
             {GROUPS[group].map((k) => <option key={k} value={k}>{pick(categories[k], lang)}</option>)}
           </select>
         </label>
-        <label>{t.price}
+        <label>{t.price.replace('₴', sign)}
           <span className="row">
-            <input id="f-min" type="number" min="0" placeholder={t.from} value={f.minUAH != null ? Math.round(f.minUAH) : ''} onChange={(e) => set('minUAH', e.target.value === '' ? '' : +e.target.value)} />
-            <input id="f-max" type="number" min="0" placeholder={t.to} value={f.maxUAH != null ? Math.round(f.maxUAH) : ''} onChange={(e) => set('maxUAH', e.target.value === '' ? '' : +e.target.value)} />
+            <input id="f-min" type="number" min="0" placeholder={t.from} value={f.minUAH != null ? Math.round(f.minUAH / rate) : ''} onChange={(e) => set('minUAH', e.target.value === '' ? '' : +e.target.value * rate)} />
+            <input id="f-max" type="number" min="0" placeholder={t.to} value={f.maxUAH != null ? Math.round(f.maxUAH / rate) : ''} onChange={(e) => set('maxUAH', e.target.value === '' ? '' : +e.target.value * rate)} />
           </span>
         </label>
         <label>{t.ship_to}

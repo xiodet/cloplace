@@ -21,7 +21,7 @@ const outDir = FIXTURE ? join(root, 'scripts/fixtures/out') : join(root, 'src/da
 const NEW_DAYS = 14;
 // --images: keep a small local copy of the first photo of the newest items (used by offline previews)
 const IMAGES = process.argv.includes('--images');
-const IMAGES_PER_BRAND = +(process.env.IMAGES_PER_BRAND || 8); // photos cached per brand for the offline preview
+const IMAGE_QUOTA = { clothes: 6, acc: 2, shoes: 3 }; // photos cached per brand for the offline preview
 const ITEMS_PER_BRAND = 120; // newest items kept per brand, so the site stays light
 const now = FIXTURE ? new Date('2026-11-14T00:00:00Z') : new Date();
 
@@ -146,8 +146,11 @@ async function cacheImages(items) {
   let saved = 0;
   for (const it of items) {
     if (!it.image) continue;
-    perBrand[it.brandId] = (perBrand[it.brandId] || 0) + 1;
-    if (perBrand[it.brandId] > IMAGES_PER_BRAND) continue;
+    // a few photos of each kind, so the preview can show clothing, accessories and shoes separately
+    const kind = it.category === 'shoes' ? 'shoes' : ['accessories', 'cap'].includes(it.category) ? 'acc' : 'clothes';
+    const key = it.brandId + ':' + kind;
+    perBrand[key] = (perBrand[key] || 0) + 1;
+    if (perBrand[key] > IMAGE_QUOTA[kind]) continue;
     const file = join(dir, it.id + '.jpg');
     keep.add(it.id + '.jpg');
     try { await readFile(file); continue; } catch {}
