@@ -295,7 +295,6 @@ function NewsRow({ n, i }) {
   const { lang, t } = useLang();
   const b = brandById[n.brandId];
   if (!b) return null;
-  const { logo } = brandMedia(b.id);
   const base = itemsByBrand[b.id] || [];
   const pick = n.type === 'sale' ? base.filter((x) => x.compareAt) : base;
   const thumbs = (pick.length ? pick : base).slice(0, 3);
@@ -305,7 +304,6 @@ function NewsRow({ n, i }) {
       <a className="nr-main" href={'#/brand/' + b.id}>
         <span className="nr-meta"><time>{date}</time><span>{t.news_types[n.type]}</span></span>
         <span className="nr-brand">
-          <span className="nr-slot"><Logo className="nr-logo" src={logo} /></span>
           <span className="nr-name">{b.name}</span>
         </span>
         <span className="nr-text">
