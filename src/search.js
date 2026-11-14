@@ -15,6 +15,8 @@ export const categoryWords = {
   jeans: ['джинс', 'jeans', 'denim'],
   pants: ['штан', 'брюк', 'карго', 'pants', 'trousers', 'cargo'],
   cap: ['кепк', 'шапк', 'бини', 'панам', 'cap', ' hat', 'beanie'],
+  shoes: ['взутт', 'черевик', 'кроссовк', 'кросовк', 'кросівк', 'кеды', 'кед', 'обувь', 'ботинк', 'sneaker', 'shoe', 'boots', 'runner'],
+  accessories: ['аксесуар', 'шкарпет', 'сумк', 'шопер', 'носк', 'аксессуар', 'bag', 'tote', 'socks', 'accessor'],
 };
 
 // "women"/"жен" before "men"/"муж": the female words contain the male ones in English.
