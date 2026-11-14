@@ -674,7 +674,7 @@ function BrandPage({ brand }) {
 }
 
 // ── Search: text query → parsed filters, editable ───────────
-const GROUPS = { clothes: ['tee', 'hoodie', 'pants', 'jacket', 'knit'], acc: ['accessories', 'cap'], shoes: ['shoes'] };
+const GROUPS = { clothes: ['tee', 'hoodie', 'pants', 'jacket', 'knit', 'other'], acc: ['accessories', 'cap'], shoes: ['shoes'] };
 const groupOf = (cat) => Object.keys(GROUPS).find((g) => GROUPS[g].includes(cat)) || 'clothes';
 const priceUAH = (i) => i.price * (toUAH[i.currency] || 1);
 const discount = (i) => (i.compareAt > i.price ? 1 - i.price / i.compareAt : 0);

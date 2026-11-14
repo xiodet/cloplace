@@ -32,21 +32,23 @@ function hasWord(s, w) {
   return new RegExp(`(^|[^a-z])${w}${w.length <= 4 ? '(s|es)?([^a-z]|$)' : ''}`).test(s);
 }
 const extraWords = {
-  hoodie: ['crewneck', 'pullover', 'hooded', 'tracksuit'],
-  tee: ['shirt', 'polo', 'jersey', 'tank', 'top', 'dress', 'bodysuit', 'singlet'],
-  pants: ['jogger', 'short', 'skirt', 'legging', 'jorts', 'pant', 'chino', 'bottom', 'sweatpant', 'sweatshort', 'trackpant'],
-  jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell'],
-  shoes: ['boot', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
-  accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace'],
+  hoodie: ['crewneck', 'crew neck', 'pullover', 'hooded', 'tracksuit', 'sudadera', 'zipper', 'twinset'],
+  tee: ['shirt', 'polo', 'jersey', 'tank', 'top', 'dress', 'bodysuit', 'singlet', 'long sleeve', 'short sleeve', 'camiseta', 'chemise', 'tanktop', 'rugby', 'flannel', 'body', 'bralette', 'maglia', 'camisa', 'corset'],
+  pants: ['jogger', 'short', 'skirt', 'legging', 'jorts', 'pant', 'chino', 'bottom', 'sweatpant', 'sweatshort', 'trackpant', 'swimshort', 'jean', 'pantalon', 'pantalón', 'panttalón', 'hose', 'suit', 'workpant'],
+  jacket: ['vest', 'gilet', 'parka', 'fleece', 'windbreaker', 'blazer', 'anorak', 'overshirt', 'shell', 'chaqueta', 'cortavientos', 'veste', 'jacke', 'manteau', 'doudoune', 'poncho'],
+  cap: ['gorra', 'casquette', 'bonnet', 'balaclava', 'bucket', 'gorro', 'panama'],
+  knit: ['turtleneck', 'pull'],
+  shoes: ['boot', 'jordan', 'asics', 'adistar', 'air max', 'dunk', 'samba', 'zapatilla', 'chaussure', 'loafer', 'footwear', 'trainer', 'sandal', 'slide', 'mule', 'derby', 'slipper', 'clog'],
+  accessories: ['belt', 'wallet', 'scarf', 'glove', 'jewel', 'necklace', 'ring', 'bracelet', 'earring', 'sunglass', 'eyewear', 'keychain', 'sock', 'backpack', 'pouch', 'cardholder', 'lighter', 'sticker', 'poster', 'candle', 'towel', 'umbrella', 'insole', 'lace', 'underwear', 'boxer', 'panty', 'bandana', 'tie', 'pendant', 'spray', 'mug', 'deck', 'brush', 'bufanda', 'calcetin', 'chaussette', 'echarpe', 'décapsuleur', 'voiture', 'duffle', 'musette', 'ceinture', 'sacoche', 'handbag', 'holdall', 'carabiner', 'charm', 'pin', 'chain'],
 };
 // The store's own product type is the best hint, then the title, then the tags.
-function guessCategory(type, title, tags) {
+function guessCategory(type, title, tags, fallback = 'other') {
   for (const text of [type, title, tags]) {
     const s = String(text || '').toLowerCase();
     if (!s) continue;
     for (const [cat, words] of Object.entries(categoryWords)) if ([...words, ...(extraWords[cat] || [])].some((w) => hasWord(s, w))) return cat;
   }
-  return 'accessories';
+  return fallback; // nothing recognisable: plain clothing for a clothing brand, accessories for a jewellery one
 }
 
 function guessNewsType(text) {
@@ -86,7 +88,7 @@ async function storeInfo(base) {
   return info;
 }
 
-async function shopify(brand, base, currency) {
+async function shopify(brand, base, currency, fallback) {
   const data = JSON.parse(await fetchText(base.replace(/\/$/, '') + '/products.json?limit=250'));
   return (data.products || []).slice(0, ITEMS_PER_BRAND * 2).filter((p) => p.variants?.some((v) => parseFloat(v.price) > 0) && !/gift ?card|gutschein|e-?gift/i.test(p.title)).map((p) => {
     const prices = p.variants.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
@@ -97,7 +99,7 @@ async function shopify(brand, base, currency) {
       id: `${brand.id}-${p.handle}`,
       brandId: brand.id,
       title: p.title,
-      category: guessCategory(p.product_type, p.title, (Array.isArray(p.tags) ? p.tags : [p.tags]).join(' ')),
+      category: guessCategory(p.product_type, p.title, (Array.isArray(p.tags) ? p.tags : [p.tags]).join(' '), fallback),
       price,
       compareAt: compareAt && compareAt > price ? compareAt : null,
       currency: currency || brand.currency,
@@ -246,7 +248,7 @@ async function main() {
       try {
         const info = FIXTURE ? null : await storeInfo(s.shopify).catch((e) => (report.push(`✗ ${brand.id} store info: ${e.message}`), null));
         if (info) stores[brand.id] = info;
-        const its = await shopify(brand, s.shopify, info?.priced || info?.currency);
+        const its = await shopify(brand, s.shopify, info?.priced || info?.currency, s.mostly);
         if (info?.priced && info.priced !== info.currency) report.push(`• ${brand.id}: feed priced in ${info.priced}, shop currency ${info.currency}`);
         items.push(...its);
         news.push(...newsFromItems(brand, its));

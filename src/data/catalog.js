@@ -33,6 +33,7 @@ export const categories = {
   pants: { en: 'Pants', ru: 'Штаны', uk: 'Штани' },
   jacket: { en: 'Jackets', ru: 'Куртки', uk: 'Куртки' },
   knit: { en: 'Knitwear', ru: 'Трикотаж', uk: 'Трикотаж' },
+  other: { en: 'Other clothing', ru: 'Другая одежда', uk: 'Інший одяг' },
   cap: { en: 'Caps', ru: 'Кепки', uk: 'Кепки' },
   shoes: { en: 'Shoes', ru: 'Обувь', uk: 'Взуття' },
   accessories: { en: 'Accessories', ru: 'Аксессуары', uk: 'Аксесуари' },

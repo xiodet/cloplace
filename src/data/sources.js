@@ -1,5 +1,6 @@
 // Where the ingest script collects data from, per brand.
 //   shopify: store root; the script reads /products.json, /meta.json and the refund policy
+//   mostly:  category for items whose name says nothing (default: other clothing)
 //   rss:     any RSS/Atom feed (brand blog, news page, Telegram-to-RSS bridge, etc.)
 // All stores below answered on 2026-11-14 (found with scripts/discover.mjs).
 export default {
@@ -10,14 +11,14 @@ export default {
   'club-de-presage': { shopify: 'https://clubpresage.com' },
   'divention': { shopify: 'https://divention.de' },
   'obvune': { shopify: 'https://obvune.com' },
-  '2819-jewelry': { shopify: 'https://2819jewelry.de' },
+  '2819-jewelry': { shopify: 'https://2819jewelry.de', mostly: 'accessories' },
   'scuffers': { shopify: 'https://scuffers.com' },
   'racer-worldwide': { shopify: 'https://racerworldwide.net' },
   'lomalab': { shopify: 'https://lomalab.store' },
   'lkc2000': { shopify: 'https://lostkidsclub2000.com' },
   'jaded-london': { shopify: 'https://jadedman.com' },
   'undersoul': { shopify: 'https://undersoulwear.com' },
-  'monateo': { shopify: 'https://monateo.com' },
+  'monateo': { shopify: 'https://monateo.com', mostly: 'accessories' },
   '6pm': { shopify: 'https://6pmseason.com' },
   'arte-antwerp': { shopify: 'https://arte-antwerp.com' },
   'avnier': { shopify: 'https://avnier.com' },
@@ -50,12 +51,12 @@ export default {
   'ksenia-schnaider': { shopify: 'https://kseniaschnaider.com' },
   'ienki-ienki': { shopify: 'https://ienki-ienki.com' },
   'represent': { shopify: 'https://uk.representclo.com' },
-  'filling-pieces': { shopify: 'https://fillingpieces.com' },
+  'filling-pieces': { shopify: 'https://fillingpieces.com', mostly: 'shoes' },
   'olaf-hussein': { shopify: 'https://olafhussein.com' },
   'patta': { shopify: 'https://patta.nl' },
   'the-new-originals': { shopify: 'https://theneworiginals.eu' },
   'black-bananas': { shopify: 'https://blackbananas.com' },
   'polar-skate-co': { shopify: 'https://polarskateco.com' },
   'soulland': { shopify: 'https://soulland.com' },
-  'eytys': { shopify: 'https://eytys.com' },
+  'eytys': { shopify: 'https://eytys.com', mostly: 'shoes' },
 };
