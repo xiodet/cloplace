@@ -345,18 +345,18 @@
   "type": "drop",
   "date": "2026-11-14",
   "title": {
-   "en": "New in store: 21",
-   "ru": "Новинки в магазине: 21",
-   "uk": "Новинки в магазині: 21"
+   "en": "New in store: 23",
+   "ru": "Новинки в магазине: 23",
+   "uk": "Новинки в магазині: 23"
   },
   "summary": {
-   "en": "New in: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…",
-   "ru": "Новинки: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…",
-   "uk": "Новинки: Logo Boxy Hoodie Virtual Pink, Doyer Oversized Hoodie Virtual Pink, Colne Logo Oversized Hoodie Anthracite…"
+   "en": "New in: Leono Boxy Hoodie Light Beige Gum, Absecon Teddy Jacket Virtual Pink Deep Purple Black, Baxter Boxy Tee Black…",
+   "ru": "Новинки: Leono Boxy Hoodie Light Beige Gum, Absecon Teddy Jacket Virtual Pink Deep Purple Black, Baxter Boxy Tee Black…",
+   "uk": "Новинки: Leono Boxy Hoodie Light Beige Gum, Absecon Teddy Jacket Virtual Pink Deep Purple Black, Baxter Boxy Tee Black…"
   },
   "source": {
    "kind": "shopify",
-   "url": "https://pegador.com/products/logo-boxy-hoodie-washed-virtual-pink"
+   "url": "https://pegador.com/products/leono-boxy-hoodie-washed-light-beige-virtual-pink-gum"
   }
  },
  {
@@ -405,18 +405,18 @@
   "type": "drop",
   "date": "2026-11-14",
   "title": {
-   "en": "New in store: 21",
-   "ru": "Новинки в магазине: 21",
-   "uk": "Новинки в магазині: 21"
+   "en": "New in store: 22",
+   "ru": "Новинки в магазине: 22",
+   "uk": "Новинки в магазині: 22"
   },
   "summary": {
-   "en": "New in: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…",
-   "ru": "Новинки: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…",
-   "uk": "Новинки: Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE, Blank T-Shirt #2 RD-BLNKTS#2 BLACK…"
+   "en": "New in: Merino Short Beanie Hat Morse Code Logo RD-MRNSBHMCL BEIGE, Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE…",
+   "ru": "Новинки: Merino Short Beanie Hat Morse Code Logo RD-MRNSBHMCL BEIGE, Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE…",
+   "uk": "Новинки: Merino Short Beanie Hat Morse Code Logo RD-MRNSBHMCL BEIGE, Rolled Logo T-Shirt RD-RLTS BLACK, Blank T-Shirt #2 RD-BLNKTS#2 (FW26) COYOTE…"
   },
   "source": {
    "kind": "shopify",
-   "url": "https://riotdivision.tech/products/rolled-logo-t-shirt-rd-rlts-black"
+   "url": "https://riotdivision.tech/products/merino-short-beanie-hat-morse-code-logo-rd-mrnsbhmcl-beige"
   }
  },
  {
@@ -430,13 +430,13 @@
    "uk": "Знижки до −60%"
   },
   "summary": {
-   "en": "10 items discounted.",
-   "ru": "10 вещей со скидкой.",
-   "uk": "10 речей зі знижкою."
+   "en": "11 items discounted.",
+   "ru": "11 вещей со скидкой.",
+   "uk": "11 речей зі знижкою."
   },
   "source": {
    "kind": "shopify",
-   "url": "https://riotdivision.tech/products/merino-short-beanie-hat-rd-logo-rd-mrnsbhrdl-beige"
+   "url": "https://riotdivision.tech/products/merino-short-beanie-hat-morse-code-logo-rd-mrnsbhmcl-beige"
   }
  },
  {
@@ -450,13 +450,13 @@
    "uk": "Знижки до −81%"
   },
   "summary": {
-   "en": "56 items discounted.",
-   "ru": "56 вещей со скидкой.",
-   "uk": "56 речей зі знижкою."
+   "en": "57 items discounted.",
+   "ru": "57 вещей со скидкой.",
+   "uk": "57 речей зі знижкою."
   },
   "source": {
    "kind": "shopify",
-   "url": "https://kseniaschnaider.com/products/corruption-pants-black"
+   "url": "https://kseniaschnaider.com/products/wide-leg-jeans-with-embroidered-cherries-copy"
   }
  },
  {
@@ -577,6 +577,26 @@
   "source": {
    "kind": "shopify",
    "url": "https://carnebollente.com/products/cb-x-plain-welcum-to-napoli"
+  }
+ },
+ {
+  "id": "ksenia-schnaider-drop-2026-11-14",
+  "brandId": "ksenia-schnaider",
+  "type": "drop",
+  "date": "2026-11-14",
+  "title": {
+   "en": "New in store: 19",
+   "ru": "Новинки в магазине: 19",
+   "uk": "Новинки в магазині: 19"
+  },
+  "summary": {
+   "en": "New in: Wide Leg Jeans with Embroidered Cherries, Jungle Jeans, Illusion Sweater with Denim Back Detail…",
+   "ru": "Новинки: Wide Leg Jeans with Embroidered Cherries, Jungle Jeans, Illusion Sweater with Denim Back Detail…",
+   "uk": "Новинки: Wide Leg Jeans with Embroidered Cherries, Jungle Jeans, Illusion Sweater with Denim Back Detail…"
+  },
+  "source": {
+   "kind": "shopify",
+   "url": "https://kseniaschnaider.com/products/wide-leg-jeans-with-embroidered-cherries-copy"
   }
  },
  {
@@ -1105,14 +1125,14 @@
   "type": "drop",
   "date": "2026-11-04",
   "title": {
-   "en": "New in store: 2",
-   "ru": "Новинки в магазине: 2",
-   "uk": "Новинки в магазині: 2"
+   "en": "New in store: 1",
+   "ru": "Новинки в магазине: 1",
+   "uk": "Новинки в магазині: 1"
   },
   "summary": {
-   "en": "New in: Cicada Beanie, Rhombus Belt Leo",
-   "ru": "Новинки: Cicada Beanie, Rhombus Belt Leo",
-   "uk": "Новинки: Cicada Beanie, Rhombus Belt Leo"
+   "en": "New in: Cicada Beanie",
+   "ru": "Новинки: Cicada Beanie",
+   "uk": "Новинки: Cicada Beanie"
   },
   "source": {
    "kind": "shopify",
