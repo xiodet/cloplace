@@ -50,7 +50,7 @@ const go = (h) => { window.location.hash = h; };
 // Extra copy for this layout (kept next to the layout that uses it).
 const W = {
   en: {
-    m_all: 'All', m_ua: 'Ukraine', m_eu: 'EU', m_europe: 'All of Europe', m_cities: 'All cities', m_in: 'Zoom in', m_out: 'Zoom out', m_title: (b, c) => `${b} ${b === 1 ? 'brand' : 'brands'} in ${c} ${c === 1 ? 'city' : 'cities'}`, m_sub: 'Nearest to you first. Select a city on the map or below.', m_away: (d) => `${d} km from you`, m_here: 'your city', m_ship: (d) => `Delivery about ${d}`, m_noship: 'does not ship to you', m_latest: (c) => `Latest from ${c}`, m_nearby: 'Nearby',
+    m_europe: 'All of Europe', m_cities: 'All cities', m_in: 'Zoom in', m_out: 'Zoom out', m_title: (b, c) => `${b} ${b === 1 ? 'brand' : 'brands'} in ${c} ${c === 1 ? 'city' : 'cities'}`, m_sub: 'Nearest to you first. Select a city on the map or below. Pinch or scroll with two fingers to move around the map.', m_away: (d) => `${d} km from you`, m_here: 'your city', m_ship: (d) => `Delivery about ${d}`, m_noship: 'does not ship to you', m_latest: (c) => `Latest from ${c}`, m_nearby: 'Nearby',
     headline: 'Independent streetwear brands. Prices, shipping and returns in one place.',
     lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
     quote_by: 'ShoWindow',
@@ -65,7 +65,7 @@ const W = {
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
-    m_all: 'Все', m_ua: 'Украина', m_eu: 'ЕС', m_europe: 'Вся Европа', m_cities: 'Все города', m_in: 'Приблизить', m_out: 'Отдалить', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренда', 'брендов')} в ${c} ${ruPlural(c, 'городе', 'городах', 'городах')}`, m_sub: 'Сначала ближайшие к вам. Выберите город на карте или в списке.', m_away: (d) => `${d} км от вас`, m_here: 'ваш город', m_ship: (d) => `Доставка примерно ${d}`, m_noship: 'не доставляет к вам', m_latest: (c) => `Новое из города ${c}`, m_nearby: 'Рядом',
+    m_europe: 'Вся Европа', m_cities: 'Все города', m_in: 'Приблизить', m_out: 'Отдалить', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренда', 'брендов')} в ${c} ${ruPlural(c, 'городе', 'городах', 'городах')}`, m_sub: 'Сначала ближайшие к вам. Выберите город на карте или в списке. Карту можно приближать щипком и двигать двумя пальцами.', m_away: (d) => `${d} км от вас`, m_here: 'ваш город', m_ship: (d) => `Доставка примерно ${d}`, m_noship: 'не доставляет к вам', m_latest: (c) => `Новое из города ${c}`, m_nearby: 'Рядом',
     headline: 'Независимые стритвир-бренды. Цены, доставка и возвраты в одном месте.',
     lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
     quote_by: 'ShoWindow',
@@ -80,7 +80,7 @@ const W = {
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
   },
   uk: {
-    m_all: 'Усі', m_ua: 'Україна', m_eu: 'ЄС', m_europe: 'Уся Європа', m_cities: 'Усі міста', m_in: 'Наблизити', m_out: 'Віддалити', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренди', 'брендів')} у ${c} ${ruPlural(c, 'місті', 'містах', 'містах')}`, m_sub: 'Спочатку найближчі до вас. Оберіть місто на карті або у списку.', m_away: (d) => `${d} км від вас`, m_here: 'ваше місто', m_ship: (d) => `Доставка приблизно ${d}`, m_noship: 'не доставляє до вас', m_latest: (c) => `Нове з міста ${c}`, m_nearby: 'Поруч',
+    m_europe: 'Уся Європа', m_cities: 'Усі міста', m_in: 'Наблизити', m_out: 'Віддалити', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренди', 'брендів')} у ${c} ${ruPlural(c, 'місті', 'містах', 'містах')}`, m_sub: 'Спочатку найближчі до вас. Оберіть місто на карті або у списку. Карту можна наближати щипком і рухати двома пальцями.', m_away: (d) => `${d} км від вас`, m_here: 'ваше місто', m_ship: (d) => `Доставка приблизно ${d}`, m_noship: 'не доставляє до вас', m_latest: (c) => `Нове з міста ${c}`, m_nearby: 'Поруч',
     headline: 'Незалежні стрітвір-бренди. Ціни, доставка й повернення в одному місці.',
     lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
     quote_by: 'ShoWindow',
@@ -426,8 +426,6 @@ function Showcase({ brand, group = 'clothes', n }) {
 
 // ── Index: every brand as a typographic row ─────────────────
 // Map page: a large map with one pin per city, and rough delivery times to the visitor's country.
-const EU_CODES = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'];
-const inRegion = { all: () => true, ua: (b) => b.country === 'UA', eu: (b) => EU_CODES.includes(b.country) };
 const ALL_CLUSTERS = clusterBrands(brands);
 const HOME_VIEW = { zoom: 1, cx: MAP.w / 2, cy: MAP.h / 2 };
 const stamp = (i) => i.publishedAt || '';
@@ -436,7 +434,6 @@ const stamp = (i) => i.publishedAt || '';
 // distance from the visitor or shows the brands of the chosen city.
 function IndexPage() {
   const { lang, t, w } = useLang();
-  const [region, setRegion] = useState('all');
   const [place, setPlace] = useState(null);
   const [view, setView] = useState(HOME_VIEW);
   const [me, setMeState] = useState(guessCountry);
@@ -448,11 +445,10 @@ function IndexPage() {
   const [hx, hy] = project(home);
   const mine = ALL_CLUSTERS.find((c) => Math.hypot(c.x - hx, c.y - hy) < 16);
   const rows = ALL_CLUSTERS
-    .map((c) => { const list = c.brands.filter(inRegion[region]); return { ...c, list, n: list.length || c.brands.length, ok: list.length > 0, you: c === mine, d: Math.round(km(home, c.geo)) }; })
+    .map((c) => { const list = c.brands; return { ...c, list, n: list.length, ok: true, you: c === mine, d: Math.round(km(home, c.geo)) }; })
     .sort((a, b) => a.d - b.d);
   const shown = rows.filter((c) => c.ok);
   const far = Math.max(1, ...shown.map((c) => c.d));
-  const count = (r) => brands.filter(inRegion[r]).length;
   const picked = rows.find((c) => c.key === place);
 
   const select = (key) => {
@@ -465,8 +461,6 @@ function IndexPage() {
     }
   };
   const reset = () => { setPlace(null); setView((v) => ({ ...v, zoom: 1 })); };
-  const zoomIn = () => setView((v) => ({ zoom: ZOOM, cx: picked ? picked.x : 330, cy: picked ? picked.y : 410 }));
-  const setFilter = (r) => { setRegion(r); if (picked && !picked.brands.some(inRegion[r])) reset(); };
   const ships = (b) => !b.shipsTo || b.country === me || b.shipsTo.includes(me);
 
   const latest = picked ? picked.list.flatMap((b) => itemsByBrand[b.id] || []).filter((i) => i.image && !i.demo).sort((a, b) => stamp(b).localeCompare(stamp(a))).slice(0, 3) : [];
@@ -480,11 +474,6 @@ function IndexPage() {
         <div className="mapx">
           <div className="mapx-stage">
             <div className="mapx-bar">
-              <div className="mapx-chips" role="group" aria-label={w.index_quote}>
-                {[['all', w.m_all], ['ua', w.m_ua], ['eu', w.m_eu]].map(([k, label]) => (
-                  <button key={k} type="button" className={'mchip' + (region === k ? ' on' : '')} aria-pressed={region === k} onClick={() => setFilter(k)}>{label} · {count(k)}</button>
-                ))}
-              </div>
               {view.zoom > 1 && (
                 <button type="button" className="mchip mback" onClick={reset}>
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>{w.m_europe}
@@ -492,7 +481,7 @@ function IndexPage() {
               )}
             </div>
             <BrandMap
-              pins={rows} selected={place} view={view} onSelect={select} onZoomIn={zoomIn} onReset={reset}
+              pins={rows} selected={place} view={view} onSelect={select} onView={setView} focus={picked}
               you={{ x: hx, y: hy }}
               copy={{ you: w.d_you, brands: t.brands_count, leg1: t.brands_count(1), zoomIn: w.m_in, zoomOut: w.m_out }}
             />

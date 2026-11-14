@@ -215,13 +215,15 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .mapx-stage { position: relative; max-width: calc((100dvh - var(--top) - 40px) * 960 / 791); min-width: min(100%, 560px); }
 .mapx-bar { position: absolute; left: 0; top: 0; right: 0; z-index: 8; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; pointer-events: none; }
 .mapx-bar > * { pointer-events: auto; }
-.mapx-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .mchip { height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #ddd; background: var(--bg); color: var(--ink); font: 500 13px var(--font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .2s, color .2s, border-color .2s; }
 .mchip:hover { border-color: var(--ink); }
 .mchip.on { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .mchip.mback { padding-left: 10px; }
-.dmap { position: relative; width: 100%; overflow: hidden; }
-.dmap-layer { position: absolute; inset: 0; transform-origin: 0 0; transition: transform .6s var(--ease-out); will-change: transform; }
+.dmap { position: relative; width: 100%; overflow: hidden; touch-action: pan-y; }
+.dmap.zoomed { touch-action: none; cursor: grab; }
+.dmap.live { cursor: grabbing; }
+.dmap.live .dmap-layer, .dmap.live .dpin, .dmap.live .dpin-me { transition: none; }
+.dmap-layer { position: absolute; inset: 0; transform-origin: 0 0; transition: transform .6s var(--ease-out); }
 .dmap-layer img { width: 100%; height: 100%; display: block; user-select: none; }
 .dpin { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; border: 0; padding: 0; background: none; border-radius: 50%; cursor: pointer; font: inherit; color: var(--ink); transition: left .6s var(--ease-out), top .6s var(--ease-out), opacity .3s; }
 .dpin-dot { width: var(--s); height: var(--s); border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: clamp(9px, calc(var(--s) * .55), 11px); font-weight: 600; line-height: 1; letter-spacing: 0; box-shadow: 0 0 0 2px var(--bg); transition: width .3s, height .3s, box-shadow .25s, transform .25s var(--ease-out); }
@@ -281,8 +283,6 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 @media (max-width: 768px) {
   .mapx { grid-template-columns: minmax(0, 1fr); }
   .mapx-stage { min-width: 0; max-width: none; }
-  .mapx-bar { position: static; margin-bottom: 10px; }
-  .mchip.mback { position: absolute; left: 8px; top: 54px; z-index: 8; }
   .dmap-legend { gap: 10px; font-size: 11px; }
   .mapx-panel { position: static; max-height: none; overflow: visible; padding: 24px 0 0; }
   .mapx-panel.open .mp-over { display: block; }
