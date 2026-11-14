@@ -176,7 +176,7 @@ function SearchBar({ initial = '' }) {
 
 // ── Home: white canvas, one line, six showcases of different heights ──
 function Home() {
-  const { t, w } = useLang();
+  const { t, w, lang } = useLang();
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
   const order = useMemo(() => [...FEATURED.map((id) => brandById[id]).filter(Boolean), ...brands.filter((b) => !FEATURED.includes(b.id))], []);
   const [count, setCount] = useState(homeCount);
@@ -212,9 +212,11 @@ function Home() {
             {w.more_brands(order.length - count)}
           </button>
         )}
-        <div className="home-search rise">
-          <span className="label">{t.nav_search}</span>
-          <SearchBar />
+        <div className="home-note rise">
+          <span className="muted">{lang === 'ru' ? 'О сайте' : 'About'}</span>
+          <p>{lang === 'ru'
+            ? 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.'
+            : 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.'}</p>
         </div>
         <footer className="foot"><span>{t.footer}</span></footer>
       </main>
