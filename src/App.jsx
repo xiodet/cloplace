@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { LangContext, dict, useLang, pick, LANGS, dateLocale, ruPlural } from './i18n.js';
-import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds, brandMedia } from './data/catalog.js';
+import { brands, items, news, brandById, categories, regions, formatPrice, toUAH, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
 import { cities } from './data/cities.js';
 import { places, guessCountry, estimate } from './data/places.js';
@@ -39,7 +39,7 @@ const W = {
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
     note: 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
     map_hint: 'Select a pin to see the brands from that city', map_reset: 'Show all',
-    n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
+    g_clothes: 'Clothing', g_acc: 'Accessories', g_shoes: 'Shoes', s_def: 'Mixed', s_lo: 'Cheapest first', s_hi: 'Priciest first', s_sale: 'Biggest discount', n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
@@ -53,7 +53,7 @@ const W = {
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
     note: 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
     map_hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', map_reset: 'Показать все',
-    n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
+    g_clothes: 'Одежда', g_acc: 'Аксессуары', g_shoes: 'Обувь', s_def: 'Вперемешку', s_lo: 'Сначала дешевле', s_hi: 'Сначала дороже', s_sale: 'Самая большая скидка', n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
   },
   uk: {
@@ -67,7 +67,7 @@ const W = {
     next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
     note: 'Drop Index — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
     map_hint: 'Натисніть на точку, щоб побачити бренди з цього міста', map_reset: 'Показати всі',
-    n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
+    g_clothes: 'Одяг', g_acc: 'Аксесуари', g_shoes: 'Взуття', s_def: 'Упереміш', s_lo: 'Спочатку дешевші', s_hi: 'Спочатку дорожчі', s_sale: 'Найбільша знижка', n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
     c_ship: 'доставка', c_world: 'доставка по всьому світу', c_ret: (d) => `повернення ${d} днів`, c_drop: 'новий дроп',
   },
 };
@@ -627,16 +627,33 @@ function BrandPage({ brand }) {
 }
 
 // ── Search: text query → parsed filters, editable ───────────
+const GROUPS = { clothes: ['tee', 'hoodie', 'pants', 'jacket', 'knit'], acc: ['accessories', 'cap'], shoes: ['shoes'] };
+const groupOf = (cat) => Object.keys(GROUPS).find((g) => GROUPS[g].includes(cat)) || 'clothes';
+const priceUAH = (i) => i.price * (toUAH[i.currency] || 1);
+const discount = (i) => (i.compareAt > i.price ? 1 - i.price / i.compareAt : 0);
+// Default order: one item from each brand in turn, so no brand fills the first screens.
+function interleave(list) {
+  const seen = {};
+  return list.map((i) => [i, (seen[i.brandId] = (seen[i.brandId] || 0) + 1)]).sort((a, b) => a[1] - b[1]).map((x) => x[0]);
+}
 function SearchPage({ q }) {
   const { lang, t, w } = useLang();
   const parsed = useMemo(() => parseQuery(q), [q]);
   const [f, setF] = useState(parsed);
   useEffect(() => setF(parsed), [parsed]);
+  const [group, setGroup] = useState(groupOf(parsed.category));
+  useEffect(() => setGroup(groupOf(parsed.category)), [parsed]);
+  const [sort, setSort] = useState('def');
   const [shown, setShown] = useState(48);
-  useEffect(() => setShown(48), [f]);
+  useEffect(() => setShown(48), [f, group, sort]);
+  const pickGroup = (g) => { setGroup(g); setF((o) => ({ ...o, category: undefined })); };
   const set = (k, v) => setF((o) => ({ ...o, [k]: v === '' || v === false ? undefined : v }));
 
-  const found = items.filter((i) => matchItem(i, brandById[i.brandId], f));
+  let found = items.filter((i) => GROUPS[group].includes(i.category) && matchItem(i, brandById[i.brandId], f));
+  if (sort === 'def') found = interleave(found);
+  if (sort === 'lo') found.sort((a, b) => priceUAH(a) - priceUAH(b));
+  if (sort === 'hi') found.sort((a, b) => priceUAH(b) - priceUAH(a));
+  if (sort === 'sale') found.sort((a, b) => discount(b) - discount(a));
 
   const chips = [];
   if (f.category) chips.push(pick(categories[f.category], lang));
@@ -657,11 +674,24 @@ function SearchPage({ q }) {
         <span className="understood">{chips.length > 0 && <>{t.understood}: {chips.map((c) => <span key={c} className="tag">{c}</span>)}</>}</span>
         <span className="muted">{t.items_found(found.length)}</span>
       </div>
+      <div className="sp-groups rise">
+        <div className="chips">
+          {[['clothes', w.g_clothes], ['acc', w.g_acc], ['shoes', w.g_shoes]].map(([k, l]) => <button key={k} className={'chip' + (group === k ? ' on' : '')} onClick={() => pickGroup(k)}>{l}</button>)}
+        </div>
+        <label className="np-select"><span>{w.n_sort}</span>
+          <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="def">{w.s_def}</option>
+            <option value="lo">{w.s_lo}</option>
+            <option value="hi">{w.s_hi}</option>
+            <option value="sale">{w.s_sale}</option>
+          </select>
+        </label>
+      </div>
       <div className="filters rise">
         <label>{t.category}
           <select id="f-cat" value={f.category || ''} onChange={(e) => set('category', e.target.value)}>
             <option value="">{t.any}</option>
-            {Object.entries(categories).map(([k, v]) => <option key={k} value={k}>{pick(v, lang)}</option>)}
+            {GROUPS[group].map((k) => <option key={k} value={k}>{pick(categories[k], lang)}</option>)}
           </select>
         </label>
         <label>{t.price}

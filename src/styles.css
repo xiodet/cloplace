@@ -253,6 +253,9 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .search-page .item-grid.wide-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 44px 16px; margin-top: 48px; }
 .search-page .home-more { margin-top: 56px; }
 .sp-none { margin-top: 48px; }
+.sp-groups { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 32px; flex-wrap: wrap; margin-top: 28px; }
+.sp-groups .chips { margin: 0; gap: 28px; }
+.sp-groups .chip { font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -0.04em; }
 .searchbar { display: flex; border-bottom: 1px solid var(--ink); }
 .searchbar input { flex: 1; min-width: 0; border: 0; background: none; padding: 10px 0; font-size: 21px; letter-spacing: -0.03em; outline: none; }
 .searchbar input::placeholder { color: #b4b5b7; }
