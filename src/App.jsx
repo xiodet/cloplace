@@ -51,13 +51,13 @@ const W = {
   en: {
     headline: 'Independent streetwear brands. Prices, shipping and returns in one place.',
     lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
-    quote_by: 'Drop Index',
+    quote_by: 'Show Window',
     index_quote: 'Where the brands are based',
     d_title: 'Approximate delivery times', d_to: 'Deliver to', d_days: (a, b) => `${a}–${b} days`, d_you: 'You', d_customs: 'customs duties possible', d_noship: 'This brand does not list your country for shipping',
     d_note: 'A rough estimate from distance and customs borders, not data from the brands or carriers. Add the time the brand needs to pack an order. A crossed-out brand does not list your country for shipping.',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
-    note: 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
+    note: 'Show Window is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
     map_hint: 'Select a pin to see the brands from that city', map_reset: 'Show all',
     g_clothes: 'Clothing', g_acc: 'Accessories', g_shoes: 'Shoes', s_az: 'A–Z', s_def: 'Mixed', s_lo: 'Cheapest first', s_hi: 'Priciest first', s_sale: 'Biggest discount', n_all: 'All brands', n_brand: 'Brand', n_sort: 'Sort', n_new: 'Newest first', n_old: 'Oldest first', n_az: 'By brand, A–Z', n_empty: 'No news for this filter yet', n_reset: 'Reset',
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
@@ -65,13 +65,13 @@ const W = {
   ru: {
     headline: 'Независимые стритвир-бренды. Цены, доставка и возвраты в одном месте.',
     lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
-    quote_by: 'Drop Index',
+    quote_by: 'Show Window',
     index_quote: 'Где находятся бренды',
     d_title: 'Примерные сроки доставки', d_to: 'Куда', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дня', 'дней')}`, d_you: 'Вы', d_customs: 'возможны таможенные платежи', d_noship: 'Бренд не указывает вашу страну в списке доставки',
     d_note: 'Это грубая оценка по расстоянию и таможенным границам, а не данные брендов или служб доставки. К сроку добавьте время, за которое бренд собирает заказ. Зачёркнутый бренд не указывает вашу страну в списке доставки.',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
-    note: 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
+    note: 'Show Window — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
     map_hint: 'Нажмите на точку, чтобы увидеть бренды из этого города', map_reset: 'Показать все',
     g_clothes: 'Одежда', g_acc: 'Аксессуары', g_shoes: 'Обувь', s_az: 'По алфавиту', s_def: 'Вперемешку', s_lo: 'Сначала дешевле', s_hi: 'Сначала дороже', s_sale: 'Самая большая скидка', n_all: 'Все бренды', n_brand: 'Бренд', n_sort: 'Сортировка', n_new: 'Сначала новые', n_old: 'Сначала старые', n_az: 'По бренду, А–Я', n_empty: 'Новостей по этому фильтру пока нет', n_reset: 'Сбросить',
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
@@ -79,13 +79,13 @@ const W = {
   uk: {
     headline: 'Незалежні стрітвір-бренди. Ціни, доставка й повернення в одному місці.',
     lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
-    quote_by: 'Drop Index',
+    quote_by: 'Show Window',
     index_quote: 'Де розташовані бренди',
     d_title: 'Орієнтовні терміни доставки', d_to: 'Куди', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дні', 'днів')}`, d_you: 'Ви', d_customs: 'можливі митні платежі', d_noship: 'Бренд не вказує вашу країну у списку доставки',
     d_note: 'Це груба оцінка за відстанню та митними кордонами, а не дані брендів чи служб доставки. До терміну додайте час, за який бренд збирає замовлення. Закреслений бренд не вказує вашу країну у списку доставки.',
     news_quote: 'Дропи, знижки та колаборації, зібрані автоматично',
     next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
-    note: 'Drop Index — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
+    note: 'Show Window — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
     map_hint: 'Натисніть на точку, щоб побачити бренди з цього міста', map_reset: 'Показати всі',
     g_clothes: 'Одяг', g_acc: 'Аксесуари', g_shoes: 'Взуття', s_az: 'За алфавітом', s_def: 'Упереміш', s_lo: 'Спочатку дешевші', s_hi: 'Спочатку дорожчі', s_sale: 'Найбільша знижка', n_all: 'Усі бренди', n_brand: 'Бренд', n_sort: 'Сортування', n_new: 'Спочатку нові', n_old: 'Спочатку старі', n_az: 'За брендом, А–Я', n_empty: 'Новин за цим фільтром поки немає', n_reset: 'Скинути',
     c_ship: 'доставка', c_world: 'доставка по всьому світу', c_ret: (d) => `повернення ${d} днів`, c_drop: 'новий дроп',
@@ -188,12 +188,33 @@ function Pref({ label, value, options, show, onPick }) {
   );
 }
 
+// Name: "ShoW" at rest; on hover (and once after load) "indow" slides out of the W.
+let wordmarkShown = false;
+function Wordmark() {
+  const [intro, setIntro] = useState(!wordmarkShown);
+  useEffect(() => {
+    if (!intro) return;
+    wordmarkShown = true;
+    const t = setTimeout(() => setIntro(false), 1900);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <a href="#/" className={'logo' + (intro ? ' wide' : '')} aria-label="Show Window">
+      <span aria-hidden="true">Sho</span>
+      <span aria-hidden="true" className="lw">W</span>
+      <span aria-hidden="true" className="lx"><span className="lx-in">
+        {'indow'.split('').map((c, i) => <span key={i} style={{ '--k': i }}>{c}</span>)}
+      </span></span>
+    </a>
+  );
+}
+
 // ── Top bar on every page: wordmark left, quiet nav right.
 function TopBar({ active }) {
   const { lang, t, setLang, cur, setCur } = useLang();
   return (
     <header className="top">
-      <a href="#/" className="logo">Drop Index</a>
+      <Wordmark />
       <nav className="nav">
         <a href="#/" className={active === 'home' ? 'on' : ''}>{t.nav_brands}</a>
         <a href="#/search" className={active === 'search' ? 'on' : ''}>{t.nav_search}</a>
