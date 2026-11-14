@@ -20,7 +20,7 @@ function withStore(b) {
   if (!st) return b;
   const ships = st.shipsTo || [];
   const shipping = [ships.includes('UA') && 'UA', EU.some((c) => ships.includes(c)) && 'EU', ships.includes('US') && ships.length > 60 && 'WORLD'].filter(Boolean);
-  const out = { ...b, currency: st.currency || b.currency };
+  const out = { ...b, currency: st.currency || b.currency, shipsTo: ships.length ? ships : null };
   if (shipping.length) { out.shipping = shipping; out.verified = [...new Set([...b.verified, 'shipping'])]; }
   if (!b.returns && st.returnDays) out.returns = { days: st.returnDays };
   return out;

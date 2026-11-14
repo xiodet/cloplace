@@ -7,8 +7,8 @@ import { geoMercator, geoPath } from 'd3-geo';
 const topo = JSON.parse(readFileSync(new URL('../node_modules/world-atlas/countries-50m.json', import.meta.url)));
 const all = feature(topo, topo.objects.countries).features;
 
-const W = 1000, H = 760;
-const box = { type: 'Feature', geometry: { type: 'MultiPoint', coordinates: [[-12, 34.5], [43, 34.5], [-12, 62.5], [43, 62.5]] } };
+const W = 1400, H = 780;
+const box = { type: 'Feature', geometry: { type: 'MultiPoint', coordinates: [[-24, 34.5], [56, 34.5], [-24, 62.8], [56, 62.8]] } };
 const proj = geoMercator().fitExtent([[0, 0], [W, H]], box).clipExtent([[0, 0], [W, H]]);
 const path = geoPath(proj).digits(1);
 

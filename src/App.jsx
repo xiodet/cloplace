@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { LangContext, dict, useLang, pick, LANGS, dateLocale } from './i18n.js';
+import { LangContext, dict, useLang, pick, LANGS, dateLocale, ruPlural } from './i18n.js';
 import { brands, items, news, brandById, categories, regions, formatPrice, liveBrandIds, brandMedia } from './data/catalog.js';
 import { countries } from './data/brands.js';
+import { cities } from './data/cities.js';
+import { places, guessCountry, estimate } from './data/places.js';
 import { parseQuery, matchItem } from './search.js';
 import Garment from './components/Garment.jsx';
 import Logo from './components/Logo.jsx';
@@ -31,6 +33,8 @@ const W = {
     lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
     quote_by: 'Drop Index',
     index_quote: 'Where the brands are based',
+    d_title: 'Approximate delivery times', d_to: 'Deliver to', d_days: (a, b) => `${a}–${b} days`, d_you: 'You', d_customs: 'customs duties possible', d_noship: 'This brand does not list your country for shipping',
+    d_note: 'A rough estimate from distance and customs borders, not data from the brands or carriers. Add the time the brand needs to pack an order. A crossed-out brand does not list your country for shipping.',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
     note: 'Drop Index is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
@@ -43,6 +47,8 @@ const W = {
     lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
     quote_by: 'Drop Index',
     index_quote: 'Где находятся бренды',
+    d_title: 'Примерные сроки доставки', d_to: 'Куда', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дня', 'дней')}`, d_you: 'Вы', d_customs: 'возможны таможенные платежи', d_noship: 'Бренд не указывает вашу страну в списке доставки',
+    d_note: 'Это грубая оценка по расстоянию и таможенным границам, а не данные брендов или служб доставки. К сроку добавьте время, за которое бренд собирает заказ. Зачёркнутый бренд не указывает вашу страну в списке доставки.',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
     note: 'Drop Index — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
@@ -55,6 +61,8 @@ const W = {
     lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
     quote_by: 'Drop Index',
     index_quote: 'Де розташовані бренди',
+    d_title: 'Орієнтовні терміни доставки', d_to: 'Куди', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дні', 'днів')}`, d_you: 'Ви', d_customs: 'можливі митні платежі', d_noship: 'Бренд не вказує вашу країну у списку доставки',
+    d_note: 'Це груба оцінка за відстанню та митними кордонами, а не дані брендів чи служб доставки. До терміну додайте час, за який бренд збирає замовлення. Закреслений бренд не вказує вашу країну у списку доставки.',
     news_quote: 'Дропи, знижки та колаборації, зібрані автоматично',
     next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
     note: 'Drop Index — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
@@ -279,55 +287,72 @@ function Showcase({ brand, n }) {
 }
 
 // ── Index: every brand as a typographic row ─────────────────
+// Map page: a large map with one pin per city, and rough delivery times to the visitor's country.
 function IndexPage() {
   const { lang, t, w } = useLang();
   const [origin, setOrigin] = useState('ALL');
   const [place, setPlace] = useState(null);
-  const [hotBrand, setHotBrand] = useState(null);
   const [hotPlace, setHotPlace] = useState(null);
+  const [me, setMeState] = useState(guessCountry);
+  const setMe = (c) => { setMeState(c); try { localStorage.setItem('country', c); } catch {} };
   const inOrigin = brands
     .filter((b) => origin === 'ALL' || (origin === 'UA' ? b.country === 'UA' : b.country !== 'UA'))
     .sort((a, b) => a.name.localeCompare(b.name));
   const clusters = useMemo(() => clusterBrands(inOrigin), [origin]);
   const picked = clusters.find((c) => c.key === place);
-  const hovered = clusters.find((c) => c.key === hotPlace);
-  const list = picked ? inOrigin.filter((b) => picked.brands.includes(b)) : inOrigin;
+  const regionName = useMemo(() => { try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (c) => d.of(c); } catch { return (c) => c; } }, [lang]);
+  const rows = clusters
+    .map((c) => ({ c, e: estimate(c.brands[0].country, cities[c.brands[0].city], me) }))
+    .sort((a, b) => a.e.days[0] - b.e.days[0] || a.e.days[1] - b.e.days[1] || a.c.key.localeCompare(b.c.key));
+  const ships = (b) => !b.shipsTo || b.country === me || b.shipsTo.includes(me);
+  const brandLinks = (c) => c.brands.map((b) => (
+    <a key={b.id} className={'dl-brand' + (ships(b) ? '' : ' no')} href={'#/brand/' + b.id} title={ships(b) ? undefined : w.d_noship}>{b.name}</a>
+  ));
   return (
     <>
       <TopBar active="index" />
       <main className="index-page">
-        <div className="ix-top">
-          <div className="ix-side rise">
-            <p className="np-lead">{w.index_quote}</p>
-            <div className="ix-tools">
-              <div className="chips">
-                {[['ALL', t.any], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
-                  <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => { setOrigin(k); setPlace(null); }}>{label}</button>
-                ))}
+        <div className="np-head rise">
+          <p className="np-lead">{w.index_quote}</p>
+          <div className="chips">
+            {[['ALL', t.any], ['UA', 'UA'], ['EU', 'EU']].map(([k, label]) => (
+              <button key={k} className={origin === k ? 'chip on' : 'chip'} onClick={() => { setOrigin(k); setPlace(null); }}>{label}</button>
+            ))}
+          </div>
+        </div>
+        <div className="map-wrap rise" style={{ '--i': 1 }}>
+          <BrandMap clusters={clusters} selected={place} hot={null} onSelect={setPlace} onHover={setHotPlace} focus={origin} you={places[me].geo} youLabel={w.d_you} />
+          {picked
+            ? (
+              <div className="map-card">
+                <button className="map-x" onClick={() => setPlace(null)} aria-label={w.map_reset}>×</button>
+                <span className="muted">{picked.names.join(', ')} · {pick(countries[picked.brands[0].country], lang)}</span>
+                <span className="map-brands">{brandLinks(picked)}</span>
+                <span className="muted">{w.d_days(...estimate(picked.brands[0].country, cities[picked.brands[0].city], me).days)} · {regionName(me)}</span>
               </div>
-              {picked
-                ? <p className="ix-picked"><span>{picked.names.join(', ')}</span><span className="muted">{t.brands_count(picked.brands.length)}</span><button className="chip on" onClick={() => setPlace(null)}>{w.map_reset} ×</button></p>
-                : <p className="muted ix-hint">{w.map_hint}</p>}
-            </div>
+            )
+            : <p className="map-hint muted">{w.map_hint}</p>}
+        </div>
+        <section className="delivery">
+          <div className="row-head">
+            <h2>{w.d_title}</h2>
+            <label className="np-select dl-to"><span>{w.d_to}</span>
+              <select value={me} onChange={(e) => setMe(e.target.value)}>
+                {Object.keys(places).map((c) => [c, regionName(c)]).sort((a, b) => a[1].localeCompare(b[1], lang)).map(([c, name]) => <option key={c} value={c}>{name}</option>)}
+              </select>
+            </label>
           </div>
-          <div className="rise" style={{ '--i': 2 }}>
-            <BrandMap clusters={clusters} selected={place} hot={hotBrand} onSelect={setPlace} onHover={setHotPlace} focus={origin} />
+          <div className="dl-list">
+            {rows.map(({ c, e }) => (
+              <div key={c.key} className={'dl-row' + (hotPlace === c.key || place === c.key ? ' hot' : '')} onMouseEnter={() => setHotPlace(c.key)} onMouseLeave={() => setHotPlace(null)}>
+                <span className="dl-days">{w.d_days(...e.days)}</span>
+                <span className="dl-from">{c.names.join(', ')}<small>{pick(countries[c.brands[0].country], lang)}{e.customs ? ' · ' + w.d_customs : ''}</small></span>
+                <span className="dl-brands">{brandLinks(c)}</span>
+              </div>
+            ))}
           </div>
-        </div>
-        <div className="row-head ix-head">
-          <h2>{picked ? picked.names.join(', ') : t.all_brands}</h2>
-          <span className="muted">{t.brands_count(list.length)}</span>
-        </div>
-        <div className="index-list">
-          {list.map((b) => (
-            <a key={b.id} className={'index-row' + (hovered?.brands.includes(b) ? ' hot' : '')} href={'#/brand/' + b.id} onClick={(e) => openBrand(e, b)}
-              onMouseEnter={() => setHotBrand(b.id)} onMouseLeave={() => setHotBrand(null)}>
-              <span className="ir-name">{b.name}</span>
-              <span className="ir-style">{b.style.join(', ')}</span>
-              <span className="ir-city">{b.city ? b.city + ', ' : ''}{pick(countries[b.country], lang)}</span>
-            </a>
-          ))}
-        </div>
+          <p className="dl-note muted">{w.d_note}</p>
+        </section>
         <footer className="foot"><span>{t.footer}</span></footer>
       </main>
     </>

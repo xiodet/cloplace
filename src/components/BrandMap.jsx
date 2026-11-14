@@ -2,7 +2,7 @@ import europe from '../data/europe.json';
 import { cities } from '../data/cities.js';
 
 // Same Mercator as scripts/build-map.mjs, so pins land on the pre-drawn outlines.
-const project = ([lon, lat]) => [
+export const project = ([lon, lat]) => [
   europe.tx + europe.k * (lon * Math.PI) / 180,
   europe.ty - europe.k * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)),
 ];
@@ -40,12 +40,13 @@ function view(focus, clusters) {
   return { z, x: fit((x0 + x1) / 2, europe.w), y: fit((y0 + y1) / 2, europe.h) };
 }
 
-export default function BrandMap({ clusters, selected, hot, onSelect, onHover, focus = 'ALL' }) {
+export default function BrandMap({ clusters, selected, hot, onSelect, onHover, focus = 'ALL', you, youLabel }) {
   const v = view(focus, clusters);
   return (
     <div className="map" style={{ aspectRatio: `${europe.w} / ${europe.h}` }}>
      <div className="map-stage" style={{ '--z': v.z, transform: `translate(${v.x}%, ${v.y}%) scale(${v.z})` }}>
       <svg viewBox={`0 0 ${europe.w} ${europe.h}`} aria-hidden="true"><path d={europe.d} /></svg>
+      {you && (() => { const [x, y] = project(you); return <span className="pin-you" data-label={youLabel} style={{ left: (x / europe.w) * 100 + '%', top: (y / europe.h) * 100 + '%' }}><i />{youLabel}</span>; })()}
       {clusters.map((c) => {
         const on = selected === c.key;
         const lit = on || c.brands.some((b) => b.id === hot);
