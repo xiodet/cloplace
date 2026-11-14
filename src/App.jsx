@@ -18,12 +18,32 @@ function useRoute() {
   };
   const [route, setRoute] = useState(get);
   useEffect(() => {
-    const on = () => { setRoute(get()); window.scrollTo(0, 0); };
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    let prev = window.location.hash || '#/';
+    // Lists (brands, items, news, map) reopen where you left them; a brand page always starts at the top.
+    const on = () => {
+      scrollMemory[prev] = window.scrollY;
+      const now = window.location.hash || '#/';
+      prev = now;
+      const y = now.startsWith('#/brand/') ? 0 : scrollMemory[now] || 0;
+      setRoute(get());
+      window.scrollTo(0, 0);
+      if (y) {
+        // wait for the list to render (and grow to the remembered length) before jumping back
+        let tries = 0;
+        const jump = () => {
+          window.scrollTo(0, y);
+          if (Math.abs(window.scrollY - y) > 2 && tries++ < 20) requestAnimationFrame(jump);
+        };
+        requestAnimationFrame(() => requestAnimationFrame(jump));
+      }
+    };
     window.addEventListener('hashchange', on);
     return () => window.removeEventListener('hashchange', on);
   }, []);
   return route;
 }
+const scrollMemory = {};
 const go = (h) => { window.location.hash = h; };
 
 // Extra copy for this layout (kept next to the layout that uses it).
