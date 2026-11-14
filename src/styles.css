@@ -90,6 +90,7 @@ img.tile-img { object-fit: contain; mix-blend-mode: multiply; }
 .back:hover { color: var(--ink); }
 .lead { font-size: 24px; line-height: 1.15; letter-spacing: -0.035em; font-weight: 500; text-wrap: balance; }
 .hero-photo { display: block; margin-top: 28px; width: 100%; height: auto; }
+.hero-collage { margin-top: 28px; }
 .scroll-hint { margin-top: 28px; padding-bottom: 40px; font-size: 13px; color: var(--muted); }
 .hero-img { margin-top: 28px; aspect-ratio: 5 / 6; background: var(--soft); overflow: hidden; max-width: 100%; }
 
@@ -195,7 +196,8 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
   .store-inner { margin-left: 0; width: 100%; }
   .store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .below-row { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 72px; }
-  .scroll-hint { display: none; }
+  .hero-collage { margin-top: 28px; }
+.scroll-hint { display: none; }
   .home-search { margin-top: 64px; }
   .shell { grid-template-columns: minmax(0, 1fr); }
   .side { position: static; height: auto; gap: 40px; padding-bottom: 28px; padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }

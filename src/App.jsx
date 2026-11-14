@@ -324,7 +324,11 @@ function BrandPage({ brand }) {
         <p className="lead rise">{brand.description[lang]}</p>
         {hero
           ? <img className="hero-photo rise" src={hero} alt={brand.name} />
-          : <div className="hero-img rise">{its[0] && <Garment item={its[0]} tone={0} />}</div>}
+          : (
+            <div className="hero-collage collage rise">
+              {its.slice(0, 3).map((it, i) => <span key={it.id} className="tile"><Garment item={it} tone={i} /></span>)}
+            </div>
+          )}
         <p className="scroll-hint rise">{w.scroll} ↓</p>
       </Shell>
 

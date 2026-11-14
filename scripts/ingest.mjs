@@ -160,7 +160,9 @@ async function brandMedia(brand, base) {
     const type = res.headers.get('content-type') || '';
     const ext = type.includes('png') ? 'png' : type.includes('jpeg') ? 'jpg' : type.includes('webp') ? 'webp' : null;
     if (!res.ok || !ext) throw new Error(`${kind}: HTTP ${res.status} ${type}`);
-    await writeFile(join(dir, `_${kind}-${brand.id}.${ext}`), Buffer.from(await res.arrayBuffer()));
+    const bytes = Buffer.from(await res.arrayBuffer());
+    if (bytes.length > 1_500_000) throw new Error(`${kind}: too large (${bytes.length} bytes)`);
+    await writeFile(join(dir, `_${kind}-${brand.id}.${ext}`), bytes);
     out[kind] = true;
   };
   if (icon && attr(icon, 'href')) {
