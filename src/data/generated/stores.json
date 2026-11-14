@@ -8325,6 +8325,6 @@
  "vicinity": {
   "closed": true,
   "opensAt": null,
-  "closedNote": "Confirm Withdrawal and Return"
+  "closedNote": null
  }
 }

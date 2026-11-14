@@ -263,10 +263,10 @@ async function closedState(base) {
   if (!(res.status === 401 || /\/password/.test(res.url))) return null;
   const html = await (await fetch(root + '/password', { headers: head, signal: AbortSignal.timeout(20000) })).text();
   const body = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ');
-  // the shop's own words on that page: leaf text blocks, minus the password form and footer
-  const lines = [...new Set([...body.matchAll(/<(h[1-6]|p|div|span|label|strong|b|em|a|button|li|marquee)[^>]*>([^<]{6,240})<\/\1>/g)]
-    .map((m) => m[2].replace(/&amp;/g, '&').replace(/&[a-z#0-9]+;/g, ' ').replace(/\s+/g, ' ').trim()))]
-    .filter((t) => t.length > 5 && !/password|passwort|enter|cancel|e-?mail|newsletter|subscribe|sign in|log in|powered by|shopify|opens in a new|©|cookie|privacy|facebook|instagram|tiktok|twitter|youtube|pinterest|skip to|close|menu/i.test(t));
+  // the shop's own words on that page: its headings only (other text there is forms, footers and policies)
+  const lines = [...new Set([...body.matchAll(/<(h1|h2|h3)[^>]*>([\s\S]*?)<\/\1>/g)]
+    .map((m) => m[2].replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&[a-z#0-9]+;/g, ' ').replace(/\s+/g, ' ').trim()))]
+    .filter((t) => t.length > 5 && t.length < 200 && !/password|passwort|enter|e-?mail|newsletter|subscribe|powered by|shopify|©|facebook|instagram|tiktok/i.test(t));
   const soon = Date.now() + 60e3, far = Date.now() + 400 * 864e5;
   const dates = [
     ...html.matchAll(/20\d\d-\d\d-\d\d(?:[T ]\d\d:\d\d(?::\d\d)?(?:\.\d+)?(?:Z|[+-]\d\d:?\d\d)?)?/g),
