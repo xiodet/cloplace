@@ -56,4 +56,5 @@ export default {
   'the-new-originals': { shopify: 'https://theneworiginals.eu' },
   'polar-skate-co': { shopify: 'https://polarskateco.com' },
   'soulland': { shopify: 'https://soulland.com' },
+  'vicinity': { shopify: 'https://www.vicinityclo.de' },
 };

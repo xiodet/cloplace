@@ -333,6 +333,13 @@ export const brands = [
     description: { en: "Copenhagen fashion brand with seasonal collections.", ru: "Копенгагенский модный бренд с сезонными коллекциями.", uk: "Копенгагенський модний бренд із сезонними колекціями." },
     website: 'https://soulland.com', instagram: null,
   },
+  {
+    // Shop is password-protected between drops; the page shows a countdown or a "closed" note.
+    ...found, id: "vicinity", name: "Vicinity", country: 'DE', city: "Herrenberg", founded: 2020,
+    style: ["streetwear"],
+    description: { en: "German streetwear brand founded in 2020: hoodies, tees, denim and knitwear, sold in drops.", ru: "Немецкий стритвир-бренд, основан в 2020 году: худи, футболки, джинсы и трикотаж, продаёт дропами.", uk: "Німецький стрітвір-бренд, заснований 2020 року: худі, футболки, джинси й трикотаж, продає дропами." },
+    website: 'https://www.vicinityclo.de', instagram: null, currency: 'EUR',
+  },
 ];
 
 export const countries = {

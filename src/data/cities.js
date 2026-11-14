@@ -35,4 +35,5 @@ export const cities = {
   'Malmö': [13.0, 55.6],
   Copenhagen: [12.57, 55.68],
   Stockholm: [18.07, 59.33],
+  Herrenberg: [8.87, 48.6],
 };

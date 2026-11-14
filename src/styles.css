@@ -364,3 +364,14 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .pref-menu button.on { color: var(--ink); }
 .sp-gender { margin: 0 0 0 auto; gap: 18px; font-size: 16px; align-self: center; }
 @media (max-width: 860px) { .sp-gender { margin: 0; order: 3; width: 100%; } }
+
+/* closed shops: a quiet tile with the countdown instead of the collage */
+.sc-closed { display: flex; flex-direction: column; justify-content: space-between; background: var(--soft); padding: 18px; aspect-ratio: 4 / 3; }
+.scc-tag { align-self: flex-start; font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; }
+.ct { display: flex; flex-direction: column; gap: 6px; }
+.ct-num, .sc-closed .ct-wait { font-size: clamp(28px, 3.4vw, 52px); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.ct-label { font-size: 13px; color: var(--muted); }
+.closed-panel { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 14px; padding: 36px 0 48px; border-top: 1px solid var(--line); }
+.closed-panel h3 { font-size: 15px; font-weight: 400; color: var(--muted); margin: 0; }
+.ct.big .ct-num, .ct-wait.big { font-size: clamp(40px, 6vw, 96px); letter-spacing: -0.05em; line-height: .95; }
+.cp-note { font-size: 18px; letter-spacing: -0.02em; max-width: 40ch; }

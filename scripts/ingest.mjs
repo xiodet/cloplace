@@ -253,6 +253,32 @@ async function brandMedia(brand, base) {
   return out;
 }
 
+// A Shopify shop behind its password page (between drops). Returns null when the shop is open.
+// The opening time is taken from the password page when it has one (countdown widgets carry a date);
+// otherwise the site says "closed until the new collection".
+async function closedState(base) {
+  const root = base.replace(/\/$/, '');
+  const head = { 'user-agent': 'DropIndexBot/0.1 (+hobby aggregator)' };
+  const res = await fetch(root + '/products.json?limit=1', { headers: head, redirect: 'follow', signal: AbortSignal.timeout(20000) });
+  if (!(res.status === 401 || /\/password/.test(res.url))) return null;
+  const html = await (await fetch(root + '/password', { headers: head, signal: AbortSignal.timeout(20000) })).text();
+  const body = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ');
+  const lines = [...body.matchAll(/<(h1|h2|h3|p)[^>]*>([\s\S]*?)<\/\1>/g)]
+    .map((m) => m[2].replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter((t) => t.length > 3 && !/password|powered by|shopify|opens in a new|©/i.test(t));
+  const soon = Date.now() + 60e3, far = Date.now() + 400 * 864e5;
+  const dates = [
+    ...html.matchAll(/20\d\d-\d\d-\d\d(?:[T ]\d\d:\d\d(?::\d\d)?(?:\.\d+)?(?:Z|[+-]\d\d:?\d\d)?)?/g),
+    ...html.matchAll(/(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.? \d{1,2},? 20\d\d(?:,? \d{1,2}:\d\d(?::\d\d)?)?/gi),
+    ...html.matchAll(/\d{1,2}\.\d{1,2}\.20\d\d/g),
+  ].map((m) => {
+    const s = m[0];
+    const de = s.match(/^(\d{1,2})\.(\d{1,2})\.(20\d\d)$/);
+    return de ? new Date(Date.UTC(+de[3], +de[2] - 1, +de[1])) : new Date(s);
+  }).filter((d) => !isNaN(d) && d > soon && d < far).sort((a, b) => a - b);
+  return { closed: true, opensAt: dates[0] ? dates[0].toISOString() : null, closedNote: lines.slice(0, 2).join(' ') || null };
+}
+
 async function readJSON(path, fallback) {
   try { return JSON.parse(await readFile(path, 'utf8')); } catch { return fallback; }
 }
@@ -267,6 +293,14 @@ async function main() {
   for (const brand of brands) {
     const s = srcs[brand.id];
     if (!s) continue;
+    if (s.shopify && !FIXTURE) {
+      const shut = await closedState(s.shopify).catch(() => null);
+      if (shut) {
+        stores[brand.id] = shut;
+        report.push(`• ${brand.id}: shop closed (password page)${shut.opensAt ? ', opens ' + shut.opensAt : ''}${shut.closedNote ? ' · ' + shut.closedNote : ''}`);
+        continue;
+      }
+    }
     if (s.shopify) {
       try {
         const info = FIXTURE ? null : await storeInfo(s.shopify).catch((e) => (report.push(`✗ ${brand.id} store info: ${e.message}`), null));

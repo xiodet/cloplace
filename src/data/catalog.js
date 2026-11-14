@@ -19,6 +19,8 @@ const EU = ['DE', 'FR', 'PL', 'IT', 'ES', 'NL'];
 function withStore(b) {
   const st = stores[b.id];
   if (!st) return b;
+  // shop behind its password page: no items, the brand page shows a countdown or a closed note
+  if (st.closed) return { ...b, closed: { opensAt: st.opensAt || null, note: st.closedNote || null } };
   const ships = st.shipsTo || [];
   const shipping = [ships.includes('UA') && 'UA', EU.some((c) => ships.includes(c)) && 'EU', ships.includes('US') && ships.length > 60 && 'WORLD'].filter(Boolean);
   const out = { ...b, currency: st.currency || b.currency, shipsTo: ships.length ? ships : null };
@@ -119,7 +121,7 @@ function demoItemsFor(brand) {
 const realByBrand = new Set(genItems.map((i) => i.brandId));
 export const items = [
   ...genItems,
-  ...brands.filter((b) => !realByBrand.has(b.id)).flatMap(demoItemsFor),
+  ...(genItems.length ? [] : brands).filter((b) => !realByBrand.has(b.id) && !b.closed).flatMap(demoItemsFor),
 ].map((i) => ({ ...i, image: cachedImage(i.id) || i.image, priceUAH: Math.round(i.price * (toUAH[i.currency] || 1)) }));
 
 export const news = [...genNews, ...demoNews].sort((a, b) => b.date.localeCompare(a.date));

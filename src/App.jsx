@@ -54,7 +54,7 @@ const W = {
     quote_by: 'ShoWindow',
     index_quote: 'Where the brands are based',
     d_title: 'Approximate delivery times', d_to: 'Deliver to', d_days: (a, b) => `${a}–${b} days`, d_you: 'You', d_customs: 'customs duties possible', d_noship: 'This brand does not list your country for shipping',
-    d_note: 'A rough estimate from distance and customs borders, not data from the brands or carriers. Add the time the brand needs to pack an order. A crossed-out brand does not list your country for shipping.',
+    cl_title: 'The shop is closed', cl_until: 'Opens in', cl_wait: 'Closed until the new collection', cl_check: 'We check the shop every day: the items appear here as soon as it opens.', cl_tile: 'closed', cl_d: 'd', d_note: 'A rough estimate from distance and customs borders, not data from the brands or carriers. Add the time the brand needs to pack an order. A crossed-out brand does not list your country for shipping.',
     news_quote: 'Drops, sales and collaborations, collected automatically',
     next: 'Next brand', more_brands: (n) => `Show more brands (${n} left)`, see_store: 'see the store’s policy', more: (n) => `Show more (${n} left)`, about: 'About', info: 'Information', country: 'Country',
     note: 'ShoWindow is a showcase, not a store. All brands, names, logos and photos belong to their owners. Prices and availability come from the brands’ own sites, and you buy on the brand’s site.',
@@ -68,7 +68,7 @@ const W = {
     quote_by: 'ShoWindow',
     index_quote: 'Где находятся бренды',
     d_title: 'Примерные сроки доставки', d_to: 'Куда', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дня', 'дней')}`, d_you: 'Вы', d_customs: 'возможны таможенные платежи', d_noship: 'Бренд не указывает вашу страну в списке доставки',
-    d_note: 'Это грубая оценка по расстоянию и таможенным границам, а не данные брендов или служб доставки. К сроку добавьте время, за которое бренд собирает заказ. Зачёркнутый бренд не указывает вашу страну в списке доставки.',
+    cl_title: 'Магазин закрыт', cl_until: 'Откроется через', cl_wait: 'Закрыт до новой коллекции', cl_check: 'Мы проверяем магазин каждый день: вещи появятся здесь, как только он откроется.', cl_tile: 'закрыт', cl_d: 'д', d_note: 'Это грубая оценка по расстоянию и таможенным границам, а не данные брендов или служб доставки. К сроку добавьте время, за которое бренд собирает заказ. Зачёркнутый бренд не указывает вашу страну в списке доставки.',
     news_quote: 'Дропы, скидки и коллаборации, собранные автоматически',
     next: 'Следующий бренд', more_brands: (n) => `Показать ещё бренды (осталось ${n})`, see_store: 'смотри условия на сайте бренда', more: (n) => `Показать ещё (осталось ${n})`, about: 'О бренде', info: 'Информация', country: 'Страна',
     note: 'ShoWindow — витрина, а не магазин. Все бренды, названия, логотипы и фото принадлежат их владельцам. Цены и наличие берутся с сайтов брендов, покупка происходит на сайте бренда.',
@@ -82,7 +82,7 @@ const W = {
     quote_by: 'ShoWindow',
     index_quote: 'Де розташовані бренди',
     d_title: 'Орієнтовні терміни доставки', d_to: 'Куди', d_days: (a, b) => `${a}–${b} ${ruPlural(b, 'день', 'дні', 'днів')}`, d_you: 'Ви', d_customs: 'можливі митні платежі', d_noship: 'Бренд не вказує вашу країну у списку доставки',
-    d_note: 'Це груба оцінка за відстанню та митними кордонами, а не дані брендів чи служб доставки. До терміну додайте час, за який бренд збирає замовлення. Закреслений бренд не вказує вашу країну у списку доставки.',
+    cl_title: 'Магазин закритий', cl_until: 'Відкриється через', cl_wait: 'Закритий до нової колекції', cl_check: 'Ми перевіряємо магазин щодня: речі з’являться тут, щойно він відкриється.', cl_tile: 'закритий', cl_d: 'д', d_note: 'Це груба оцінка за відстанню та митними кордонами, а не дані брендів чи служб доставки. До терміну додайте час, за який бренд збирає замовлення. Закреслений бренд не вказує вашу країну у списку доставки.',
     news_quote: 'Дропи, знижки та колаборації, зібрані автоматично',
     next: 'Наступний бренд', more_brands: (n) => `Показати ще бренди (залишилось ${n})`, see_store: 'дивись умови на сайті бренду', more: (n) => `Показати ще (залишилось ${n})`, about: 'Про бренд', info: 'Інформація', country: 'Країна',
     note: 'ShoWindow — вітрина, а не магазин. Усі бренди, назви, логотипи й фото належать їхнім власникам. Ціни та наявність беруться із сайтів брендів, покупка відбувається на сайті бренду.',
@@ -282,7 +282,7 @@ function Home() {
   const [group, setGroupState] = useState(homeGroup);
   const [sort, setSortState] = useState(homeSort);
   const order = useMemo(() => {
-    const list = HOME_ORDER.filter((b) => groupItems(b.id, group).length > 0);
+    const list = HOME_ORDER.filter((b) => groupItems(b.id, group).length > 0 || (b.closed && group === 'clothes'));
     const mid = (b) => { const p = groupItems(b.id, group).filter((i) => !i.demo && i.price > 0).map(priceUAH).sort((x, y) => x - y); return p.length ? p[p.length >> 1] : Infinity; };
     if (sort === 'az') return [...list].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'lo') return [...list].sort((a, b) => mid(a) - mid(b));
@@ -367,8 +367,30 @@ function ShowcaseMeta({ brand, items: its }) {
 }
 
 // Showcase per the sketch: logo and name on top, a collage of the brand's clothes below.
+// Countdown to a closed shop's opening, ticking every second; without a known date, "closed until the new collection".
+function ClosedTime({ closed, big }) {
+  const { w } = useLang();
+  const to = closed.opensAt ? new Date(closed.opensAt).getTime() : null;
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    if (!to) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [to]);
+  if (!to || to <= now) return <span className={'ct ct-wait' + (big ? ' big' : '')}>{w.cl_wait}</span>;
+  const s = Math.floor((to - now) / 1000);
+  const p = (n) => String(n).padStart(2, '0');
+  const d = Math.floor(s / 86400);
+  return (
+    <span className={'ct' + (big ? ' big' : '')}>
+      {big && <span className="ct-label">{w.cl_until}</span>}
+      <span className="ct-num">{d > 0 ? `${d}${w.cl_d} ` : ''}{p(Math.floor(s / 3600) % 24)}:{p(Math.floor(s / 60) % 60)}:{p(s % 60)}</span>
+    </span>
+  );
+}
+
 function Showcase({ brand, group = 'clothes', n }) {
-  const { lang } = useLang();
+  const { lang, w } = useLang();
   const base = groupItems(brand.id, group);
   const its = base.length ? Array.from({ length: 3 }, (_, i) => base[i % base.length]) : [];
   const { logo } = brandMedia(brand.id);
@@ -378,9 +400,11 @@ function Showcase({ brand, group = 'clothes', n }) {
         <span className="sc-name">{brand.name}</span>
         <span className="sc-city">{brand.city || pick(countries[brand.country], lang)}</span>
       </span>
-      <span className="sc-art collage">
-        {its.map((it, i) => <span key={i} className="tile"><Garment item={it} tone={i} /></span>)}
-      </span>
+      {brand.closed
+        ? <span className="sc-art sc-closed"><span className="scc-tag">{w.cl_tile}</span><ClosedTime closed={brand.closed} /></span>
+        : <span className="sc-art collage">
+          {its.map((it, i) => <span key={i} className="tile"><Garment item={it} tone={i} /></span>)}
+        </span>}
       <ShowcaseMeta brand={brand} items={base} />
     </a>
   );
@@ -695,11 +719,18 @@ function BrandPage({ brand }) {
               {groups.length > 1 && <span className="chips store-groups">
                 {groups.map((g) => <button key={g} className={'chip' + (group === g ? ' on' : '')} onClick={() => setGroup(g)}>{w['g_' + g]}</button>)}
               </span>}
-              <span className="muted">{t.items_found(its.length)}</span>
+              {!brand.closed && <span className="muted">{t.items_found(its.length)}</span>}
               {brand.website && <a className="store-link" href={brand.website} target="_blank" rel="noreferrer">{t.shop} ↗</a>}
             </div>
             {isDemo && <p className="demo-note">{t.demo_note}</p>}
-            <div className="store-grid" ref={grid}>{its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
+            <div className="store-grid" ref={grid}>{brand.closed
+              ? <div className="closed-panel">
+                  <h3>{w.cl_title}</h3>
+                  <ClosedTime closed={brand.closed} big />
+                  {brand.closed.note && <p className="cp-note">“{brand.closed.note}”</p>}
+                  <p className="muted">{w.cl_check}</p>
+                </div>
+              : its.slice(0, shown).map((i) => <ItemCard key={i.id} item={i} />)}</div>
             {its.length > shown && <button className="more" onClick={() => setShown(shown + PAGE)}>{w.more(its.length - shown)}</button>}
           </div>
         </section>
