@@ -411,8 +411,54 @@ function HomeIntro({ children }) {
   );
 }
 
+// Every brand in one alphabetical list with a search field. Opens out of the top right corner.
+const CAT = {
+  en: { title: 'Catalogue', search: 'Search brands', none: 'Nothing found', close: 'Close' },
+  ru: { title: 'Каталог', search: 'Поиск бренда', none: 'Ничего не найдено', close: 'Закрыть' },
+  uk: { title: 'Каталог', search: 'Пошук бренду', none: 'Нічого не знайдено', close: 'Закрити' },
+};
+const CAT_LIST = [...brands].sort((a, b) => a.name.localeCompare(b.name));
+function BrandCatalog({ open, onClose }) {
+  const { lang } = useLang();
+  const c = CAT[lang] || CAT.en;
+  const [q, setQ] = useState('');
+  const input = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const key = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', key);
+    document.documentElement.classList.add('cat-lock');
+    const id = setTimeout(() => input.current && input.current.focus({ preventScroll: true }), 350);
+    return () => { window.removeEventListener('keydown', key); document.documentElement.classList.remove('cat-lock'); clearTimeout(id); };
+  }, [open]);
+  const needle = q.trim().toLowerCase();
+  const list = CAT_LIST.filter((b) => !needle || [b.name, b.city, pick(countries[b.country], lang), pick(countries[b.country], 'en')].some((x) => x && x.toLowerCase().includes(needle)));
+  return (
+    <div className={'cat' + (open ? ' open' : '')} aria-hidden={!open}>
+      <div className="cat-shade" onClick={onClose} />
+      <aside className="cat-panel" role="dialog" aria-label={c.title}>
+        <div className="cat-head">
+          <h2>{c.title} <sup>{brands.length}</sup></h2>
+          <button className="cat-x" onClick={onClose} aria-label={c.close} tabIndex={open ? 0 : -1}>×</button>
+        </div>
+        <input ref={input} className="cat-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={c.search} tabIndex={open ? 0 : -1} />
+        <div className="cat-list">
+          {list.map((b, i) => (
+            <a key={b.id} href={`#/brand/${b.id}`} onClick={onClose} style={{ '--i': Math.min(i, 14) }} tabIndex={open ? 0 : -1}>
+              <span>{b.name}</span>
+              <em>{[b.city, pick(countries[b.country], lang)].filter(Boolean).join(', ')}</em>
+            </a>
+          ))}
+          {!list.length && <p className="cat-none">{c.none}</p>}
+        </div>
+      </aside>
+    </div>
+  );
+}
+
 function Home() {
   const { t, w, lang } = useLang();
+  const [cat, setCat] = useState(false);
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
   const [group, setGroupState] = useState(homeGroup);
   const [sort, setSortState] = useState(homeSort);
@@ -450,6 +496,8 @@ function Home() {
           <div className="chips">
             {[['clothes', w.g_clothes], ['acc', w.g_acc], ['shoes', w.g_shoes]].map(([k, l]) => <button key={k} className={'chip' + (group === k ? ' on' : '')} onClick={() => setGroup(k)}>{l}</button>)}
           </div>
+          <div className="home-tools">
+          <button className="np-select cat-open" onClick={() => setCat(true)}><span>{t.brands_count(brands.length)}</span><b>{(CAT[lang] || CAT.en).title}</b></button>
           <label className="np-select"><span>{w.n_sort}</span>
             <select id="h-sort" value={sort} onChange={(e) => setSort(e.target.value)}>
               <option value="def">{w.s_def}</option>
@@ -458,7 +506,9 @@ function Home() {
               <option value="hi">{w.s_hi}</option>
             </select>
           </label>
+          </div>
         </div>
+        <BrandCatalog open={cat} onClose={() => setCat(false)} />
         <div className="showcases" key={group + sort}>
           {order.slice(0, count).map((b, i) => <Showcase key={b.id} brand={b} group={group} n={i % BATCH} />)}
         </div>
