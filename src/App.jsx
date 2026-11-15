@@ -312,14 +312,15 @@ const lerp = (a, b, t) => a + (b - a) * t;
 // cubic-bezier(.76, 0, .24, 1), the site's --ease, so the hands move in step with the CSS
 const easeInOut = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 18; i++) { const t = (lo + hi) / 2, bx = 3 * (1 - t) ** 2 * t * 0.76 + 3 * (1 - t) * t * t * 0.24 + t ** 3; if (bx < x) lo = t; else hi = t; } const t = (lo + hi) / 2; return 3 * (1 - t) * t * t + t ** 3; };
 
-// Two cartoon arms grow out of the W, take the small s by its top and bottom, stretch it
-// into the capital and let go. Drawn frame by frame from the letters' real positions.
+// Two rubber-hose arms in white cartoon gloves grow out of the W, take the small s by its
+// top with both hands, pull it up into the capital and let go. Drawn frame by frame from
+// the letters' real positions. The glove is designed in a 100 x 100 box, wrist at the top.
 function IntroArms({ row, onPull, onDone }) {
   const svg = useRef(null);
   useEffect(() => {
     const el = svg.current, host = row.current;
     if (!el || !host) return onDone();
-    const [armA, armB, handA, handB] = ['.arm-a', '.arm-b', '.hand-a', '.hand-b'].map((q) => el.querySelector(q));
+    const arms = el.querySelectorAll('.arm'), hands = el.querySelectorAll('.glove');
     const cap = host.querySelector('.ht-cap'), letters = host.querySelectorAll('.ht-got > span'), base = host.querySelector('.ht-base');
     const wEl = letters[letters.length - 1];
     if (!cap || !wEl || !base) return onDone();
@@ -327,26 +328,29 @@ function IntroArms({ row, onPull, onDone }) {
     const wl = parseFloat(cap.style.getPropertyValue('--wl')) || cap.getBoundingClientRect().width;
     const wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
     el.style.setProperty('--u', fs + 'px');
-    el.querySelectorAll('.hand circle').forEach((c) => { c.setAttribute('cx', c.dataset.x * fs); c.setAttribute('cy', c.dataset.y * fs); c.setAttribute('r', c.dataset.r * fs); });
-    const T = { reach: 480, grab: 620, pull: 1320, hold: 1470, end: 1880 };
+    const k = 0.0054 * fs; // glove scale: 100 design units are about 0.54 em
+    const T = { reach: 620, grab: 800, pull: 1500, hold: 1680, off: 1860, end: 2350 };
+    const sides = [{ dx: -0.17, tilt: 18, lift: 0.7, from: 0.06 }, { dx: 0.17, tilt: -18, lift: 0.42, from: 0.2 }];
     let raf = 0, pulled = false; const t0 = performance.now();
     const frame = (now) => {
       const t = now - t0;
       const o = host.getBoundingClientRect(), c = cap.getBoundingClientRect(), wr = wEl.getBoundingClientRect();
       const yBase = base.getBoundingClientRect().bottom - o.top, yX = yBase - 0.546 * fs, yCap = yBase - 0.727 * fs;
       const e = t < T.grab ? 0 : t < T.pull ? easeInOut((t - T.grab) / (T.pull - T.grab)) : 1; // how far the s is stretched
-      const out = t < T.reach ? 1 - (1 - t / T.reach) ** 3 : t < T.hold ? 1 : Math.max(0, 1 - ((t - T.hold) / (T.end - T.hold)) ** 2); // how far the arms are out
-      const cx = c.left - o.left + lerp(wl, wu, e) / 2 - 0.02 * fs, r = 0.15 * fs;
-      const a0 = [wr.left - o.left + 0.05 * fs, yCap + 0.03 * fs], a1 = [cx, lerp(yX, yCap, e) - r * 1.05];
-      const b0 = [wr.left - o.left + 0.27 * wr.width, yBase - 0.03 * fs], b1 = [cx, yBase + r * 1.05];
-      const da = `M${a0[0]} ${a0[1]} Q${(a0[0] + a1[0]) / 2} ${yCap - 0.62 * fs} ${a1[0]} ${a1[1]}`;
-      const db = `M${b0[0]} ${b0[1]} Q${(b0[0] + b1[0]) / 2} ${yBase + 0.42 * fs} ${b1[0]} ${b1[1]}`;
-      const squeeze = t > T.reach && t < T.hold ? 0.86 : 1;
-      [[armA, handA, da], [armB, handB, db]].forEach(([arm, hand, d]) => {
-        arm.setAttribute('d', d);
-        const len = arm.getTotalLength(), tip = arm.getPointAtLength(len * out);
-        arm.style.strokeDasharray = `${len * out} ${len}`;
-        hand.setAttribute('transform', `translate(${tip.x} ${tip.y}) scale(${out < 0.04 ? 0 : squeeze})`);
+      const out = t < T.reach ? easeInOut(t / T.reach) : t < T.off ? 1 : 1 - easeInOut(Math.min(1, (t - T.off) / (T.end - T.off))); // how far the arms are out
+      const dip = t > T.reach && t < T.grab ? Math.sin(((t - T.reach) / (T.grab - T.reach)) * Math.PI) * 0.03 * fs : 0; // the hands press down as they take hold
+      const letGo = t > T.hold ? Math.min(1, (t - T.hold) / (T.off - T.hold)) * 0.1 * fs : 0;
+      const cx = c.left - o.left + lerp(wl, wu, e) / 2 - 0.02 * fs;
+      sides.forEach((sd, i) => {
+        const start = [wr.left - o.left + sd.from * wr.width + 0.04 * fs, yCap + 0.04 * fs];
+        const grip = [cx + sd.dx * fs, lerp(yX, yCap, e) + 0.07 * fs + dip - letGo];
+        const g = [lerp(start[0], grip[0], out), lerp(start[1], grip[1], out)], a = (sd.tilt * out * Math.PI) / 180, size = k * lerp(0.25, 1, out);
+        // the wrist sits 66 design units above the grip point, turned with the glove
+        const wrist = [g[0] + Math.sin(a) * 66 * size, g[1] - Math.cos(a) * 66 * size];
+        const top = Math.min(start[1], wrist[1]) - sd.lift * fs * out;
+        arms[i].setAttribute('d', `M${start[0]} ${start[1]} C${lerp(start[0], wrist[0], 0.25)} ${top} ${wrist[0] + Math.sin(a) * 0.3 * fs} ${top} ${wrist[0]} ${wrist[1]}`);
+        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.tilt * out}) scale(${out < 0.03 ? 0 : size * (i ? -1 : 1)} ${out < 0.03 ? 0 : size}) translate(-50 -76)`);
+        arms[i].style.opacity = out < 0.03 ? 0 : 1;
       });
       if (!pulled && t >= T.grab) { pulled = true; onPull(); }
       if (t < T.end) raf = requestAnimationFrame(frame); else onDone();
@@ -354,16 +358,20 @@ function IntroArms({ row, onPull, onDone }) {
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
   }, []);
-  const hand = (cls, dir) => (
-    <g className={'hand ' + cls}>
-      {[-1, 0, 1].map((k) => <circle key={k} data-x={k * 0.095} data-y={dir * 0.135} data-r="0.058" />)}
-      <circle data-x="0" data-y="0" data-r="0.15" />
+  const glove = (
+    <g className="glove">
+      <rect className="ink" x="3" y="38" width="19" height="36" rx="9.5" transform="rotate(24 12 56)" />
+      {[22, 40.8, 59.5].map((x) => <rect key={x} className="ink" x={x} y="46" width="18.5" height="42" rx="9.25" />)}
+      <rect className="ink" x="19" y="22" width="62" height="46" rx="21" />
+      <rect className="fill" x="23" y="26" width="54" height="40" rx="17" />
+      <path className="line" d="M38 31v13M50 30v15M62 31v13" />
+      <rect className="ink" x="26" y="6" width="48" height="20" rx="10" />
     </g>
   );
   return (
     <svg className="intro-arms" ref={svg} aria-hidden="true">
-      <path className="arm arm-a" /><path className="arm arm-b" />
-      {hand('hand-a', 1)}{hand('hand-b', -1)}
+      <path className="arm" /><path className="arm" />
+      {glove}{glove}
     </svg>
   );
 }
@@ -388,10 +396,10 @@ function HomeIntro({ children }) {
         await pause(330);
         if (!live) return;
         setState((s) => ({ ...s, pull: true, prev: null, dx: keep.current ? keep.current.offsetLeft : 0 }));
-        await pause(430);
+        await pause(700);
         if (live) setState((s) => ({ ...s, got: s.got + x[2], step: -1, pull: false }));
       }
-      await pause(350); if (!live) return;
+      await pause(250); if (!live) return;
       setState((s) => ({ ...s, arms: true })); // the W reaches for the small s
       await new Promise((r) => { armsDone.current = r; });
       if (!live) return;
@@ -425,8 +433,8 @@ function HomeIntro({ children }) {
                   {city && (
                     <span key={state.step} className={'ht-city in' + (state.pull ? ' pull' : '')}>
                       {[...city].map((ch, i) => (Array.isArray(x) && i === x[1]
-                        ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{ch}</span>
-                        : <span key={i}>{ch}</span>))}
+                        ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}><i>{ch}</i></span>
+                        : <span key={i} style={{ '--n': Math.abs(i - x?.[1]) || i }}>{ch}</span>))}
                     </span>
                   )}
                 </span>
