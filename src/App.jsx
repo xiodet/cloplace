@@ -297,7 +297,7 @@ const groupItems = (id, group) => (itemsByBrand[id] || []).filter((i) => GROUPS[
 // flick past, four of them leave a letter behind (S, h, o, W), the line settles on
 // "Streetwear from ShoW", then evaporates and the catalogue moves up to take the screen.
 // City names stay in Latin letters in every language, otherwise there is nothing to pull out.
-const INTRO_SCRIPT = ['Kyiv', 'Milan', ['Paris', 4, 'S'], 'Berlin', 'Amsterdam', ['Manchester', 4, 'h'], 'Rome', ['London', 1, 'o'], 'Madrid', 'Cologne', ['Warsaw', 0, 'W']]
+const INTRO_SCRIPT = ['Kyiv', 'Milan', ['Paris', 4, 's'], 'Berlin', 'Amsterdam', ['Manchester', 4, 'h'], 'Rome', ['London', 1, 'o'], 'Madrid', 'Cologne', ['Warsaw', 0, 'W']]
   .filter((x) => Array.isArray(x) || brands.some((b) => b.city === x));
 let introSeen = false;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -306,7 +306,7 @@ function HomeIntro({ children }) {
   const [state, setState] = useState(() => {
     const skip = introSeen || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     introSeen = true;
-    return { step: 0, pull: false, dx: 0, got: '', phase: skip ? 'off' : 'run' };
+    return { step: 0, pull: false, dx: 0, got: '', cap: false, phase: skip ? 'off' : 'run' };
   });
   const keep = useRef(null);
   useEffect(() => {
@@ -323,7 +323,9 @@ function HomeIntro({ children }) {
         await pause(430);
         if (live) setState((s) => ({ ...s, got: s.got + x[2], step: -1, pull: false }));
       }
-      await pause(1300); if (!live) return;
+      await pause(450); if (!live) return;
+      setState((s) => ({ ...s, cap: true })); // the small s grows into the capital
+      await pause(1700); if (!live) return;
       setState((s) => ({ ...s, phase: 'leave' }));
       await pause(1250); if (!live) return;
       setState((s) => ({ ...s, phase: 'off' }));
@@ -341,11 +343,15 @@ function HomeIntro({ children }) {
             <h1 className="home-title" aria-label={`${w.title_from} ShoWindow`}>
               <span aria-hidden="true">{w.title_from} </span>
               <span className="ht-slot" aria-hidden="true">
-                <span className="ht-got">{state.got}</span>
+                <span className="ht-got">
+                  {[...state.got].map((ch, i) => (i === 0
+                    ? <span key={i} className={'ht-cap' + (state.cap ? ' on' : '')} ref={(el) => { if (el && !el.style.getPropertyValue('--wl')) { el.style.setProperty('--wl', el.children[0].getBoundingClientRect().width + 'px'); el.style.setProperty('--wu', el.children[1].getBoundingClientRect().width / 0.8 + 'px'); } }}><span className="lo">{ch}</span><span className="up">{ch.toUpperCase()}</span></span>
+                    : <span key={i}>{ch}</span>))}
+                </span>
                 {city && (
                   <span key={state.step} className={'ht-city' + (state.pull ? ' pull' : '')}>
                     {[...city].map((ch, i) => (Array.isArray(x) && i === x[1]
-                      ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{state.pull ? x[2] : ch}</span>
+                      ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{ch}</span>
                       : <span key={i}>{ch}</span>))}
                   </span>
                 )}
