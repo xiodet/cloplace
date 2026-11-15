@@ -1,0 +1,19 @@
+{
+  "business_discovery": {
+    "username": "somebrand",
+    "name": "Some Brand",
+    "biography": "Made in Kyiv. DM to order.",
+    "followers_count": 1200,
+    "media_count": 48,
+    "media": {
+      "data": [
+        { "id": "1", "caption": "New drop: heavy zip hoodie #drop @somebrand\nSizes S to XL", "media_type": "IMAGE", "media_url": "https://cdn.test/photo-1.jpg", "permalink": "https://www.instagram.com/p/AAA/", "timestamp": "2026-11-10T10:00:00+0000" },
+        { "id": "2", "caption": "", "media_type": "VIDEO", "media_url": "https://cdn.test/video.mp4", "thumbnail_url": "https://cdn.test/video-thumb.jpg", "permalink": "https://www.instagram.com/reel/BBB/", "timestamp": "2026-11-08T10:00:00+0000" },
+        { "id": "3", "caption": "Lookbook", "media_type": "CAROUSEL_ALBUM", "permalink": "https://www.instagram.com/p/CCC/", "timestamp": "2026-11-05T10:00:00+0000", "children": { "data": [{ "media_type": "IMAGE", "media_url": "https://cdn.test/album-1.jpg" }] } },
+        { "id": "4", "caption": "Reel with licensed audio", "media_type": "VIDEO", "permalink": "https://www.instagram.com/reel/DDD/", "timestamp": "2026-11-01T10:00:00+0000" }
+      ]
+    },
+    "id": "178"
+  },
+  "id": "179"
+}

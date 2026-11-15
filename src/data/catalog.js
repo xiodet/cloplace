@@ -14,6 +14,15 @@ const PREVIEW = import.meta.env.MODE === 'preview' || import.meta.env.MODE === '
 const genItems = (generated['./generated/items.json'] || []).filter((i) => known.has(i.brandId) && i.image && i.price > 0 && !/gift ?card|gutschein|e-?gift/i.test(i.title))
   .filter((i) => !PREVIEW || cachedImage(i.id));
 
+// Brands that sell only through Instagram: their latest posts stand in for items (no price,
+// the link opens the post). Collected by scripts/instagram.mjs through the official API.
+const igData = generated['./generated/instagram.json'] || {};
+const igPhotos = import.meta.glob('./generated/ig/*.jpg', { eager: true, import: 'default' });
+const igItems = Object.entries(igData).filter(([id]) => known.has(id)).flatMap(([brandId, a]) => (a.posts || []).map((p) => ({
+  id: `${brandId}-ig-${p.id}`, brandId, title: p.title || '', category: 'other', gender: 'u', price: 0, compareAt: null, currency: 'EUR',
+  url: p.permalink, image: igPhotos[`./generated/ig/${brandId}-${p.id}.jpg`] || null, inStock: true, publishedAt: p.timestamp, ig: true,
+}))).filter((i) => i.image);
+
 // Brand = hand-written entry + facts the store publishes about itself (those win).
 const EU = ['DE', 'FR', 'PL', 'IT', 'ES', 'NL'];
 function withStore(b) {
@@ -118,9 +127,10 @@ function demoItemsFor(brand) {
   return out;
 }
 
-const realByBrand = new Set(genItems.map((i) => i.brandId));
+const realByBrand = new Set([...genItems, ...igItems].map((i) => i.brandId));
 export const items = [
   ...genItems,
+  ...igItems,
   ...(genItems.length ? [] : brands).filter((b) => !realByBrand.has(b.id) && !b.closed).flatMap(demoItemsFor),
 ].map((i) => ({ ...i, image: cachedImage(i.id) || i.image, priceUAH: Math.round(i.price * (toUAH[i.currency] || 1)) }));
 

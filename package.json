@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node scripts/test-search.mjs && node scripts/ingest.mjs --fixture",
+    "test": "node scripts/test-search.mjs && node scripts/ingest.mjs --fixture && node scripts/instagram.mjs --fixture",
     "dev": "vite",
     "build": "vite build",
     "build:single": "vite build --mode single",
     "preview": "vite preview",
     "ingest": "node scripts/ingest.mjs",
+    "instagram": "node scripts/instagram.mjs",
     "build:preview": "vite build --mode preview",
     "dots": "node scripts/generate-dot-map.mjs"
   },

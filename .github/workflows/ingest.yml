@@ -16,6 +16,11 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run ingest -- --images
+      # brands without a store: latest posts through Instagram's official API (docs/instagram.md)
+      - run: npm run instagram
+        continue-on-error: true
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
       - name: Commit data
         run: |
           git config user.name "drop-index-bot"

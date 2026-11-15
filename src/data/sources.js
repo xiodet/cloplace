@@ -1,6 +1,8 @@
 // Where the ingest script collects data from, per brand.
 //   shopify: store root; the script reads /products.json, /meta.json and the refund policy
 //   mostly:  category for items whose name says nothing (default: other clothing)
+//   instagram: handle of a brand that sells only through Instagram; its latest posts are read by
+//            scripts/instagram.mjs through the official API (docs/instagram.md)
 //   rss:     any RSS/Atom feed (brand blog, news page, Telegram-to-RSS bridge, etc.)
 // All stores below answered on 2026-11-14 (found with scripts/discover.mjs).
 export default {

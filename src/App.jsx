@@ -535,6 +535,7 @@ function ShowcaseMeta({ brand, items: its }) {
   const drop = news.find((n) => n.brandId === brand.id && n.type === 'drop' && Date.now() - new Date(n.date) < 14 * 864e5);
   const facts = [
     prices.length > 0 && [...new Set([formatPrice(Math.min(...prices), real[0].currency), formatPrice(Math.max(...prices), real[0].currency)])].join(' – '),
+    its.some((i) => i.ig) && brand.instagram && `Instagram · @${brand.instagram}`,
     brand.shipping.length > 0 && (brand.shipping.includes('WORLD') ? w.c_world : `${w.c_ship} ${brand.shipping.join(', ')}`),
     brand.returns?.days && w.c_ret(brand.returns.days),
   ].filter(Boolean);
@@ -852,7 +853,7 @@ function ItemCard({ item, showBrand }) {
         {showBrand && <span className="item-brand">{b.name}</span>}
         <span className="item-title">{item.title}</span>
         <span className="item-price">
-          {formatPrice(item.price, item.currency)}
+          {item.ig ? 'Instagram ↗' : formatPrice(item.price, item.currency)}
           {item.compareAt && <s>{formatPrice(item.compareAt, item.currency)}</s>}
         </span>
       </div>
@@ -1074,7 +1075,7 @@ function SearchPage({ q }) {
   const pickGroup = (g) => { setGroup(g); setF((o) => ({ ...o, category: undefined })); };
   const set = (k, v) => setF((o) => ({ ...o, [k]: v === '' || v === false ? undefined : v }));
 
-  let found = items.filter((i) => GROUPS[group].includes(i.category) && matchItem(i, brandById[i.brandId], f));
+  let found = items.filter((i) => !i.ig && GROUPS[group].includes(i.category) && matchItem(i, brandById[i.brandId], f));
   if (sort === 'def') found = interleave(found);
   if (sort === 'lo') found.sort((a, b) => priceUAH(a) - priceUAH(b));
   if (sort === 'hi') found.sort((a, b) => priceUAH(b) - priceUAH(a));
