@@ -297,35 +297,106 @@ const groupItems = (id, group) => (itemsByBrand[id] || []).filter((i) => GROUPS[
 // flick past, four of them leave a letter behind (S, h, o, W), the line settles on
 // "Streetwear from ShoW", then evaporates and the catalogue moves up to take the screen.
 // City names stay in Latin letters in every language, otherwise there is nothing to pull out.
-const INTRO_SCRIPT = ['Kyiv', 'Milan', ['Paris', 4, 's'], 'Berlin', 'Amsterdam', ['Manchester', 4, 'h'], 'Rome', ['London', 1, 'o'], 'Madrid', 'Cologne', ['Warsaw', 0, 'W']]
-  .filter((x) => Array.isArray(x) || brands.some((b) => b.city === x));
+const INTRO_PULLS = [['Paris', 4, 's'], ['Manchester', 4, 'h'], ['London', 1, 'o'], ['Warsaw', 0, 'W']];
+// Between the four cities that give a letter, three others rush past like a reel.
+const INTRO_SCRIPT = (() => {
+  const taken = INTRO_PULLS.map((x) => x[0]);
+  const pool = shuffle([...new Set(brands.map((b) => b.city))].filter((c) => c && c !== 'Kyiv' && !taken.includes(c) && c.length <= 11));
+  const out = ['Kyiv'];
+  INTRO_PULLS.forEach((x, i) => { out.push(...pool.slice(i * 3, i * 3 + 3), x); });
+  return out;
+})();
 let introSeen = false;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+const lerp = (a, b, t) => a + (b - a) * t;
+// cubic-bezier(.76, 0, .24, 1), the site's --ease, so the hands move in step with the CSS
+const easeInOut = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 18; i++) { const t = (lo + hi) / 2, bx = 3 * (1 - t) ** 2 * t * 0.76 + 3 * (1 - t) * t * t * 0.24 + t ** 3; if (bx < x) lo = t; else hi = t; } const t = (lo + hi) / 2; return 3 * (1 - t) * t * t + t ** 3; };
+
+// Two cartoon arms grow out of the W, take the small s by its top and bottom, stretch it
+// into the capital and let go. Drawn frame by frame from the letters' real positions.
+function IntroArms({ row, onPull, onDone }) {
+  const svg = useRef(null);
+  useEffect(() => {
+    const el = svg.current, host = row.current;
+    if (!el || !host) return onDone();
+    const [armA, armB, handA, handB] = ['.arm-a', '.arm-b', '.hand-a', '.hand-b'].map((q) => el.querySelector(q));
+    const cap = host.querySelector('.ht-cap'), letters = host.querySelectorAll('.ht-got > span'), base = host.querySelector('.ht-base');
+    const wEl = letters[letters.length - 1];
+    if (!cap || !wEl || !base) return onDone();
+    const fs = parseFloat(getComputedStyle(cap).fontSize);
+    const wl = parseFloat(cap.style.getPropertyValue('--wl')) || cap.getBoundingClientRect().width;
+    const wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
+    el.style.setProperty('--u', fs + 'px');
+    el.querySelectorAll('.hand circle').forEach((c) => { c.setAttribute('cx', c.dataset.x * fs); c.setAttribute('cy', c.dataset.y * fs); c.setAttribute('r', c.dataset.r * fs); });
+    const T = { reach: 480, grab: 620, pull: 1320, hold: 1470, end: 1880 };
+    let raf = 0, pulled = false; const t0 = performance.now();
+    const frame = (now) => {
+      const t = now - t0;
+      const o = host.getBoundingClientRect(), c = cap.getBoundingClientRect(), wr = wEl.getBoundingClientRect();
+      const yBase = base.getBoundingClientRect().bottom - o.top, yX = yBase - 0.546 * fs, yCap = yBase - 0.727 * fs;
+      const e = t < T.grab ? 0 : t < T.pull ? easeInOut((t - T.grab) / (T.pull - T.grab)) : 1; // how far the s is stretched
+      const out = t < T.reach ? 1 - (1 - t / T.reach) ** 3 : t < T.hold ? 1 : Math.max(0, 1 - ((t - T.hold) / (T.end - T.hold)) ** 2); // how far the arms are out
+      const cx = c.left - o.left + lerp(wl, wu, e) / 2 - 0.02 * fs, r = 0.15 * fs;
+      const a0 = [wr.left - o.left + 0.05 * fs, yCap + 0.03 * fs], a1 = [cx, lerp(yX, yCap, e) - r * 1.05];
+      const b0 = [wr.left - o.left + 0.27 * wr.width, yBase - 0.03 * fs], b1 = [cx, yBase + r * 1.05];
+      const da = `M${a0[0]} ${a0[1]} Q${(a0[0] + a1[0]) / 2} ${yCap - 0.62 * fs} ${a1[0]} ${a1[1]}`;
+      const db = `M${b0[0]} ${b0[1]} Q${(b0[0] + b1[0]) / 2} ${yBase + 0.42 * fs} ${b1[0]} ${b1[1]}`;
+      const squeeze = t > T.reach && t < T.hold ? 0.86 : 1;
+      [[armA, handA, da], [armB, handB, db]].forEach(([arm, hand, d]) => {
+        arm.setAttribute('d', d);
+        const len = arm.getTotalLength(), tip = arm.getPointAtLength(len * out);
+        arm.style.strokeDasharray = `${len * out} ${len}`;
+        hand.setAttribute('transform', `translate(${tip.x} ${tip.y}) scale(${out < 0.04 ? 0 : squeeze})`);
+      });
+      if (!pulled && t >= T.grab) { pulled = true; onPull(); }
+      if (t < T.end) raf = requestAnimationFrame(frame); else onDone();
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const hand = (cls, dir) => (
+    <g className={'hand ' + cls}>
+      {[-1, 0, 1].map((k) => <circle key={k} data-x={k * 0.095} data-y={dir * 0.135} data-r="0.058" />)}
+      <circle data-x="0" data-y="0" data-r="0.15" />
+    </g>
+  );
+  return (
+    <svg className="intro-arms" ref={svg} aria-hidden="true">
+      <path className="arm arm-a" /><path className="arm arm-b" />
+      {hand('hand-a', 1)}{hand('hand-b', -1)}
+    </svg>
+  );
+}
+
 function HomeIntro({ children }) {
   const { w } = useLang();
   const [state, setState] = useState(() => {
     const skip = introSeen || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     introSeen = true;
-    return { step: 0, pull: false, dx: 0, got: '', cap: false, phase: skip ? 'off' : 'run' };
+    return { step: 0, prev: null, pull: false, dx: 0, got: '', cap: false, arms: false, phase: skip ? 'off' : 'run' };
   });
-  const keep = useRef(null);
+  const keep = useRef(null), row = useRef(null), armsDone = useRef(null);
   useEffect(() => {
     if (state.phase === 'off') return;
     let live = true;
     (async () => {
-      await pause(500);
+      await pause(600);
       for (let i = 0; i < INTRO_SCRIPT.length && live; i++) {
-        setState((s) => ({ ...s, step: i, pull: false, dx: 0 }));
-        const x = INTRO_SCRIPT[i];
-        await pause(Array.isArray(x) ? 300 : 210);
-        if (!live || !Array.isArray(x)) continue;
-        setState((s) => ({ ...s, pull: true, dx: keep.current ? keep.current.offsetLeft : 0 }));
+        const x = INTRO_SCRIPT[i], before = INTRO_SCRIPT[i - 1];
+        setState((s) => ({ ...s, step: i, prev: typeof before === 'string' ? before : null, pull: false, dx: 0 }));
+        if (!Array.isArray(x)) { await pause(Array.isArray(INTRO_SCRIPT[i + 1]) ? 170 : 125); continue; } // the reel slows just before it stops
+        await pause(330);
+        if (!live) return;
+        setState((s) => ({ ...s, pull: true, prev: null, dx: keep.current ? keep.current.offsetLeft : 0 }));
         await pause(430);
         if (live) setState((s) => ({ ...s, got: s.got + x[2], step: -1, pull: false }));
       }
-      await pause(450); if (!live) return;
-      setState((s) => ({ ...s, cap: true })); // the small s grows into the capital
-      await pause(1700); if (!live) return;
+      await pause(350); if (!live) return;
+      setState((s) => ({ ...s, arms: true })); // the W reaches for the small s
+      await new Promise((r) => { armsDone.current = r; });
+      if (!live) return;
+      setState((s) => ({ ...s, arms: false }));
+      await pause(1300); if (!live) return;
       setState((s) => ({ ...s, phase: 'leave' }));
       await pause(1250); if (!live) return;
       setState((s) => ({ ...s, phase: 'off' }));
@@ -338,26 +409,31 @@ function HomeIntro({ children }) {
   return (
     <div className={'home-head' + (state.phase === 'leave' ? ' leave' : '')}>
       <div className="home-head-in">
-        <div className="title-row">
+        <div className="title-row" ref={row}>
           <div className="giant-clip">
             <h1 className="home-title" aria-label={`${w.title_from} ShoWindow`}>
               <span aria-hidden="true">{w.title_from} </span>
               <span className="ht-slot" aria-hidden="true">
+                <span className="ht-base" />
                 <span className="ht-got">
                   {[...state.got].map((ch, i) => (i === 0
                     ? <span key={i} className={'ht-cap' + (state.cap ? ' on' : '')} ref={(el) => { if (el && !el.style.getPropertyValue('--wl')) { el.style.setProperty('--wl', el.children[0].getBoundingClientRect().width + 'px'); el.style.setProperty('--wu', el.children[1].getBoundingClientRect().width / 0.8 + 'px'); } }}><span className="lo">{ch}</span><span className="up">{ch.toUpperCase()}</span></span>
                     : <span key={i}>{ch}</span>))}
                 </span>
-                {city && (
-                  <span key={state.step} className={'ht-city' + (state.pull ? ' pull' : '')}>
-                    {[...city].map((ch, i) => (Array.isArray(x) && i === x[1]
-                      ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{ch}</span>
-                      : <span key={i}>{ch}</span>))}
-                  </span>
-                )}
+                <span className="ht-reel">
+                  {state.prev && <span key={'o' + state.step} className="ht-city out">{state.prev}</span>}
+                  {city && (
+                    <span key={state.step} className={'ht-city in' + (state.pull ? ' pull' : '')}>
+                      {[...city].map((ch, i) => (Array.isArray(x) && i === x[1]
+                        ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{ch}</span>
+                        : <span key={i}>{ch}</span>))}
+                    </span>
+                  )}
+                </span>
               </span>
             </h1>
           </div>
+          {state.arms && <IntroArms row={row} onPull={() => setState((s) => ({ ...s, cap: true }))} onDone={() => armsDone.current && armsDone.current()} />}
         </div>
         {children}
       </div>

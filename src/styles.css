@@ -63,12 +63,22 @@ p { margin: 0; }
 .ht-cap .up { position: absolute; left: 0; bottom: 0; opacity: 0; transform-origin: 0 82%; transform: scale(.8, .74); transition: transform .7s var(--ease), opacity .35s ease .15s; }
 .ht-cap.on .lo { opacity: 0; transform: scale(1.22, 1.34); }
 .ht-cap.on .up { opacity: 1; transform: none; }
-.ht-city { display: inline-block; color: var(--muted); animation: ht-in .2s var(--ease-out) both; }
-.ht-city span { display: inline-block; transition: opacity .22s ease, transform .3s var(--ease-out); }
-.ht-city.pull span:not(.ht-keep) { opacity: 0; transform: translateY(-35%); }
+.ht-base { display: inline-block; width: 0; height: 0; }
+.ht-reel { position: relative; display: inline-block; }
+.ht-city { display: inline-block; color: var(--muted); transform-origin: 0 60%; }
+.ht-city.in { animation: reel-in .17s var(--ease-out) both; }
+.ht-city.out { position: absolute; left: 0; top: 0; animation: reel-out .17s ease-in both; }
+/* a reel: each city drops in stretched and blurred, the one before it is thrown upwards */
+@keyframes reel-in { from { transform: translateY(72%) scaleY(1.7) skewX(-8deg); opacity: 0; filter: blur(7px); } 60% { opacity: 1; } }
+@keyframes reel-out { to { transform: translateY(-72%) scaleY(1.7) skewX(-8deg); opacity: 0; filter: blur(7px); } }
+.ht-city span { display: inline-block; transition: opacity .25s ease, transform .4s var(--ease-out), filter .3s ease; }
+.ht-city.pull span:not(.ht-keep) { opacity: 0; filter: blur(6px); transform: translateY(-45%) scaleY(1.4); }
 .ht-city .ht-keep { transition: transform .4s var(--ease), color .2s; }
 .ht-city.pull .ht-keep { color: var(--ink); transform: translateX(var(--dx)); }
-@keyframes ht-in { from { transform: translateY(60%); opacity: 0; } }
+.title-row { position: relative; }
+.intro-arms { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.intro-arms .arm { fill: none; stroke: var(--ink); stroke-width: calc(var(--u) * .042); stroke-linecap: round; }
+.intro-arms .hand circle { fill: var(--bg); stroke: var(--ink); stroke-width: calc(var(--u) * .036); }
 .home-head { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 1s var(--ease) .2s; }
 .home-head-in { min-height: 0; overflow: hidden; transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease-out); }
 .home-head.leave { grid-template-rows: 0fr; }
