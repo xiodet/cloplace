@@ -1,0 +1,33 @@
+# Manual helper: fetch one page from a runner and print what product data its HTML carries.
+name: probe
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'Page to fetch', required: true }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          URL: ${{ inputs.url }}
+        run: |
+          code=$(curl -sL -m 40 -o page.html -w '%{http_code}' -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' -H 'Accept: text/html' -H 'Accept-Language: en' "$URL")
+          echo "status $code bytes $(wc -c < page.html)"
+          echo "ld+json $(grep -o 'application/ld+json' page.html | wc -l) next_data $(grep -o '__NEXT_DATA__' page.html | wc -l) product links $(grep -o 'href="[^"]*/p/[^"]*"' page.html | sort -u | wc -l)"
+          python3 - <<'PY'
+          import re
+          h = open('page.html', encoding='utf-8', errors='replace').read()
+          for m in list(re.finditer(r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>', h, re.S))[:4]:
+              print('LDJSON', m.group(1)[:2500]); print('---')
+          m = re.search(r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>', h, re.S)
+          if m: print('NEXT', len(m.group(1)), m.group(1)[:3000]); print('---')
+          i = h.find('/p/')
+          n = 0
+          for m in re.finditer(r'href="[^"]*/p/[^"]*"', h):
+              if n >= 2: break
+              n += 1
+              print('ANCHOR', h[max(0, m.start() - 1500):m.start() + 2500].replace('\n', ' ')); print('---')
+          for k in ['"price"', 'formattedPrice', 'priceValue', 'productName', '"sellingPrice"', 'self.__next_f']:
+              j = h.find(k)
+              print('KEY', k, h.count(k), h[max(0, j - 600):j + 900].replace('\n', ' ') if j >= 0 else ''); print('---')
+          PY
