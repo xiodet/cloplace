@@ -308,73 +308,27 @@ const INTRO_SCRIPT = (() => {
 })();
 let introSeen = false;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
-const lerp = (a, b, t) => a + (b - a) * t;
-// cubic-bezier(.76, 0, .24, 1), the site's --ease, so the hands move in step with the CSS
-const easeInOut = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 18; i++) { const t = (lo + hi) / 2, bx = 3 * (1 - t) ** 2 * t * 0.76 + 3 * (1 - t) * t * t * 0.24 + t ** 3; if (bx < x) lo = t; else hi = t; } const t = (lo + hi) / 2; return 3 * (1 - t) * t * t + t ** 3; };
-
-// Two thick cartoon arms in white gloves grow out of the W. One takes the small s by its
-// top, the other by its bottom, and together they stretch it into the capital, then let go.
-// Drawn frame by frame from the letters' real positions. The glove is one outline in a
-// 100 x 100 box: wrist on the left, a closed fist on the right, held by its middle (60, 52).
-const GLOVE = 'M20 32C12 28 4 37 6 50C4 63 12 72 20 68C24 78 36 84 50 83C58 86 68 84 70 76C80 78 88 70 84 62C94 60 96 48 88 44C94 36 88 26 80 28C76 18 60 14 46 18C36 20 28 26 20 32Z';
-function IntroArms({ row, onPull, onDone }) {
-  const svg = useRef(null);
+// A Shift key slides up under the small s, gets pressed, and the s snaps up into the capital.
+function IntroShift({ row, onPress, onDone }) {
+  const [pos, setPos] = useState(null);
+  const [phase, setPhase] = useState('');
   useEffect(() => {
-    const el = svg.current, host = row.current;
-    if (!el || !host) return onDone();
-    const arms = el.querySelectorAll('.arm'), hands = el.querySelectorAll('.glove');
-    const cap = host.querySelector('.ht-cap'), letters = host.querySelectorAll('.ht-got > span'), base = host.querySelector('.ht-base');
-    const wEl = letters[letters.length - 1];
-    if (!cap || !wEl || !base) return onDone();
+    const host = row.current, cap = host && host.querySelector('.ht-cap'), base = host && host.querySelector('.ht-base');
+    if (!cap || !base) return onDone();
+    const o = host.getBoundingClientRect(), c = cap.getBoundingClientRect();
     const fs = parseFloat(getComputedStyle(cap).fontSize);
-    const wl = parseFloat(cap.style.getPropertyValue('--wl')) || cap.getBoundingClientRect().width;
-    const wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
-    el.style.setProperty('--u', fs + 'px');
-    const k = 0.0034 * fs; // glove scale: the whole hand is about a third of the letter height
-    const T = { reach: 620, grab: 820, pull: 1520, hold: 1700, off: 1880, end: 2400 };
-    // top hand points down and left onto the top of the s, bottom hand up and left onto its foot
-    const sides = [{ sign: 1, turn: 118, from: 0.06, bow: -0.5 }, { sign: -1, turn: -118, from: 0.27, bow: 0.34 }];
-    let raf = 0, pulled = false; const t0 = performance.now();
-    const frame = (now) => {
-      const t = now - t0;
-      const o = host.getBoundingClientRect(), c = cap.getBoundingClientRect(), wr = wEl.getBoundingClientRect();
-      const yBase = base.getBoundingClientRect().bottom - o.top, yX = yBase - 0.546 * fs, yCap = yBase - 0.727 * fs;
-      const e = t < T.grab ? 0 : t < T.pull ? easeInOut((t - T.grab) / (T.pull - T.grab)) : 1; // how far the s is stretched
-      const out = t < T.reach ? easeInOut(t / T.reach) : t < T.off ? 1 : 1 - easeInOut(Math.min(1, (t - T.off) / (T.end - T.off))); // how far the arms are out
-      const nip = t > T.reach && t < T.grab ? Math.sin(((t - T.reach) / (T.grab - T.reach)) * Math.PI) * 0.025 * fs : 0; // a squeeze as they take hold
-      const letGo = t > T.hold ? Math.min(1, (t - T.hold) / (T.off - T.hold)) * 0.09 * fs : 0;
-      const cx = c.left - o.left + lerp(wl, wu, e) / 2;
-      sides.forEach((sd, i) => {
-        const top = sd.sign > 0;
-        const start = [wr.left - o.left + sd.from * wr.width + (top ? 0.05 * fs : 0), top ? yCap + 0.05 * fs : yBase - 0.05 * fs];
-        const grip = [cx + 0.02 * fs, top ? lerp(yX, yCap, e) + 0.03 * fs + nip - letGo : yBase - 0.03 * fs - nip + letGo + 0.02 * fs * e];
-        const g = [lerp(start[0], grip[0], out), lerp(start[1], grip[1], out)], size = k * lerp(0.3, 1, out);
-        const a = (sd.turn * Math.PI) / 180, cos = Math.cos(a), sin = Math.sin(a);
-        // wrist: 55 design units behind the middle of the fist, turned with the glove
-        const wx = -55 * size, wy = -2 * size * sd.sign;
-        const wrist = [g[0] + wx * cos - wy * sin, g[1] + wx * sin + wy * cos];
-        const reach = 0.3 * fs * out;
-        arms[i].setAttribute('d', `M${start[0]} ${start[1]} C${start[0] - 0.08 * fs * out} ${start[1] + sd.bow * fs * out} ${wrist[0] - cos * reach} ${wrist[1] - sin * reach} ${wrist[0]} ${wrist[1]}`);
-        arms[i].style.opacity = out < 0.03 ? 0 : 1;
-        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.turn}) scale(${out < 0.03 ? 0 : size} ${out < 0.03 ? 0 : size * sd.sign}) translate(-60 -52)`);
-      });
-      if (!pulled && t >= T.grab) { pulled = true; onPull(); }
-      if (t < T.end) raf = requestAnimationFrame(frame); else onDone();
-    };
-    raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
+    const wl = parseFloat(cap.style.getPropertyValue('--wl')) || c.width, wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
+    const k = Math.max(0.36 * fs, 22);
+    setPos({ left: Math.max(c.left - o.left + (wl + wu) / 4, k * 0.725 + 1), top: base.getBoundingClientRect().bottom - o.top + Math.max(0.1 * fs, 4), '--k': k + 'px' });
+    const steps = [[60, () => setPhase(' in')], [760, () => { setPhase(' in down'); onPress(); }], [1000, () => setPhase(' in')], [1800, () => setPhase(' out')], [2250, onDone]];
+    const ids = steps.map(([ms, fn]) => setTimeout(fn, ms));
+    return () => ids.forEach(clearTimeout);
   }, []);
-  const glove = (
-    <g className="glove">
-      <path className="ink" d={GLOVE} />
-      <path className="line" d="M20 32C24 44 24 58 20 68M70 76C66 72 62 70 58 70M84 62C78 62 72 60 68 58M88 44C82 46 76 46 72 44M42 62C50 53 66 50 72 56C76 62 70 68 62 66C56 65 50 66 46 71" />
-    </g>
-  );
+  if (!pos) return null;
   return (
-    <svg className="intro-arms" ref={svg} aria-hidden="true">
-      <path className="arm" /><path className="arm" />
-      {glove}{glove}
-    </svg>
+    <span className={'intro-key' + phase} style={pos} aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 4 20 13H15.5V20H8.5V13H4Z" /></svg>
+    </span>
   );
 }
 
@@ -402,7 +356,7 @@ function HomeIntro({ children }) {
         if (live) setState((s) => ({ ...s, got: s.got + x[2], step: -1, pull: false }));
       }
       await pause(250); if (!live) return;
-      setState((s) => ({ ...s, arms: true })); // the W reaches for the small s
+      setState((s) => ({ ...s, arms: true })); // a Shift key comes up under the small s
       await new Promise((r) => { armsDone.current = r; });
       if (!live) return;
       setState((s) => ({ ...s, arms: false }));
@@ -443,7 +397,7 @@ function HomeIntro({ children }) {
               </span>
             </h1>
           </div>
-          {state.arms && <IntroArms row={row} onPull={() => setState((s) => ({ ...s, cap: true }))} onDone={() => armsDone.current && armsDone.current()} />}
+          {state.arms && <IntroShift row={row} onPress={() => setState((s) => ({ ...s, cap: true }))} onDone={() => armsDone.current && armsDone.current()} />}
         </div>
         {children}
       </div>
