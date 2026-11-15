@@ -293,43 +293,68 @@ let homeGroup = 'clothes';
 let homeSort = 'def';
 // Items of one group for a brand: clothing shows clothing only, and so on.
 const groupItems = (id, group) => (itemsByBrand[id] || []).filter((i) => GROUPS[group].includes(i.category));
-// ── Home headline: one line, "Streetwear from Kyiv", where the city keeps changing to the
-// next city our brands come from. Russian and Ukrainian need the city in the genitive case,
-// so only cities listed here take part.
-const CITY_FORMS = {
-  Kyiv: ['Киева', 'Києва'], Cologne: ['Кёльна', 'Кельна'], Paris: ['Парижа', 'Парижа'], London: ['Лондона', 'Лондона'], Amsterdam: ['Амстердама', 'Амстердама'],
-  Madrid: ['Мадрида', 'Мадрида'], Milan: ['Милана', 'Мілана'], Barcelona: ['Барселоны', 'Барселони'], Rome: ['Рима', 'Рима'], Berlin: ['Берлина', 'Берліна'],
-  Warsaw: ['Варшавы', 'Варшави'], 'Kraków': ['Кракова', 'Кракова'], Tallinn: ['Таллина', 'Таллінна'], Copenhagen: ['Копенгагена', 'Копенгагена'], 'Malmö': ['Мальмё', 'Мальме'],
-  Hamburg: ['Гамбурга', 'Гамбурга'], 'Düsseldorf': ['Дюссельдорфа', 'Дюссельдорфа'], Frankfurt: ['Франкфурта', 'Франкфурта'], Leipzig: ['Лейпцига', 'Лейпцига'], Hannover: ['Ганновера', 'Ганновера'],
-  Antwerp: ['Антверпена', 'Антверпена'], Manchester: ['Манчестера', 'Манчестера'], Leeds: ['Лидса', 'Лідса'],
-};
-// Kyiv opens, the rest follow in a new order on every visit.
-const TITLE_CITIES = (() => {
-  const have = [...new Set(brands.map((b) => b.city))].filter((c) => CITY_FORMS[c]);
-  return [...have.filter((c) => c === 'Kyiv'), ...shuffle(have.filter((c) => c !== 'Kyiv'))];
-})();
-let titleAt = 0; // remembered, so coming back to the home page carries on instead of restarting
-function CityTitle() {
-  const { lang, w } = useLang();
-  const [at, setAt] = useState(titleAt);
-  const turned = useRef(false); // nothing leaves until the first change
+// ── Home intro, once per visit. "Streetwear from <city>": the cities our brands come from
+// flick past, four of them leave a letter behind (S, h, o, W), the line settles on
+// "Streetwear from ShoW", then evaporates and the catalogue moves up to take the screen.
+// City names stay in Latin letters in every language, otherwise there is nothing to pull out.
+const INTRO_SCRIPT = ['Kyiv', 'Milan', ['Paris', 4, 'S'], 'Berlin', 'Amsterdam', ['Manchester', 4, 'h'], 'Rome', ['London', 1, 'o'], 'Madrid', 'Cologne', ['Warsaw', 0, 'W']]
+  .filter((x) => Array.isArray(x) || brands.some((b) => b.city === x));
+let introSeen = false;
+const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+function HomeIntro({ children }) {
+  const { w } = useLang();
+  const [state, setState] = useState(() => {
+    const skip = introSeen || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    introSeen = true;
+    return { step: 0, pull: false, dx: 0, got: '', phase: skip ? 'off' : 'run' };
+  });
+  const keep = useRef(null);
   useEffect(() => {
-    if (TITLE_CITIES.length < 2) return;
-    const id = setInterval(() => { turned.current = true; setAt((i) => (titleAt = (i + 1) % TITLE_CITIES.length)); }, 2600);
-    return () => clearInterval(id);
+    if (state.phase === 'off') return;
+    let live = true;
+    (async () => {
+      await pause(500);
+      for (let i = 0; i < INTRO_SCRIPT.length && live; i++) {
+        setState((s) => ({ ...s, step: i, pull: false, dx: 0 }));
+        const x = INTRO_SCRIPT[i];
+        await pause(Array.isArray(x) ? 300 : 210);
+        if (!live || !Array.isArray(x)) continue;
+        setState((s) => ({ ...s, pull: true, dx: keep.current ? keep.current.offsetLeft : 0 }));
+        await pause(430);
+        if (live) setState((s) => ({ ...s, got: s.got + x[2], step: -1, pull: false }));
+      }
+      await pause(1300); if (!live) return;
+      setState((s) => ({ ...s, phase: 'leave' }));
+      await pause(1250); if (!live) return;
+      setState((s) => ({ ...s, phase: 'off' }));
+    })();
+    return () => { live = false; };
   }, []);
-  const name = (c) => (lang === 'ru' ? CITY_FORMS[c][0] : lang === 'uk' ? CITY_FORMS[c][1] : c);
-  const city = TITLE_CITIES[at] || 'Kyiv';
-  const prev = TITLE_CITIES[(at - 1 + TITLE_CITIES.length) % TITLE_CITIES.length];
+  if (state.phase === 'off') return null;
+  const x = INTRO_SCRIPT[state.step];
+  const city = Array.isArray(x) ? x[0] : x;
   return (
-    <div className="giant-clip">
-      <h1 className="home-title" aria-label={`${w.title_from} ${name(city)}`}>
-        <span aria-hidden="true">{w.title_from} </span>
-        <span className="ht-slot" aria-hidden="true">
-          {turned.current && <span key={'o' + at} className="ht-word out">{name(prev)}</span>}
-          <span key={'i' + at} className="ht-word in">{name(city)}</span>
-        </span>
-      </h1>
+    <div className={'home-head' + (state.phase === 'leave' ? ' leave' : '')}>
+      <div className="home-head-in">
+        <div className="title-row">
+          <div className="giant-clip">
+            <h1 className="home-title" aria-label={`${w.title_from} ShoWindow`}>
+              <span aria-hidden="true">{w.title_from} </span>
+              <span className="ht-slot" aria-hidden="true">
+                <span className="ht-got">{state.got}</span>
+                {city && (
+                  <span key={state.step} className={'ht-city' + (state.pull ? ' pull' : '')}>
+                    {[...city].map((ch, i) => (Array.isArray(x) && i === x[1]
+                      ? <span key={i} ref={keep} className="ht-keep" style={{ '--dx': -state.dx + 'px' }}>{state.pull ? x[2] : ch}</span>
+                      : <span key={i}>{ch}</span>))}
+                  </span>
+                )}
+              </span>
+            </h1>
+          </div>
+        </div>
+        {children}
+      </div>
     </div>
   );
 }
@@ -363,13 +388,12 @@ function Home() {
     <>
       <TopBar active="home" />
       <main className="home">
-        <div className="title-row">
-          <CityTitle />
-        </div>
-        <div className="intro rise">
-          <p>{w.lead}</p>
-          <span className="intro-count">{t.brands_count(brands.length)}</span>
-        </div>
+        <HomeIntro>
+          <div className="intro rise">
+            <p>{w.lead}</p>
+            <span className="intro-count">{t.brands_count(brands.length)}</span>
+          </div>
+        </HomeIntro>
         <div className="sp-groups home-groups rise">
           <div className="chips">
             {[['clothes', w.g_clothes], ['acc', w.g_acc], ['shoes', w.g_shoes]].map(([k, l]) => <button key={k} className={'chip' + (group === k ? ' on' : '')} onClick={() => setGroup(k)}>{l}</button>)}

@@ -52,13 +52,19 @@ p { margin: 0; }
 .home { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
 .title-row { padding-top: clamp(28px, 5vw, 72px); padding-bottom: 22px; border-bottom: 1px solid var(--ink); }
 .home-title { font-size: clamp(34px, 7.4vw, 132px); font-weight: 300; letter-spacing: -0.035em; line-height: 1; white-space: nowrap; }
-.ht-slot { position: relative; display: inline-block; vertical-align: bottom; overflow: hidden; padding: .1em .04em .16em 0; margin: -.1em 0 -.16em; }
-.ht-word { display: inline-block; font-weight: 400; }
-.ht-word.in { animation: ht-in .7s var(--ease-out) both; }
-.ht-word.out { position: absolute; left: 0; top: .1em; animation: ht-out .55s var(--ease) both; }
-@keyframes ht-in { from { transform: translateY(105%); opacity: 0; } }
-@keyframes ht-out { to { transform: translateY(-105%); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .ht-word.in { animation: none; } .ht-word.out { display: none; } }
+.ht-slot { position: relative; display: inline-block; vertical-align: bottom; overflow: hidden; padding: .1em .04em .16em 0; margin: -.1em 0 -.16em; white-space: nowrap; min-height: 1.26em; }
+.ht-got, .ht-city { font-weight: 400; }
+.ht-city { display: inline-block; color: var(--muted); animation: ht-in .2s var(--ease-out) both; }
+.ht-city span { display: inline-block; transition: opacity .22s ease, transform .3s var(--ease-out); }
+.ht-city.pull span:not(.ht-keep) { opacity: 0; transform: translateY(-35%); }
+.ht-city .ht-keep { transition: transform .4s var(--ease), color .2s; }
+.ht-city.pull .ht-keep { color: var(--ink); transform: translateX(var(--dx)); }
+@keyframes ht-in { from { transform: translateY(60%); opacity: 0; } }
+.home-head { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 1s var(--ease) .2s; }
+.home-head-in { min-height: 0; overflow: hidden; transition: opacity .7s ease, filter .8s ease, transform .9s var(--ease-out); }
+.home-head.leave { grid-template-rows: 0fr; }
+.home-head.leave .home-head-in { opacity: 0; filter: blur(14px); transform: translateY(-14px); }
+.home-head.leave .home-title { letter-spacing: .02em; transition: letter-spacing 1s ease; }
 .intro { display: flex; justify-content: space-between; align-items: baseline; gap: 16px 32px; flex-wrap: wrap; padding: 20px 0 56px; }
 .intro p { max-width: 560px; font-size: 19px; line-height: 1.25; letter-spacing: -0.03em; color: var(--muted); }
 .intro-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
