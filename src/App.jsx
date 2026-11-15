@@ -308,7 +308,7 @@ const INTRO_SCRIPT = (() => {
 })();
 let introSeen = false;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
-// A Shift key slides up under the small s, gets pressed, and the s snaps up into the capital.
+// A dark laptop Shift key slides in beside the small s, gets pressed, its light goes green, and the s snaps up into the capital.
 function IntroShift({ row, onPress, onDone }) {
   const [pos, setPos] = useState(null);
   const [phase, setPhase] = useState('');
@@ -318,16 +318,22 @@ function IntroShift({ row, onPress, onDone }) {
     const o = host.getBoundingClientRect(), c = cap.getBoundingClientRect();
     const fs = parseFloat(getComputedStyle(cap).fontSize);
     const wl = parseFloat(cap.style.getPropertyValue('--wl')) || c.width, wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
-    const k = Math.max(0.36 * fs, 22);
-    setPos({ left: Math.max(c.left - o.left + (wl + wu) / 4, k * 0.725 + 1), top: base.getBoundingClientRect().bottom - o.top + Math.max(0.1 * fs, 4), '--k': k + 'px' });
-    const steps = [[60, () => setPhase(' in')], [760, () => { setPhase(' in down'); onPress(); }], [1000, () => setPhase(' in')], [1800, () => setPhase(' out')], [2250, onDone]];
+    const k = Math.max(0.34 * fs, 22), kw = k * 1.55;
+    const yBase = base.getBoundingClientRect().bottom - o.top;
+    // up and to the left of the s, over the end of the word before it; on a phone the s starts
+    // its own line and there is text right above it, so there the key stays under the line
+    const wrapped = c.left - o.left < kw + 0.1 * fs;
+    setPos(wrapped
+      ? { left: Math.max(c.left - o.left + (wl + wu) / 4 - kw / 2, 0), top: yBase + Math.max(0.1 * fs, 4), '--k': k + 'px', '--from': '70%' }
+      : { left: c.left - o.left - 0.07 * fs - kw, top: yBase - 0.546 * fs - 0.08 * fs - k, '--k': k + 'px', '--from': '-70%' });
+    const steps = [[60, () => setPhase(' in')], [760, () => { setPhase(' in lit down'); onPress(); }], [1000, () => setPhase(' in lit')], [1800, () => setPhase(' out')], [2250, onDone]];
     const ids = steps.map(([ms, fn]) => setTimeout(fn, ms));
     return () => ids.forEach(clearTimeout);
   }, []);
   if (!pos) return null;
   return (
     <span className={'intro-key' + phase} style={pos} aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M12 4 20 13H15.5V20H8.5V13H4Z" /></svg>
+      <b /><svg viewBox="0 0 24 24"><path d="M12 4 20 13H15.5V20H8.5V13H4Z" /></svg>
     </span>
   );
 }
