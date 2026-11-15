@@ -315,8 +315,8 @@ const easeInOut = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 18; i++) { co
 // Two thick cartoon arms in white gloves grow out of the W. One takes the small s by its
 // top, the other by its bottom, and together they stretch it into the capital, then let go.
 // Drawn frame by frame from the letters' real positions. The glove is one outline in a
-// 100 x 100 box: wrist on the left, thumb and index finger pinching on the right at (84, 30).
-const GLOVE = 'M20 34C12 30 4 38 6 50C4 62 10 74 20 70C26 80 44 84 56 78C66 76 70 68 64 62C74 62 78 54 70 50L92 44C100 42 100 30 90 31L62 37C70 31 79 25 86 20C94 15 90 3 80 6C68 9 52 20 44 28C36 31 28 31 20 34Z';
+// 100 x 100 box: wrist on the left, a closed fist on the right, held by its middle (60, 52).
+const GLOVE = 'M20 32C12 28 4 37 6 50C4 63 12 72 20 68C24 78 36 84 50 83C58 86 68 84 70 76C80 78 88 70 84 62C94 60 96 48 88 44C94 36 88 26 80 28C76 18 60 14 46 18C36 20 28 26 20 32Z';
 function IntroArms({ row, onPull, onDone }) {
   const svg = useRef(null);
   useEffect(() => {
@@ -330,10 +330,10 @@ function IntroArms({ row, onPull, onDone }) {
     const wl = parseFloat(cap.style.getPropertyValue('--wl')) || cap.getBoundingClientRect().width;
     const wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
     el.style.setProperty('--u', fs + 'px');
-    const k = 0.0036 * fs; // glove scale: the whole hand is about a third of the letter height
+    const k = 0.0034 * fs; // glove scale: the whole hand is about a third of the letter height
     const T = { reach: 620, grab: 820, pull: 1520, hold: 1700, off: 1880, end: 2400 };
     // top hand points down and left onto the top of the s, bottom hand up and left onto its foot
-    const sides = [{ sign: 1, turn: 128, from: 0.06, bow: -0.5 }, { sign: -1, turn: -128, from: 0.27, bow: 0.34 }];
+    const sides = [{ sign: 1, turn: 118, from: 0.06, bow: -0.5 }, { sign: -1, turn: -118, from: 0.27, bow: 0.34 }];
     let raf = 0, pulled = false; const t0 = performance.now();
     const frame = (now) => {
       const t = now - t0;
@@ -347,16 +347,16 @@ function IntroArms({ row, onPull, onDone }) {
       sides.forEach((sd, i) => {
         const top = sd.sign > 0;
         const start = [wr.left - o.left + sd.from * wr.width + (top ? 0.05 * fs : 0), top ? yCap + 0.05 * fs : yBase - 0.05 * fs];
-        const grip = [cx + 0.03 * fs, top ? lerp(yX, yCap, e) + 0.045 * fs + nip - letGo : yBase - 0.04 * fs - nip + letGo + 0.02 * fs * e];
+        const grip = [cx + 0.02 * fs, top ? lerp(yX, yCap, e) + 0.03 * fs + nip - letGo : yBase - 0.03 * fs - nip + letGo + 0.02 * fs * e];
         const g = [lerp(start[0], grip[0], out), lerp(start[1], grip[1], out)], size = k * lerp(0.3, 1, out);
         const a = (sd.turn * Math.PI) / 180, cos = Math.cos(a), sin = Math.sin(a);
-        // wrist: 78 design units behind the grip along the hand and 22 across it, turned with the glove
-        const wx = -78 * size, wy = 22 * size * sd.sign;
+        // wrist: 55 design units behind the middle of the fist, turned with the glove
+        const wx = -55 * size, wy = -2 * size * sd.sign;
         const wrist = [g[0] + wx * cos - wy * sin, g[1] + wx * sin + wy * cos];
         const reach = 0.3 * fs * out;
         arms[i].setAttribute('d', `M${start[0]} ${start[1]} C${start[0] - 0.08 * fs * out} ${start[1] + sd.bow * fs * out} ${wrist[0] - cos * reach} ${wrist[1] - sin * reach} ${wrist[0]} ${wrist[1]}`);
         arms[i].style.opacity = out < 0.03 ? 0 : 1;
-        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.turn}) scale(${out < 0.03 ? 0 : size} ${out < 0.03 ? 0 : size * sd.sign}) translate(-84 -30)`);
+        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.turn}) scale(${out < 0.03 ? 0 : size} ${out < 0.03 ? 0 : size * sd.sign}) translate(-60 -52)`);
       });
       if (!pulled && t >= T.grab) { pulled = true; onPull(); }
       if (t < T.end) raf = requestAnimationFrame(frame); else onDone();
@@ -367,7 +367,7 @@ function IntroArms({ row, onPull, onDone }) {
   const glove = (
     <g className="glove">
       <path className="ink" d={GLOVE} />
-      <path className="line" d="M20 34C24 45 24 59 20 70M64 62C60 62 57 61 54 60M70 50C65 51 61 51 57 50" />
+      <path className="line" d="M20 32C24 44 24 58 20 68M70 76C66 72 62 70 58 70M84 62C78 62 72 60 68 58M88 44C82 46 76 46 72 44M42 62C50 53 66 50 72 56C76 62 70 68 62 66C56 65 50 66 46 71" />
     </g>
   );
   return (
