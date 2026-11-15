@@ -50,6 +50,7 @@ const go = (h) => { window.location.hash = h; };
 // Extra copy for this layout (kept next to the layout that uses it).
 const W = {
   en: {
+    title_from: 'Streetwear from',
     m_europe: 'All of Europe', m_cities: 'All cities', m_in: 'Zoom in', m_out: 'Zoom out', m_title: (b, c) => `${b} ${b === 1 ? 'brand' : 'brands'} in ${c} ${c === 1 ? 'city' : 'cities'}`, m_sub: 'Nearest to you first. Select a city on the map or below. Pinch or scroll with two fingers to move around the map.', m_away: (d) => `${d} km from you`, m_here: 'your city', m_ship: (d) => `Delivery about ${d}`, m_noship: 'does not ship to you', m_latest: (c) => `Latest from ${c}`, m_nearby: 'Nearby',
     headline: 'Independent streetwear brands. Prices, shipping and returns in one place.',
     lead: 'Ukrainian and European labels. Items and prices are refreshed every day from the brands’ own stores.',
@@ -65,6 +66,7 @@ const W = {
     c_ship: 'ships to', c_world: 'ships worldwide', c_ret: (d) => `returns ${d} days`, c_drop: 'new drop',
   },
   ru: {
+    title_from: 'Стритвир из',
     m_europe: 'Вся Европа', m_cities: 'Все города', m_in: 'Приблизить', m_out: 'Отдалить', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренда', 'брендов')} в ${c} ${ruPlural(c, 'городе', 'городах', 'городах')}`, m_sub: 'Сначала ближайшие к вам. Выберите город на карте или в списке. Карту можно приближать щипком и двигать двумя пальцами.', m_away: (d) => `${d} км от вас`, m_here: 'ваш город', m_ship: (d) => `Доставка примерно ${d}`, m_noship: 'не доставляет к вам', m_latest: (c) => `Новое из города ${c}`, m_nearby: 'Рядом',
     headline: 'Независимые стритвир-бренды. Цены, доставка и возвраты в одном месте.',
     lead: 'Украинские и европейские бренды. Вещи и цены обновляются каждый день с сайтов самих брендов.',
@@ -80,6 +82,7 @@ const W = {
     c_ship: 'доставка', c_world: 'доставка по всему миру', c_ret: (d) => `возврат ${d} дней`, c_drop: 'новый дроп',
   },
   uk: {
+    title_from: 'Стрітвір з',
     m_europe: 'Уся Європа', m_cities: 'Усі міста', m_in: 'Наблизити', m_out: 'Віддалити', m_title: (b, c) => `${b} ${ruPlural(b, 'бренд', 'бренди', 'брендів')} у ${c} ${ruPlural(c, 'місті', 'містах', 'містах')}`, m_sub: 'Спочатку найближчі до вас. Оберіть місто на карті або у списку. Карту можна наближати щипком і рухати двома пальцями.', m_away: (d) => `${d} км від вас`, m_here: 'ваше місто', m_ship: (d) => `Доставка приблизно ${d}`, m_noship: 'не доставляє до вас', m_latest: (c) => `Нове з міста ${c}`, m_nearby: 'Поруч',
     headline: 'Незалежні стрітвір-бренди. Ціни, доставка й повернення в одному місці.',
     lead: 'Українські та європейські бренди. Речі й ціни оновлюються щодня із сайтів самих брендів.',
@@ -290,6 +293,47 @@ let homeGroup = 'clothes';
 let homeSort = 'def';
 // Items of one group for a brand: clothing shows clothing only, and so on.
 const groupItems = (id, group) => (itemsByBrand[id] || []).filter((i) => GROUPS[group].includes(i.category));
+// ── Home headline: one line, "Streetwear from Kyiv", where the city keeps changing to the
+// next city our brands come from. Russian and Ukrainian need the city in the genitive case,
+// so only cities listed here take part.
+const CITY_FORMS = {
+  Kyiv: ['Киева', 'Києва'], Cologne: ['Кёльна', 'Кельна'], Paris: ['Парижа', 'Парижа'], London: ['Лондона', 'Лондона'], Amsterdam: ['Амстердама', 'Амстердама'],
+  Madrid: ['Мадрида', 'Мадрида'], Milan: ['Милана', 'Мілана'], Barcelona: ['Барселоны', 'Барселони'], Rome: ['Рима', 'Рима'], Berlin: ['Берлина', 'Берліна'],
+  Warsaw: ['Варшавы', 'Варшави'], 'Kraków': ['Кракова', 'Кракова'], Tallinn: ['Таллина', 'Таллінна'], Copenhagen: ['Копенгагена', 'Копенгагена'], 'Malmö': ['Мальмё', 'Мальме'],
+  Hamburg: ['Гамбурга', 'Гамбурга'], 'Düsseldorf': ['Дюссельдорфа', 'Дюссельдорфа'], Frankfurt: ['Франкфурта', 'Франкфурта'], Leipzig: ['Лейпцига', 'Лейпцига'], Hannover: ['Ганновера', 'Ганновера'],
+  Antwerp: ['Антверпена', 'Антверпена'], Manchester: ['Манчестера', 'Манчестера'], Leeds: ['Лидса', 'Лідса'],
+};
+// Kyiv opens, the rest follow in a new order on every visit.
+const TITLE_CITIES = (() => {
+  const have = [...new Set(brands.map((b) => b.city))].filter((c) => CITY_FORMS[c]);
+  return [...have.filter((c) => c === 'Kyiv'), ...shuffle(have.filter((c) => c !== 'Kyiv'))];
+})();
+let titleAt = 0; // remembered, so coming back to the home page carries on instead of restarting
+function CityTitle() {
+  const { lang, w } = useLang();
+  const [at, setAt] = useState(titleAt);
+  const turned = useRef(false); // nothing leaves until the first change
+  useEffect(() => {
+    if (TITLE_CITIES.length < 2) return;
+    const id = setInterval(() => { turned.current = true; setAt((i) => (titleAt = (i + 1) % TITLE_CITIES.length)); }, 2600);
+    return () => clearInterval(id);
+  }, []);
+  const name = (c) => (lang === 'ru' ? CITY_FORMS[c][0] : lang === 'uk' ? CITY_FORMS[c][1] : c);
+  const city = TITLE_CITIES[at] || 'Kyiv';
+  const prev = TITLE_CITIES[(at - 1 + TITLE_CITIES.length) % TITLE_CITIES.length];
+  return (
+    <div className="giant-clip">
+      <h1 className="home-title" aria-label={`${w.title_from} ${name(city)}`}>
+        <span aria-hidden="true">{w.title_from} </span>
+        <span className="ht-slot" aria-hidden="true">
+          {turned.current && <span key={'o' + at} className="ht-word out">{name(prev)}</span>}
+          <span key={'i' + at} className="ht-word in">{name(city)}</span>
+        </span>
+      </h1>
+    </div>
+  );
+}
+
 function Home() {
   const { t, w, lang } = useLang();
   // featured first, then everyone else; more showcases arrive as you scroll (or by button)
@@ -320,7 +364,7 @@ function Home() {
       <TopBar active="home" />
       <main className="home">
         <div className="title-row">
-          <div className="giant-clip"><h1 className="home-title">{w.headline}</h1></div>
+          <CityTitle />
         </div>
         <div className="intro rise">
           <p>{w.lead}</p>
