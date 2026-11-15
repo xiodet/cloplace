@@ -13,6 +13,7 @@ jobs:
         run: |
           code=$(curl -sL -m 40 -o page.html -w '%{http_code}' -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' -H 'Accept: text/html' -H 'Accept-Language: en' "$URL")
           echo "status $code bytes $(wc -c < page.html)"
+          head -c 1800 page.html; echo
           echo "ld+json $(grep -o 'application/ld+json' page.html | wc -l) next_data $(grep -o '__NEXT_DATA__' page.html | wc -l) product links $(grep -o 'href="[^"]*/p/[^"]*"' page.html | sort -u | wc -l)"
           python3 - <<'PY'
           import re
