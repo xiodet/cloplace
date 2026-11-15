@@ -312,9 +312,11 @@ const lerp = (a, b, t) => a + (b - a) * t;
 // cubic-bezier(.76, 0, .24, 1), the site's --ease, so the hands move in step with the CSS
 const easeInOut = (x) => { let lo = 0, hi = 1; for (let i = 0; i < 18; i++) { const t = (lo + hi) / 2, bx = 3 * (1 - t) ** 2 * t * 0.76 + 3 * (1 - t) * t * t * 0.24 + t ** 3; if (bx < x) lo = t; else hi = t; } const t = (lo + hi) / 2; return 3 * (1 - t) * t * t + t ** 3; };
 
-// Two rubber-hose arms in white cartoon gloves grow out of the W, take the small s by its
-// top with both hands, pull it up into the capital and let go. Drawn frame by frame from
-// the letters' real positions. The glove is designed in a 100 x 100 box, wrist at the top.
+// Two thick cartoon arms in white gloves grow out of the W. One takes the small s by its
+// top, the other by its bottom, and together they stretch it into the capital, then let go.
+// Drawn frame by frame from the letters' real positions. The glove is one outline in a
+// 100 x 100 box: wrist on the left, thumb and index finger pinching on the right at (84, 30).
+const GLOVE = 'M20 34C12 30 4 38 6 50C4 62 10 74 20 70C26 80 44 84 56 78C66 76 70 68 64 62C74 62 78 54 70 50L92 44C100 42 100 30 90 31L62 37C70 31 79 25 86 20C94 15 90 3 80 6C68 9 52 20 44 28C36 31 28 31 20 34Z';
 function IntroArms({ row, onPull, onDone }) {
   const svg = useRef(null);
   useEffect(() => {
@@ -328,9 +330,10 @@ function IntroArms({ row, onPull, onDone }) {
     const wl = parseFloat(cap.style.getPropertyValue('--wl')) || cap.getBoundingClientRect().width;
     const wu = parseFloat(cap.style.getPropertyValue('--wu')) || wl;
     el.style.setProperty('--u', fs + 'px');
-    const k = 0.0054 * fs; // glove scale: 100 design units are about 0.54 em
-    const T = { reach: 620, grab: 800, pull: 1500, hold: 1680, off: 1860, end: 2350 };
-    const sides = [{ dx: -0.17, tilt: 18, lift: 0.7, from: 0.06 }, { dx: 0.17, tilt: -18, lift: 0.42, from: 0.2 }];
+    const k = 0.0036 * fs; // glove scale: the whole hand is about a third of the letter height
+    const T = { reach: 620, grab: 820, pull: 1520, hold: 1700, off: 1880, end: 2400 };
+    // top hand points down and left onto the top of the s, bottom hand up and left onto its foot
+    const sides = [{ sign: 1, turn: 128, from: 0.06, bow: -0.5 }, { sign: -1, turn: -128, from: 0.27, bow: 0.34 }];
     let raf = 0, pulled = false; const t0 = performance.now();
     const frame = (now) => {
       const t = now - t0;
@@ -338,19 +341,22 @@ function IntroArms({ row, onPull, onDone }) {
       const yBase = base.getBoundingClientRect().bottom - o.top, yX = yBase - 0.546 * fs, yCap = yBase - 0.727 * fs;
       const e = t < T.grab ? 0 : t < T.pull ? easeInOut((t - T.grab) / (T.pull - T.grab)) : 1; // how far the s is stretched
       const out = t < T.reach ? easeInOut(t / T.reach) : t < T.off ? 1 : 1 - easeInOut(Math.min(1, (t - T.off) / (T.end - T.off))); // how far the arms are out
-      const dip = t > T.reach && t < T.grab ? Math.sin(((t - T.reach) / (T.grab - T.reach)) * Math.PI) * 0.03 * fs : 0; // the hands press down as they take hold
-      const letGo = t > T.hold ? Math.min(1, (t - T.hold) / (T.off - T.hold)) * 0.1 * fs : 0;
-      const cx = c.left - o.left + lerp(wl, wu, e) / 2 - 0.02 * fs;
+      const nip = t > T.reach && t < T.grab ? Math.sin(((t - T.reach) / (T.grab - T.reach)) * Math.PI) * 0.025 * fs : 0; // a squeeze as they take hold
+      const letGo = t > T.hold ? Math.min(1, (t - T.hold) / (T.off - T.hold)) * 0.09 * fs : 0;
+      const cx = c.left - o.left + lerp(wl, wu, e) / 2;
       sides.forEach((sd, i) => {
-        const start = [wr.left - o.left + sd.from * wr.width + 0.04 * fs, yCap + 0.04 * fs];
-        const grip = [cx + sd.dx * fs, lerp(yX, yCap, e) + 0.07 * fs + dip - letGo];
-        const g = [lerp(start[0], grip[0], out), lerp(start[1], grip[1], out)], a = (sd.tilt * out * Math.PI) / 180, size = k * lerp(0.25, 1, out);
-        // the wrist sits 66 design units above the grip point, turned with the glove
-        const wrist = [g[0] + Math.sin(a) * 66 * size, g[1] - Math.cos(a) * 66 * size];
-        const top = Math.min(start[1], wrist[1]) - sd.lift * fs * out;
-        arms[i].setAttribute('d', `M${start[0]} ${start[1]} C${lerp(start[0], wrist[0], 0.25)} ${top} ${wrist[0] + Math.sin(a) * 0.3 * fs} ${top} ${wrist[0]} ${wrist[1]}`);
-        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.tilt * out}) scale(${out < 0.03 ? 0 : size * (i ? -1 : 1)} ${out < 0.03 ? 0 : size}) translate(-50 -76)`);
+        const top = sd.sign > 0;
+        const start = [wr.left - o.left + sd.from * wr.width + (top ? 0.05 * fs : 0), top ? yCap + 0.05 * fs : yBase - 0.05 * fs];
+        const grip = [cx + 0.03 * fs, top ? lerp(yX, yCap, e) + 0.045 * fs + nip - letGo : yBase - 0.04 * fs - nip + letGo + 0.02 * fs * e];
+        const g = [lerp(start[0], grip[0], out), lerp(start[1], grip[1], out)], size = k * lerp(0.3, 1, out);
+        const a = (sd.turn * Math.PI) / 180, cos = Math.cos(a), sin = Math.sin(a);
+        // wrist: 78 design units behind the grip along the hand and 22 across it, turned with the glove
+        const wx = -78 * size, wy = 22 * size * sd.sign;
+        const wrist = [g[0] + wx * cos - wy * sin, g[1] + wx * sin + wy * cos];
+        const reach = 0.3 * fs * out;
+        arms[i].setAttribute('d', `M${start[0]} ${start[1]} C${start[0] - 0.08 * fs * out} ${start[1] + sd.bow * fs * out} ${wrist[0] - cos * reach} ${wrist[1] - sin * reach} ${wrist[0]} ${wrist[1]}`);
         arms[i].style.opacity = out < 0.03 ? 0 : 1;
+        hands[i].setAttribute('transform', `translate(${g[0]} ${g[1]}) rotate(${sd.turn}) scale(${out < 0.03 ? 0 : size} ${out < 0.03 ? 0 : size * sd.sign}) translate(-84 -30)`);
       });
       if (!pulled && t >= T.grab) { pulled = true; onPull(); }
       if (t < T.end) raf = requestAnimationFrame(frame); else onDone();
@@ -360,12 +366,8 @@ function IntroArms({ row, onPull, onDone }) {
   }, []);
   const glove = (
     <g className="glove">
-      <rect className="ink" x="3" y="38" width="19" height="36" rx="9.5" transform="rotate(24 12 56)" />
-      {[22, 40.8, 59.5].map((x) => <rect key={x} className="ink" x={x} y="46" width="18.5" height="42" rx="9.25" />)}
-      <rect className="ink" x="19" y="22" width="62" height="46" rx="21" />
-      <rect className="fill" x="23" y="26" width="54" height="40" rx="17" />
-      <path className="line" d="M38 31v13M50 30v15M62 31v13" />
-      <rect className="ink" x="26" y="6" width="48" height="20" rx="10" />
+      <path className="ink" d={GLOVE} />
+      <path className="line" d="M20 34C24 45 24 59 20 70M64 62C60 62 57 61 54 60M70 50C65 51 61 51 57 50" />
     </g>
   );
   return (
