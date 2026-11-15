@@ -51,7 +51,7 @@ p { margin: 0; }
 /* ── home ── */
 .home { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
 .title-row { padding-top: clamp(28px, 5vw, 72px); padding-bottom: 22px; border-bottom: 1px solid var(--ink); }
-.home-title { font-size: clamp(34px, 5.6vw, 96px); font-weight: 400; letter-spacing: -0.055em; line-height: .98; max-width: 16em; text-wrap: balance; }
+.home-title { font-family: 'Geist', var(--font); font-size: clamp(34px, 5.6vw, 96px); font-weight: 400; letter-spacing: -0.04em; line-height: .98; max-width: 16em; text-wrap: balance; }
 .intro { display: flex; justify-content: space-between; align-items: baseline; gap: 16px 32px; flex-wrap: wrap; padding: 20px 0 56px; }
 .intro p { max-width: 560px; font-size: 19px; line-height: 1.25; letter-spacing: -0.03em; color: var(--muted); }
 .intro-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
@@ -129,12 +129,12 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 .wide-grid + .demo-note { margin-top: 32px; }
 
 /* ── brand page: closed (name + column) ⇄ open (clothes across the screen) ── */
-.brand .side { position: fixed; left: 0; top: calc(var(--top) + env(safe-area-inset-top, 0px)); width: 42vw; transition: opacity .45s ease, transform .85s var(--ease); }
+.brand .side { position: fixed; left: 0; top: calc(var(--top) + env(safe-area-inset-top, 0px)); width: var(--split, 42vw); transition: opacity .45s ease, transform .85s var(--ease); }
 .brand.open .side { opacity: 0; transform: translateX(-8vw); pointer-events: none; }
-.brand-intro { margin-left: 42vw; max-width: 484px; padding: 20px var(--pad) 0 0; }
+.brand-intro { margin-left: var(--split, 42vw); max-width: 484px; padding: 20px var(--pad) 0 0; }
 .brand-logo { display: block; width: 44px; height: 44px; object-fit: contain; margin-bottom: 16px; }
 .store { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); overflow-anchor: none; }
-.store-inner { margin-left: calc(42vw - var(--pad)); width: calc(100% - 42vw + var(--pad)); max-width: 100%; }
+.store-inner { margin-left: calc(var(--split, 42vw) - var(--pad)); width: calc(100% - var(--split, 42vw) + var(--pad)); max-width: 100%; }
 .brand.open .store-inner { margin-left: 0; width: 100%; }
 .store-head { position: sticky; top: calc(var(--top) + env(safe-area-inset-top, 0px)); z-index: 5; background: var(--bg); display: flex; align-items: baseline; gap: 14px; padding: 28px 0 14px; white-space: nowrap; }
 .store-head h2 { font-size: 22px; letter-spacing: -0.03em; margin: 0; }
@@ -152,7 +152,7 @@ a.item-card:hover .tile-img { transform: scale(1.05); }
 
 /* information under the clothes */
 .below { padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
-.below-row { display: grid; grid-template-columns: calc(42vw - var(--pad)) minmax(0, 620px); margin-top: 120px; }
+.below-row { display: grid; grid-template-columns: calc(var(--split, 42vw) - var(--pad)) minmax(0, 620px); margin-top: 120px; }
 .below-row h2 { font-size: 22px; letter-spacing: -0.03em; }
 
 /* news */

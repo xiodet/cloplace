@@ -788,6 +788,26 @@ function BrandPage({ brand }) {
   // again when that transition ends (it used to replay its entrance a moment later).
   const [arrived] = useState(() => document.documentElement.classList.contains('from-fx'));
 
+  // The reading column starts just after the end of the giant name instead of at a fixed 42vw,
+  // so a short name does not leave a wide empty strip. Between 30vw and 42vw; desktop only.
+  const giant = useRef(null);
+  useLayoutEffect(() => {
+    const fit = () => {
+      const el = giant.current, root = page.current;
+      if (!el || !root) return;
+      if (window.innerWidth <= 860) return root.style.removeProperty('--split');
+      // measure the letters themselves (each word is a full-width block, so the boxes would not do)
+      const r = document.createRange();
+      const right = Math.max(0, ...[...el.querySelectorAll('span')].map((w) => { r.selectNodeContents(w.firstChild || w); return Math.max(0, ...[...r.getClientRects()].map((x) => x.right)); }));
+      const vw = window.innerWidth / 100;
+      root.style.setProperty('--split', Math.round(Math.min(42 * vw, Math.max(30 * vw, right + Math.max(56, 5 * vw)))) + 'px');
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, [brand.id]);
+
   return (
     <>
       <TopBar />
@@ -797,7 +817,7 @@ function BrandPage({ brand }) {
             <p>{brand.style.join(', ')}</p>
             <cite>{[brand.city, pick(countries[brand.country], lang)].filter(Boolean).join(', ')}</cite>
           </blockquote>
-          <div className="giant-clip"><h1 className={'giant' + (arrived ? ' still' : '')} style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
+          <div className="giant-clip"><h1 ref={giant} className={'giant' + (arrived ? ' still' : '')} style={{ '--len': longestWord(brand.name) }}>{brand.name.toLowerCase().split(/\s+/).map((x, i) => <span key={i}>{x} </span>)}</h1></div>
         </aside>
 
         <div className="brand-intro">
