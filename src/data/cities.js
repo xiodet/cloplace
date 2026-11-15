@@ -2,6 +2,7 @@
 // here simply has no pin; add the city when adding the brand.
 export const cities = {
   Kyiv: [30.52, 50.45],
+  Kharkiv: [36.23, 49.99],
   Cologne: [6.96, 50.94],
   Dreieich: [8.7, 50.02],
   Bergheim: [6.64, 50.96],

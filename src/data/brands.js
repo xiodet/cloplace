@@ -340,6 +340,21 @@ export const brands = [
     description: { en: "German streetwear brand founded in 2020: hoodies, tees, denim and knitwear, sold in drops.", ru: "Немецкий стритвир-бренд, основан в 2020 году: худи, футболки, джинсы и трикотаж, продаёт дропами.", uk: "Німецький стрітвір-бренд, заснований 2020 року: худі, футболки, джинси й трикотаж, продає дропами." },
     website: 'https://www.vicinityclo.de', instagram: null, currency: 'EUR',
   },
+  {
+    ...found, id: "swoyachovskiy", name: "Swoyachovskiy", country: 'UA', city: "Kharkiv",
+    style: ["streetwear"],
+    description: { en: "Ukrainian streetwear label from Kharkiv: puffer jackets, zip hoodies and baggy jeans and pants with reflective logos.", ru: "Украинский стритвир-бренд из Харькова: пуховики, зип-худи, широкие джинсы и штаны со светоотражающими логотипами.", uk: "Український стрітвір-бренд із Харкова: пуховики, зіп-худі, широкі джинси та штани зі світловідбивними логотипами." },
+    website: 'https://swoyachovskiy.com', instagram: 'swoyachovskiy', currency: 'UAH', shipping: ['UA', 'EU', 'WORLD'], returns: { days: 14 },
+    returnsNote: { en: "Exchange only, within 14 days of receipt; refunds for defects or when a replacement is out of stock.", ru: "Только обмен в течение 14 дней после получения; деньги возвращают при браке или если замены нет в наличии.", uk: "Лише обмін протягом 14 днів після отримання; гроші повертають у разі браку або якщо заміни немає в наявності." },
+    verified: ['name', 'website', 'instagram', 'shipping', 'returns'], checkedAt: '2026-11-15',
+  },
+  {
+    // Part of H&M Group; the store is not on Shopify, so items are not collected yet.
+    ...found, id: "weekday", name: "Weekday", country: 'SE', city: "Stockholm", founded: 2002,
+    style: ["denim", "streetwear"],
+    description: { en: "Swedish denim and fashion brand founded in Stockholm in 2002, part of H&M Group.", ru: "Шведский бренд денима и одежды, основан в Стокгольме в 2002 году, входит в H&M Group.", uk: "Шведський бренд деніму та одягу, заснований у Стокгольмі 2002 року, входить до H&M Group." },
+    website: 'https://www.weekday.com', instagram: null, checkedAt: '2026-11-15',
+  },
 ];
 
 export const countries = {
