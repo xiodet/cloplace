@@ -406,7 +406,7 @@
    "VN"
   ],
   "returnDays": 14,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "club-de-presage": {
   "name": "club de présage",
@@ -720,7 +720,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "obvune": {
   "name": "Obvune",
@@ -966,7 +966,7 @@
    "ZM",
    "ZW"
   ],
-  "priced": "CAD"
+  "priced": "USD"
  },
  "2819-jewelry": {
   "name": "2819 Jewelry",
@@ -1213,7 +1213,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "scuffers": {
   "name": "Scuffers",
@@ -1460,7 +1460,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "racer-worldwide": {
   "name": "Racer Worldwide",
@@ -1653,7 +1653,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "lomalab": {
   "name": "Lomalab",
@@ -1747,7 +1747,7 @@
    "ZA"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "lkc2000": {
   "name": "LKC2000",
@@ -1994,7 +1994,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "jaded-london": {
   "name": "Jaded London",
@@ -2203,7 +2203,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "undersoul": {
   "name": "UNDERSOUL®",
@@ -2431,7 +2431,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "monateo": {
   "name": "monateo",
@@ -2677,7 +2677,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "6pm": {
   "name": "6PM",
@@ -2954,7 +2954,7 @@
    "US",
    "YE"
   ],
-  "priced": "EUR"
+  "priced": "USD"
  },
  "bluemarble": {
   "name": "BLUEMARBLE",
@@ -3200,7 +3200,7 @@
    "ZM",
    "ZW"
   ],
-  "priced": "CAD"
+  "priced": "USD"
  },
  "carne-bollente": {
   "name": "Carne Bollente",
@@ -3439,7 +3439,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "cole-buxton": {
   "name": "Cole Buxton",
@@ -3681,7 +3681,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "dont-waste-culture": {
   "name": "Don't Waste Culture",
@@ -3889,7 +3889,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "doomsday": {
   "name": "Doomsday Co",
@@ -3947,7 +3947,7 @@
    "US"
   ],
   "returnDays": 60,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "drole-de-monsieur": {
   "name": "Drôle de Monsieur",
@@ -4197,7 +4197,7 @@
    "XK"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "eightyfive": {
   "name": "eightyfiveclo",
@@ -4487,7 +4487,7 @@
    "US"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "grimey": {
   "name": "Grimey",
@@ -4603,7 +4603,7 @@
    "US"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "kaotiko": {
   "name": "Kaotiko",
@@ -4850,7 +4850,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "low-lights-studios": {
   "name": "Low Lights Studios",
@@ -4906,7 +4906,7 @@
    "XK"
   ],
   "returnDays": 14,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "misbhv": {
   "name": "MISBHV",
@@ -5366,7 +5366,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "more-money-more-love": {
   "name": "MORE MONEY MORE LOVE",
@@ -5437,7 +5437,7 @@
    "YT"
   ],
   "returnDays": 14,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "named-collective": {
   "name": "NAMED COLLECTIVE®",
@@ -5662,7 +5662,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "nude-project": {
   "name": "Nude Project",
@@ -5933,7 +5933,7 @@
    "US"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "pegador": {
   "name": "PEGADOR®",
@@ -6007,7 +6007,7 @@
    "SK",
    "US"
   ],
-  "priced": "EUR"
+  "priced": "USD"
  },
  "reternity": {
   "name": "RETERNITY",
@@ -6251,251 +6251,12 @@
    "ZM",
    "ZW"
   ],
-  "priced": "CAD"
+  "priced": "USD"
  },
  "trendt-vision": {
-  "name": "Trendt Vision",
-  "country": "DE",
-  "city": "Seevetal ",
-  "currency": "EUR",
-  "shipsTo": [
-   "AC",
-   "AD",
-   "AE",
-   "AF",
-   "AG",
-   "AI",
-   "AL",
-   "AM",
-   "AO",
-   "AR",
-   "AT",
-   "AU",
-   "AW",
-   "AX",
-   "AZ",
-   "BA",
-   "BB",
-   "BD",
-   "BE",
-   "BF",
-   "BG",
-   "BH",
-   "BI",
-   "BJ",
-   "BL",
-   "BM",
-   "BN",
-   "BO",
-   "BQ",
-   "BR",
-   "BS",
-   "BT",
-   "BW",
-   "BY",
-   "BZ",
-   "CC",
-   "CD",
-   "CF",
-   "CG",
-   "CH",
-   "CK",
-   "CL",
-   "CM",
-   "CN",
-   "CO",
-   "CR",
-   "CV",
-   "CW",
-   "CX",
-   "CY",
-   "CZ",
-   "DE",
-   "DJ",
-   "DK",
-   "DM",
-   "DO",
-   "DZ",
-   "EC",
-   "EE",
-   "EG",
-   "EH",
-   "ER",
-   "ES",
-   "ET",
-   "FI",
-   "FJ",
-   "FK",
-   "FO",
-   "FR",
-   "GA",
-   "GB",
-   "GD",
-   "GE",
-   "GF",
-   "GG",
-   "GH",
-   "GI",
-   "GL",
-   "GM",
-   "GN",
-   "GP",
-   "GQ",
-   "GR",
-   "GS",
-   "GT",
-   "GW",
-   "GY",
-   "HK",
-   "HN",
-   "HR",
-   "HT",
-   "HU",
-   "ID",
-   "IE",
-   "IL",
-   "IM",
-   "IN",
-   "IO",
-   "IQ",
-   "IS",
-   "IT",
-   "JE",
-   "JM",
-   "JO",
-   "JP",
-   "KE",
-   "KG",
-   "KH",
-   "KI",
-   "KM",
-   "KN",
-   "KR",
-   "KW",
-   "KY",
-   "KZ",
-   "LA",
-   "LB",
-   "LC",
-   "LI",
-   "LK",
-   "LR",
-   "LS",
-   "LT",
-   "LU",
-   "LV",
-   "LY",
-   "MA",
-   "MC",
-   "MD",
-   "ME",
-   "MF",
-   "MG",
-   "MK",
-   "ML",
-   "MM",
-   "MN",
-   "MO",
-   "MQ",
-   "MR",
-   "MS",
-   "MT",
-   "MU",
-   "MV",
-   "MW",
-   "MX",
-   "MY",
-   "MZ",
-   "NA",
-   "NC",
-   "NE",
-   "NF",
-   "NG",
-   "NI",
-   "NL",
-   "NO",
-   "NP",
-   "NR",
-   "NU",
-   "NZ",
-   "OM",
-   "PA",
-   "PE",
-   "PF",
-   "PG",
-   "PH",
-   "PK",
-   "PL",
-   "PM",
-   "PN",
-   "PS",
-   "PT",
-   "PY",
-   "QA",
-   "RE",
-   "RO",
-   "RS",
-   "RU",
-   "RW",
-   "SA",
-   "SB",
-   "SC",
-   "SD",
-   "SE",
-   "SG",
-   "SH",
-   "SI",
-   "SJ",
-   "SK",
-   "SL",
-   "SM",
-   "SN",
-   "SO",
-   "SR",
-   "SS",
-   "ST",
-   "SV",
-   "SX",
-   "SZ",
-   "TA",
-   "TC",
-   "TD",
-   "TF",
-   "TG",
-   "TH",
-   "TJ",
-   "TK",
-   "TL",
-   "TM",
-   "TN",
-   "TO",
-   "TR",
-   "TT",
-   "TV",
-   "TW",
-   "TZ",
-   "UA",
-   "UG",
-   "UM",
-   "US",
-   "UY",
-   "UZ",
-   "VA",
-   "VC",
-   "VE",
-   "VG",
-   "VN",
-   "VU",
-   "WF",
-   "WS",
-   "XK",
-   "YE",
-   "YT",
-   "ZA",
-   "ZM",
-   "ZW"
-  ],
-  "priced": "EUR"
+  "closed": true,
+  "opensAt": "2026-11-22T00:00:00.000Z",
+  "closedNote": "Your cart is empty RECOMMENDED TO YOU"
  },
  "wrstbhvr": {
   "name": "WRSTBHVR",
@@ -7034,7 +6795,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "ienki-ienki": {
   "name": "IENKI IENKI",
@@ -7047,7 +6808,7 @@
    "US"
   ],
   "returnDays": 14,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "represent": {
   "name": "REPRESENT | UK",
@@ -7277,7 +7038,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "olaf-hussein": {
   "name": "OLAF",
@@ -7500,7 +7261,7 @@
    "ZW"
   ],
   "returnDays": 30,
-  "priced": "CAD"
+  "priced": "EUR"
  },
  "patta": {
   "name": "Patta",
@@ -7624,7 +7385,7 @@
    "ZA"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "EUR"
  },
  "the-new-originals": {
   "name": "the new originals",
@@ -7767,7 +7528,7 @@
    "ZW"
   ],
   "returnDays": 10,
-  "priced": "EUR"
+  "priced": "USD"
  },
  "polar-skate-co": {
   "name": "Polar Skate Co.",
@@ -8078,7 +7839,7 @@
    "ZM",
    "ZW"
   ],
-  "priced": "EUR"
+  "priced": "USD"
  },
  "vicinity": {
   "name": "VICINITY",
@@ -8325,7 +8086,7 @@
    "ZW"
   ],
   "returnDays": 14,
-  "priced": "CAD"
+  "priced": "USD"
  },
  "swoyachovskiy": {
   "name": "Swoyachovskiy",
